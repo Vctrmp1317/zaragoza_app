@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:zaragoza_app/providers/add_form_provider.dart';
 import 'package:zaragoza_app/screens/screens.dart';
 
 import 'router/app_routes.dart';
@@ -11,8 +12,9 @@ class AppState extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MyApp();
-    ;
+    return MultiProvider(providers: [
+      ChangeNotifierProvider(create: (_) => AddFormProvider()),
+    ], child: const MyApp());
   }
 }
 

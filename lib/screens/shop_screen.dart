@@ -118,8 +118,11 @@ class __searchBarState extends State<_searchBar> {
         const Spacer(),
         Container(
             margin: EdgeInsets.only(right: 20),
-            child:
-                IconButton(onPressed: () {}, icon: const Icon(Icons.checkroom)))
+            child: IconButton(
+                onPressed: () {
+                  Navigator.pushNamed(context, 'addproduct');
+                },
+                icon: const Icon(Icons.checkroom)))
       ],
     );
   }
