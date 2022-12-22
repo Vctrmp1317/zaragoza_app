@@ -4,13 +4,13 @@ import '../models/menu_option.dart';
 import '../screens/screens.dart';
 
 class AppRoutes {
-  static const initialRoute = 'Login';
+  static const initialRoute = 'login2';
 
   static final menuOptions = <MenuOption>[
     MenuOption(
-        route: 'login',
+        route: 'login2',
         name: 'Login Screen',
-        screen: LoginScreen(),
+        screen: Login2Screen(),
         icon: Icons.account_balance_outlined),
     MenuOption(
         route: 'tienda',
@@ -44,6 +44,6 @@ class AppRoutes {
   // };
 
   static Route<dynamic> onGenerateRoute(settings) {
-    return MaterialPageRoute(builder: (context) => LoginScreen());
+    return MaterialPageRoute(builder: (context) => Login2Screen());
   }
 }

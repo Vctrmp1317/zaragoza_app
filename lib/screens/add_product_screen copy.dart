@@ -1,8 +1,5 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:http/http.dart';
 import 'package:provider/provider.dart';
 import 'package:zaragoza_app/providers/add_form_provider.dart';
 import 'package:image_picker/image_picker.dart';
@@ -23,6 +20,10 @@ class AddProductScreen extends StatelessWidget {
             const _appBar(),
             const _dividerLine(),
             const SizedBox(height: 80),
+            ChangeNotifierProvider(
+              create: (_) => AddFormProvider(),
+              child: _AddForm(),
+            ),
           ],
         ),
       ),
@@ -44,7 +45,7 @@ class _dividerLine extends StatelessWidget {
               gradient: LinearGradient(
                   begin: Alignment.center,
                   end: Alignment.centerLeft,
-                  colors: [Colors.black, Colors.white38])),
+                  colors: [Colors.white, Colors.white38])),
           height: 1,
           width: 130,
           margin: const EdgeInsets.only(left: 20, bottom: 5, top: 5),
@@ -55,7 +56,7 @@ class _dividerLine extends StatelessWidget {
               gradient: LinearGradient(
                   begin: Alignment.center,
                   end: Alignment.centerRight,
-                  colors: [Colors.black, Colors.white38])),
+                  colors: [Colors.white, Colors.white38])),
           height: 1,
           width: 180,
           margin: const EdgeInsets.only(right: 20, bottom: 5, top: 5),
@@ -78,9 +79,9 @@ class _appBar extends StatelessWidget {
             children: [
               const Text('Añadir Producto',
                   style: TextStyle(
-                    fontSize: 28,
-                    fontWeight: FontWeight.bold,
-                  )),
+                      fontSize: 28,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white)),
               const Spacer(),
               const SizedBox(width: 8),
               IconButton(
@@ -88,7 +89,7 @@ class _appBar extends StatelessWidget {
                     Navigator.pushNamedAndRemoveUntil(
                         context, 'tienda', (route) => false);
                   },
-                  icon: const Icon(Icons.logout, color: Colors.black)),
+                  icon: const Icon(Icons.logout, color: Colors.white)),
             ],
           )),
     );
@@ -147,11 +148,51 @@ class backGroundAuth extends StatelessWidget {
       Container(
         width: double.infinity,
         height: double.infinity,
-        color: const Color.fromARGB(255, 243, 242, 242),
+        color: Colors.blueAccent[100],
       ),
-      const SingleChildScrollView(child: _ColorBox()),
+      const _ColorBox()
     ]);
   }
+}
+
+class _Bubble extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 1000,
+      height: 1000,
+      decoration: BoxDecoration(
+        boxShadow: [
+          const BoxShadow(color: Colors.black, blurRadius: 10),
+          const BoxShadow(color: Colors.white, blurRadius: 30)
+        ],
+        borderRadius: BorderRadius.circular(500),
+        color: Colors.white,
+      ),
+    );
+  }
+}
+
+class _Bub extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 60,
+      height: 60,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(100),
+        boxShadow: [const BoxShadow(color: Colors.black38, blurRadius: 10)],
+        gradient: const LinearGradient(colors: [Colors.white70, Colors.white]),
+        color: Colors.white,
+      ),
+    );
+  }
+}
+
+BoxDecoration _buildBoxDecoration() {
+  return const BoxDecoration(
+    gradient: LinearGradient(colors: [Colors.black87, Colors.black38]),
+  );
 }
 
 class _ColorBox extends StatelessWidget {
@@ -161,132 +202,41 @@ class _ColorBox extends StatelessWidget {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     return Container(
-      margin: const EdgeInsets.only(top: 150),
-      height: size.height * 0.8,
-      decoration: const BoxDecoration(
-          boxShadow: [BoxShadow(color: Colors.black, blurRadius: 5)],
-          color: Colors.white,
-          borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(30), topRight: Radius.circular(30))),
-      width: double.infinity,
-      child: Stack(
-        children: [
-          Positioned(
-              top: 100,
-              child: Container(
-                decoration: const BoxDecoration(
-                    boxShadow: [BoxShadow(color: Colors.black, blurRadius: 20)],
-                    color: Colors.white,
-                    borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(30),
-                        topRight: Radius.circular(30))),
-              )),
-          Container(
-            width: 300,
-            margin: const EdgeInsets.only(top: 10, left: 30),
-            child: ChangeNotifierProvider(
-              create: (_) => AddFormProvider(),
-              child: _AddForm(),
-            ),
-          ),
-        ],
-      ),
-    );
+        width: double.infinity,
+        height: double.infinity,
+        child: Stack(
+          children: [
+            Positioned(top: 150, right: -50, child: _Bubble()),
+            Positioned(top: 150, right: 30, child: _Bub()),
+            Positioned(top: 250, right: 3, child: _Bub()),
+            Positioned(top: 120, left: 160, child: _Bub()),
+            Positioned(top: 300, left: 160, child: _Bub()),
+          ],
+        ));
   }
 }
 
-class _AddForm extends StatefulWidget {
-  @override
-  State<_AddForm> createState() => _AddFormState();
-}
-
-class _AddFormState extends State<_AddForm> {
-  late String imagenPath = '';
+class _AddForm extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final addForm = Provider.of<AddFormProvider>(context);
     const List<String> list = <String>['S', 'M', 'L', 'XL', 'XXL'];
     String dropdownValue = list.first;
-    final size = MediaQuery.of(context).size;
 
     return Container(
-      margin: const EdgeInsets.all(10),
+      margin: const EdgeInsets.all(30),
       padding: const EdgeInsets.all(10),
-      width: double.infinity,
-      height: 610,
+      width: 250,
+      height: 510,
+      decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(20),
+          boxShadow: [const BoxShadow(color: Colors.black, blurRadius: 3)]),
       child: Form(
           key: addForm.formKey,
           autovalidateMode: AutovalidateMode.onUserInteraction,
           child: Column(
             children: [
-              Stack(
-                children: [
-                  (imagenPath == '')
-                      ? const FadeInImage(
-                          placeholder: AssetImage('assets/no-image.jpg'),
-                          image: AssetImage('assets/no-image.jpg'),
-                          width: 300,
-                          height: 150,
-                          fit: BoxFit.cover,
-                        )
-                      : Image.file(
-                          File(imagenPath),
-                          width: 300,
-                          height: 180,
-                          fit: BoxFit.cover,
-                        ),
-                  //  getImage(imagenPath),
-
-                  Row(
-                    children: [
-                      IconButton(
-                          iconSize: 30,
-                          color: Colors.black,
-                          onPressed: () async {
-                            print(imagenPath);
-                            final picker = ImagePicker();
-
-                            final PickedFile? pickedFile =
-                                await picker.getImage(
-                                    source: ImageSource.camera,
-                                    imageQuality: 100);
-
-                            print('tenemos imagen ' + pickedFile!.path);
-
-                            imagenPath = pickedFile.path;
-
-                            pickedFile.readAsBytes().then((value) {});
-                            print(imagenPath);
-
-                            pickedFile.readAsBytes().then((value) {});
-                            setState(() {});
-                          },
-                          icon: const Icon(Icons.camera_alt_outlined)),
-                      const Spacer(),
-                      IconButton(
-                          iconSize: 30,
-                          color: Colors.black,
-                          onPressed: () async {
-                            final picker = ImagePicker();
-
-                            final PickedFile? pickedFile =
-                                await picker.getImage(
-                                    source: ImageSource.gallery,
-                                    imageQuality: 100);
-
-                            print('tenemos imagen ' + pickedFile!.path);
-
-                            imagenPath = pickedFile.path;
-
-                            pickedFile.readAsBytes().then((value) {});
-
-                            setState(() {});
-                          },
-                          icon: const Icon(Icons.image_outlined))
-                    ],
-                  ),
-                ],
-              ),
               TextFormField(
                   autocorrect: false,
                   keyboardType: TextInputType.emailAddress,
@@ -299,7 +249,7 @@ class _AddFormState extends State<_AddForm> {
                   ),
                   onChanged: (value) => addForm.tipo = value,
                   validator: (value) {}),
-              const SizedBox(height: 10),
+              const SizedBox(height: 20),
               TextFormField(
                 autocorrect: false,
                 decoration: const InputDecoration(
@@ -310,7 +260,7 @@ class _AddFormState extends State<_AddForm> {
                     suffixIcon: Icon(Icons.color_lens)),
                 onChanged: (value) => addForm.color = value,
               ),
-              const SizedBox(height: 10),
+              const SizedBox(height: 20),
               DropdownButtonFormField(
                   icon: const Icon(Icons.accessibility_sharp),
                   value: dropdownValue,
@@ -324,7 +274,7 @@ class _AddFormState extends State<_AddForm> {
                     addForm.talla = value!;
                     dropdownValue = value;
                   }),
-              const SizedBox(height: 10),
+              const SizedBox(height: 20),
               TextFormField(
                 autocorrect: false,
                 decoration: const InputDecoration(
@@ -335,7 +285,7 @@ class _AddFormState extends State<_AddForm> {
                     suffixIcon: Icon(Icons.style)),
                 onChanged: (value) => addForm.material = value,
               ),
-              const SizedBox(height: 10),
+              const SizedBox(height: 20),
               TextFormField(
                 autocorrect: false,
                 keyboardType: TextInputType.number,
@@ -348,7 +298,32 @@ class _AddFormState extends State<_AddForm> {
                     suffixIcon: Icon(Icons.attach_money)),
                 onChanged: (value) => addForm.precio = value as int,
               ),
-              const SizedBox(height: 10),
+              const SizedBox(height: 20),
+              Row(
+                children: [
+                  IconButton(
+                      iconSize: 30,
+                      color: Colors.black38,
+                      onPressed: () async {
+                        final picker = ImagePicker();
+
+                        final PickedFile? pickedFile = await picker.getImage(
+                            source: ImageSource.camera, imageQuality: 100);
+                      },
+                      icon: const Icon(Icons.camera_alt_outlined)),
+                  Spacer(),
+                  IconButton(
+                      iconSize: 30,
+                      color: Colors.black38,
+                      onPressed: () async {
+                        final picker = ImagePicker();
+
+                        final PickedFile? pickedFile = await picker.getImage(
+                            source: ImageSource.gallery, imageQuality: 100);
+                      },
+                      icon: const Icon(Icons.image_outlined))
+                ],
+              ),
               SizedBox(
                 width: 300,
                 child: ElevatedButton(
@@ -381,19 +356,5 @@ class _AddFormState extends State<_AddForm> {
             ],
           )),
     );
-  }
-
-  Widget getImage(String? path) {
-    if (path == null) {
-      return const FadeInImage(
-        placeholder: AssetImage('assets/no-image.jpg'),
-        image: AssetImage('assets/no-image.jpg'),
-        width: 300,
-        height: 150,
-        fit: BoxFit.cover,
-      );
-    } else {
-      return Image.file(File(path));
-    }
   }
 }

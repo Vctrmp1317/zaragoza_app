@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:zaragoza_app/providers/add_form_provider.dart';
+import 'package:zaragoza_app/providers/login_form_provider.dart';
 import 'package:zaragoza_app/screens/screens.dart';
 
 import 'router/app_routes.dart';
@@ -14,6 +15,7 @@ class AppState extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(providers: [
       ChangeNotifierProvider(create: (_) => AddFormProvider()),
+      ChangeNotifierProvider(create: (_) => LoginFormProvider()),
     ], child: const MyApp());
   }
 }
@@ -28,6 +30,8 @@ class MyApp extends StatelessWidget {
       initialRoute: AppRoutes.initialRoute,
       onGenerateRoute: AppRoutes.onGenerateRoute,
       routes: AppRoutes.getAppRoutes(),
+      theme: ThemeData(
+          scaffoldBackgroundColor: Color.fromARGB(245, 255, 253, 253)),
     );
   }
 }
