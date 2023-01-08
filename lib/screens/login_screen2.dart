@@ -235,19 +235,12 @@ class _loginFormState extends State<_loginForm> {
                     if (addForm.isValidForm()) {
                       if (users.containsKey(addForm.email)) {
                         if (users[addForm.email] == addForm.password) {
-                          TweenAnimationBuilder(
-                            duration: const Duration(),
-                            tween: Tween(),
-                            builder: (BuildContext context, dynamic value,
-                                Widget? child) {
-                              // ignore: prefer_const_constructors
-                              return ShopScreen();
-                            },
-                          );
+                          Navigator.pushNamedAndRemoveUntil(
+                              context, 'tienda', (route) => false);
                         }
                       }
 
-                      //Navigator.pushNamed(context, 'edit');
+                      //Navigator.p ushNamed(context, 'edit');
                     }
                   },
                   // ignore: prefer_const_literals_to_create_immutables
