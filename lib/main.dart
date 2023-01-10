@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:zaragoza_app/providers/add_form_provider.dart';
 import 'package:zaragoza_app/providers/login_form_provider.dart';
+import 'package:zaragoza_app/providers/register_form_provider.dart';
 import 'package:zaragoza_app/screens/screens.dart';
 
 import 'router/app_routes.dart';
@@ -16,6 +17,7 @@ class AppState extends StatelessWidget {
     return MultiProvider(providers: [
       ChangeNotifierProvider(create: (_) => AddFormProvider()),
       ChangeNotifierProvider(create: (_) => LoginFormProvider()),
+      ChangeNotifierProvider(create: (_) => RegisterFormProvider()),
     ], child: const MyApp());
   }
 }

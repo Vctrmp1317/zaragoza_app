@@ -7,15 +7,11 @@ import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:zaragoza_app/providers/add_form_provider.dart';
 import 'package:zaragoza_app/providers/login_form_provider.dart';
+import 'package:zaragoza_app/providers/register_form_provider.dart';
 import 'package:zaragoza_app/screens/screens.dart';
 
-const users = {
-  'dribbble@gmail.com': '12345',
-  'hunter@gmail.com': 'hunter',
-};
-
-class Login2Screen extends StatelessWidget {
-  const Login2Screen({Key? key}) : super(key: key);
+class RegisterScreen extends StatelessWidget {
+  const RegisterScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -23,12 +19,12 @@ class Login2Screen extends StatelessWidget {
         body: SingleChildScrollView(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const SizedBox(height: 52),
-          const _appBar(),
-          const _dividerLine(),
-          const SizedBox(height: 5),
-          const _ColorBox()
+        children: const [
+          SizedBox(height: 52),
+          _appBar(),
+          _dividerLine(),
+          SizedBox(height: 5),
+          _ColorBox()
         ],
       ),
     ));
@@ -122,32 +118,32 @@ class _ColorBox extends StatelessWidget {
             top: 100,
             child: Container(
               width: 300,
-              margin: const EdgeInsets.only(top: 10, left: 30),
+              margin: const EdgeInsets.only(top: 5, left: 30),
               child: ChangeNotifierProvider(
-                create: (_) => LoginFormProvider(),
-                child: _loginForm(),
+                create: (_) => RegisterFormProvider(),
+                child: _registerForm(),
               ),
             ),
           ),
           const Positioned(
               left: 50,
-              top: 50,
+              top: 20,
               child: Text(
-                'Login',
+                'Registro',
                 style: TextStyle(
                   fontSize: 28,
                 ),
               )),
           Positioned(
-            left: 50,
-            bottom: 200,
+            left: 40,
+            top: 40,
             child: TextButton(
                 onPressed: () {
-                  Navigator.popAndPushNamed(context, 'registro');
+                  Navigator.popAndPushNamed(context, 'login');
                 },
-                child: const Text('Registrate',
+                child: const Text('¿Ya tienes una cuenta?',
                     style: TextStyle(
-                      fontSize: 24,
+                      fontSize: 18,
                     ))),
           )
         ],
@@ -156,32 +152,53 @@ class _ColorBox extends StatelessWidget {
   }
 }
 
-class _loginForm extends StatefulWidget {
+class _registerForm extends StatefulWidget {
   @override
-  State<_loginForm> createState() => _loginFormState();
+  State<_registerForm> createState() => _registerFormState();
 }
 
-class _loginFormState extends State<_loginForm> {
+class _registerFormState extends State<_registerForm> {
+  bool check = false;
   @override
   Widget build(BuildContext context) {
-    final addForm = Provider.of<LoginFormProvider>(context);
+    final addForm = Provider.of<RegisterFormProvider>(context);
 
     final size = MediaQuery.of(context).size;
+    @override
+    void initState() {
+      super.initState();
+      check = false;
+    }
 
     return Container(
       decoration: BoxDecoration(
           color: const Color.fromARGB(255, 234, 229, 229),
           borderRadius: BorderRadius.circular(20),
-          boxShadow: [const BoxShadow(color: Colors.black)]),
-      margin: const EdgeInsets.all(10),
+          boxShadow: const [BoxShadow(color: Colors.black)]),
+      margin: const EdgeInsets.only(bottom: 15, left: 10, right: 10),
       padding: const EdgeInsets.all(10),
       width: double.infinity,
-      height: 250,
+      height: 500,
       child: Form(
           key: addForm.formKey,
           autovalidateMode: AutovalidateMode.onUserInteraction,
           child: Column(
             children: [
+              Row(
+                children: [
+                  Text(
+                    'Tienda: ',
+                    style: TextStyle(fontSize: 17),
+                  ),
+                  Checkbox(
+                      value: check,
+                      onChanged: (bool? value) {
+                        setState(() {
+                          check = value!;
+                        });
+                      }),
+                ],
+              ),
               TextFormField(
                   autocorrect: false,
                   keyboardType: TextInputType.emailAddress,
@@ -200,7 +217,84 @@ class _loginFormState extends State<_loginForm> {
                     RegExp regExp = new RegExp(pattern);
                     return regExp.hasMatch(value ?? '') ? null : 'Insert email';
                   }),
-              const SizedBox(height: 10),
+              const SizedBox(height: 5),
+              Visibility(
+                visible: !check,
+                child: TextFormField(
+                    autocorrect: false,
+                    keyboardType: TextInputType.emailAddress,
+                    decoration: const InputDecoration(
+                      focusColor: Colors.black,
+                      hintText: 'Nombre',
+                      labelText: 'Nombre',
+                      suffixIcon: Icon(Icons.abc_outlined),
+                      border: UnderlineInputBorder(),
+                    ),
+                    onChanged: (value) => addForm.nombre = value,
+                    validator: ((value) {
+                      return (value != null && value.length >= 1)
+                          ? null
+                          : 'Inserte su nombre';
+                    })),
+              ),
+              const SizedBox(height: 5),
+              Visibility(
+                visible: !check,
+                child: TextFormField(
+                    autocorrect: false,
+                    keyboardType: TextInputType.emailAddress,
+                    decoration: const InputDecoration(
+                      focusColor: Colors.black,
+                      hintText: 'Apellidos',
+                      labelText: 'Apellidos',
+                      suffixIcon: Icon(Icons.abc_outlined),
+                      border: UnderlineInputBorder(),
+                    ),
+                    onChanged: (value) => addForm.apellidos = value,
+                    validator: ((value) {
+                      return (value != null && value.length >= 1)
+                          ? null
+                          : 'Inserte sus apellidos';
+                    })),
+              ),
+              const SizedBox(height: 5),
+              Visibility(
+                visible: check,
+                child: TextFormField(
+                    autocorrect: false,
+                    keyboardType: TextInputType.emailAddress,
+                    decoration: const InputDecoration(
+                      focusColor: Colors.black,
+                      hintText: 'Nombre de empresa',
+                      labelText: 'Nombre de empresa',
+                      suffixIcon: Icon(Icons.shopify),
+                      border: UnderlineInputBorder(),
+                    ),
+                    onChanged: (value) => addForm.nombreEmpresa = value,
+                    validator: ((value) {
+                      return (value != null && value.length >= 1)
+                          ? null
+                          : 'Inserte el nombre de la empresa';
+                    })),
+              ),
+              const SizedBox(height: 5),
+              TextFormField(
+                  autocorrect: false,
+                  keyboardType: TextInputType.emailAddress,
+                  decoration: const InputDecoration(
+                    focusColor: Colors.black,
+                    hintText: 'Direccion',
+                    labelText: 'Direccion',
+                    suffixIcon: Icon(Icons.location_on),
+                    border: UnderlineInputBorder(),
+                  ),
+                  onChanged: (value) => addForm.direccion = value,
+                  validator: ((value) {
+                    return (value != null && value.length >= 1)
+                        ? null
+                        : 'Inserte la direccion';
+                  })),
+              const SizedBox(height: 5),
               TextFormField(
                 obscureText: true,
                 autocorrect: false,
@@ -217,7 +311,23 @@ class _loginFormState extends State<_loginForm> {
                       : 'Please, enter your password';
                 }),
               ),
-              const SizedBox(height: 10),
+              TextFormField(
+                obscureText: true,
+                autocorrect: false,
+                decoration: const InputDecoration(
+                    focusColor: Colors.black,
+                    hintText: 'Confirmar Password',
+                    labelText: 'Confirmar Password',
+                    border: UnderlineInputBorder(),
+                    suffixIcon: Icon(Icons.password)),
+                onChanged: (value) => addForm.password = value,
+                validator: ((value) {
+                  return (value != null && value.length >= 1)
+                      ? null
+                      : 'Please, enter your password';
+                }),
+              ),
+              const SizedBox(height: 5),
               SizedBox(
                 width: 300,
                 child: ElevatedButton(

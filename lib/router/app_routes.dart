@@ -13,6 +13,11 @@ class AppRoutes {
         screen: Login2Screen(),
         icon: Icons.account_balance_outlined),
     MenuOption(
+        route: 'registro',
+        name: 'Registro Screen',
+        screen: RegisterScreen(),
+        icon: Icons.account_balance_outlined),
+    MenuOption(
         route: 'tienda',
         name: 'Shop Screen',
         screen: const ShopScreen(),

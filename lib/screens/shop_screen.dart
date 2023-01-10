@@ -154,10 +154,12 @@ class _listProductsState extends State<listProducts> {
       padding: const EdgeInsets.all(8.0),
       child: Container(
         height: 550,
-        width: 300,
-        child: ListView.builder(
+        width: 400,
+        child: GridView.builder(
           itemBuilder: ((context, index) => const Card()),
           itemCount: 10,
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2, mainAxisExtent: 350, mainAxisSpacing: 30),
         ),
       ),
     );
@@ -260,11 +262,16 @@ class Card extends StatelessWidget {
               color: Colors.black54,
             ),
             Row(
+              // ignore: prefer_const_literals_to_create_immutables
               children: [
                 const Text('Eliminar producto',
                     style:
                         TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
                 const Spacer(),
+              ],
+            ),
+            Row(
+              children: [
                 IconButton(
                     onPressed: () {
                       CoolAlert.show(
@@ -288,7 +295,7 @@ class Card extends StatelessWidget {
                     },
                     icon: const Icon(Icons.remove_shopping_cart_outlined))
               ],
-            ),
+            )
           ],
         ),
       ),
