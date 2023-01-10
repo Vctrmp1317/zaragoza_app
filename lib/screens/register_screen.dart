@@ -3,8 +3,10 @@ import 'dart:io';
 import 'package:cool_alert/cool_alert.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
+
 import 'package:zaragoza_app/providers/add_form_provider.dart';
 import 'package:zaragoza_app/providers/login_form_provider.dart';
 import 'package:zaragoza_app/providers/register_form_provider.dart';
@@ -94,8 +96,8 @@ class _ColorBox extends StatelessWidget {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     return Container(
-      margin: const EdgeInsets.only(top: 50),
-      height: size.height * 0.8,
+      margin: const EdgeInsets.only(top: 30),
+      height: size.height * 0.9,
       decoration: const BoxDecoration(
           boxShadow: [BoxShadow(color: Colors.black, blurRadius: 5)],
           color: Colors.white,
@@ -159,6 +161,7 @@ class _registerForm extends StatefulWidget {
 
 class _registerFormState extends State<_registerForm> {
   bool check = false;
+  String confirmarPassword = '';
   @override
   Widget build(BuildContext context) {
     final addForm = Provider.of<RegisterFormProvider>(context);
@@ -200,100 +203,78 @@ class _registerFormState extends State<_registerForm> {
                 ],
               ),
               TextFormField(
-                  autocorrect: false,
-                  keyboardType: TextInputType.emailAddress,
-                  decoration: const InputDecoration(
-                    focusColor: Colors.black,
-                    hintText: 'Email',
-                    labelText: 'Email',
-                    suffixIcon: Icon(Icons.alternate_email_outlined),
-                    border: UnderlineInputBorder(),
-                  ),
-                  onChanged: (value) => addForm.email = value,
-                  validator: (value) {
-                    String pattern =
-                        r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
-
-                    RegExp regExp = new RegExp(pattern);
-                    return regExp.hasMatch(value ?? '') ? null : 'Insert email';
-                  }),
-              const SizedBox(height: 5),
-              Visibility(
-                visible: !check,
-                child: TextFormField(
-                    autocorrect: false,
-                    keyboardType: TextInputType.emailAddress,
-                    decoration: const InputDecoration(
-                      focusColor: Colors.black,
-                      hintText: 'Nombre',
-                      labelText: 'Nombre',
-                      suffixIcon: Icon(Icons.abc_outlined),
-                      border: UnderlineInputBorder(),
-                    ),
-                    onChanged: (value) => addForm.nombre = value,
-                    validator: ((value) {
-                      return (value != null && value.length >= 1)
-                          ? null
-                          : 'Inserte su nombre';
-                    })),
+                autocorrect: false,
+                keyboardType: TextInputType.emailAddress,
+                decoration: const InputDecoration(
+                  focusColor: Colors.black,
+                  hintText: 'Email',
+                  labelText: 'Email',
+                  suffixIcon: Icon(Icons.alternate_email_outlined),
+                  border: UnderlineInputBorder(),
+                ),
+                onChanged: (value) => addForm.email = value,
               ),
               const SizedBox(height: 5),
               Visibility(
                 visible: !check,
                 child: TextFormField(
-                    autocorrect: false,
-                    keyboardType: TextInputType.emailAddress,
-                    decoration: const InputDecoration(
-                      focusColor: Colors.black,
-                      hintText: 'Apellidos',
-                      labelText: 'Apellidos',
-                      suffixIcon: Icon(Icons.abc_outlined),
-                      border: UnderlineInputBorder(),
-                    ),
-                    onChanged: (value) => addForm.apellidos = value,
-                    validator: ((value) {
-                      return (value != null && value.length >= 1)
-                          ? null
-                          : 'Inserte sus apellidos';
-                    })),
+                  autocorrect: false,
+                  keyboardType: TextInputType.emailAddress,
+                  decoration: const InputDecoration(
+                    focusColor: Colors.black,
+                    hintText: 'Nombre',
+                    labelText: 'Nombre',
+                    suffixIcon: Icon(Icons.abc_outlined),
+                    border: UnderlineInputBorder(),
+                  ),
+                  onChanged: (value) => addForm.nombre = value,
+                ),
+              ),
+              const SizedBox(height: 5),
+              Visibility(
+                visible: !check,
+                child: TextFormField(
+                  autocorrect: false,
+                  keyboardType: TextInputType.emailAddress,
+                  decoration: const InputDecoration(
+                    focusColor: Colors.black,
+                    hintText: 'Apellidos',
+                    labelText: 'Apellidos',
+                    suffixIcon: Icon(Icons.abc_outlined),
+                    border: UnderlineInputBorder(),
+                  ),
+                  onChanged: (value) => addForm.apellidos = value,
+                ),
               ),
               const SizedBox(height: 5),
               Visibility(
                 visible: check,
                 child: TextFormField(
-                    autocorrect: false,
-                    keyboardType: TextInputType.emailAddress,
-                    decoration: const InputDecoration(
-                      focusColor: Colors.black,
-                      hintText: 'Nombre de empresa',
-                      labelText: 'Nombre de empresa',
-                      suffixIcon: Icon(Icons.shopify),
-                      border: UnderlineInputBorder(),
-                    ),
-                    onChanged: (value) => addForm.nombreEmpresa = value,
-                    validator: ((value) {
-                      return (value != null && value.length >= 1)
-                          ? null
-                          : 'Inserte el nombre de la empresa';
-                    })),
-              ),
-              const SizedBox(height: 5),
-              TextFormField(
                   autocorrect: false,
                   keyboardType: TextInputType.emailAddress,
                   decoration: const InputDecoration(
                     focusColor: Colors.black,
-                    hintText: 'Direccion',
-                    labelText: 'Direccion',
-                    suffixIcon: Icon(Icons.location_on),
+                    hintText: 'Nombre de empresa',
+                    labelText: 'Nombre de empresa',
+                    suffixIcon: Icon(Icons.shopify),
                     border: UnderlineInputBorder(),
                   ),
-                  onChanged: (value) => addForm.direccion = value,
-                  validator: ((value) {
-                    return (value != null && value.length >= 1)
-                        ? null
-                        : 'Inserte la direccion';
-                  })),
+                  onChanged: (value) => addForm.nombreEmpresa = value,
+                ),
+              ),
+              const SizedBox(height: 5),
+              TextFormField(
+                autocorrect: false,
+                keyboardType: TextInputType.emailAddress,
+                decoration: const InputDecoration(
+                  focusColor: Colors.black,
+                  hintText: 'Direccion',
+                  labelText: 'Direccion',
+                  suffixIcon: Icon(Icons.location_on),
+                  border: UnderlineInputBorder(),
+                ),
+                onChanged: (value) => addForm.direccion = value,
+              ),
               const SizedBox(height: 5),
               TextFormField(
                 obscureText: true,
@@ -305,11 +286,6 @@ class _registerFormState extends State<_registerForm> {
                     border: UnderlineInputBorder(),
                     suffixIcon: Icon(Icons.password)),
                 onChanged: (value) => addForm.password = value,
-                validator: ((value) {
-                  return (value != null && value.length >= 1)
-                      ? null
-                      : 'Please, enter your password';
-                }),
               ),
               TextFormField(
                 obscureText: true,
@@ -320,12 +296,7 @@ class _registerFormState extends State<_registerForm> {
                     labelText: 'Confirmar Password',
                     border: UnderlineInputBorder(),
                     suffixIcon: Icon(Icons.password)),
-                onChanged: (value) => addForm.password = value,
-                validator: ((value) {
-                  return (value != null && value.length >= 1)
-                      ? null
-                      : 'Please, enter your password';
-                }),
+                onChanged: (value) => confirmarPassword = value,
               ),
               const SizedBox(height: 5),
               SizedBox(
@@ -344,13 +315,10 @@ class _registerFormState extends State<_registerForm> {
                     FocusScope.of(context).requestFocus(FocusNode());
                     if (addForm.isValidForm()) {
                       if (users.containsKey(addForm.email)) {
-                        if (users[addForm.email] == addForm.password) {
-                          Navigator.pushNamedAndRemoveUntil(
-                              context, 'tienda', (route) => false);
-                        }
+                        //TO DO: ALERTA DE EMAIL YA EXISTENTE
+                      } else {
+                        if (addForm.password == confirmarPassword) {}
                       }
-
-                      //Navigator.p ushNamed(context, 'edit');
                     }
                   },
                   // ignore: prefer_const_literals_to_create_immutables

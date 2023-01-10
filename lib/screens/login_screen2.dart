@@ -3,22 +3,28 @@ import 'dart:io';
 import 'package:cool_alert/cool_alert.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_tts/flutter_tts_web.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:zaragoza_app/providers/add_form_provider.dart';
 import 'package:zaragoza_app/providers/login_form_provider.dart';
 import 'package:zaragoza_app/screens/screens.dart';
+import 'package:flutter_tts/flutter_tts.dart';
 
 const users = {
   'dribbble@gmail.com': '12345',
   'hunter@gmail.com': 'hunter',
 };
+final tts = FlutterTts();
 
 class Login2Screen extends StatelessWidget {
   const Login2Screen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    tts.awaitSpeakCompletion(true);
+    tts.speak('Estás en el inicio de sesión');
+
     return Scaffold(
         body: SingleChildScrollView(
       child: Column(
@@ -258,4 +264,12 @@ class _loginFormState extends State<_loginForm> {
           )),
     );
   }
+}
+
+Future<void> speak(String cadena) async {
+  await tts.speak(cadena);
+}
+
+void stop() async {
+  await tts.stop();
 }
