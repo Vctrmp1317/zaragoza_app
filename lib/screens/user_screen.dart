@@ -3,15 +3,20 @@ import 'dart:io';
 import 'package:cool_alert/cool_alert.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_tts/flutter_tts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:zaragoza_app/providers/add_form_provider.dart';
 
-class ShopScreen extends StatelessWidget {
-  const ShopScreen({Key? key}) : super(key: key);
+final tts2 = FlutterTts();
+
+class UserScreen extends StatelessWidget {
+  const UserScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    tts2.awaitSpeakCompletion(true);
+    tts2.speak('Bienvenido estas en la pantalla de inicio');
     return Scaffold(
         body: SingleChildScrollView(
       child: Column(
@@ -22,7 +27,7 @@ class ShopScreen extends StatelessWidget {
           const _dividerLine(),
           const _searchBar(),
           const SizedBox(height: 5),
-          const listProducts()
+          const listProductsUser()
         ],
       ),
     ));
@@ -74,7 +79,7 @@ class _appBar extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 10),
         child: Row(
           children: [
-            const Text('Mi Tienda',
+            const Text('Inicio',
                 style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold)),
             const Spacer(),
             IconButton(
@@ -140,14 +145,14 @@ class __searchBarState extends State<_searchBar> {
   }
 }
 
-class listProducts extends StatefulWidget {
-  const listProducts({super.key});
+class listProductsUser extends StatefulWidget {
+  const listProductsUser({super.key});
 
   @override
-  State<listProducts> createState() => _listProductsState();
+  State<listProductsUser> createState() => _listProductsUserState();
 }
 
-class _listProductsState extends State<listProducts> {
+class _listProductsUserState extends State<listProductsUser> {
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -156,7 +161,7 @@ class _listProductsState extends State<listProducts> {
         height: 550,
         width: 400,
         child: GridView.builder(
-          itemBuilder: ((context, index) => const _Card()),
+          itemBuilder: ((context, index) => const Card()),
           itemCount: 10,
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2, mainAxisExtent: 350, mainAxisSpacing: 30),
@@ -166,8 +171,8 @@ class _listProductsState extends State<listProducts> {
   }
 }
 
-class _Card extends StatelessWidget {
-  const _Card({super.key});
+class Card extends StatelessWidget {
+  const Card({super.key});
 
   @override
   Widget build(BuildContext context) {

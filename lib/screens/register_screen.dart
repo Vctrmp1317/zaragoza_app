@@ -314,7 +314,7 @@ class _registerFormState extends State<_registerForm> {
                   onPressed: () async {
                     FocusScope.of(context).requestFocus(FocusNode());
                     if (addForm.isValidForm()) {
-                      if (users.containsKey(addForm.email)) {
+                      if (users.contains(addForm.email)) {
                         //TO DO: ALERTA DE EMAIL YA EXISTENTE
                       } else {
                         if (addForm.password == confirmarPassword) {}

@@ -1,20 +1,34 @@
-import 'dart:io';
-
 import 'package:cool_alert/cool_alert.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter_tts/flutter_tts_web.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:provider/provider.dart';
-import 'package:zaragoza_app/providers/add_form_provider.dart';
-import 'package:zaragoza_app/providers/login_form_provider.dart';
-import 'package:zaragoza_app/screens/screens.dart';
+
 import 'package:flutter_tts/flutter_tts.dart';
 
-const users = {
-  'dribbble@gmail.com': '12345',
-  'hunter@gmail.com': 'hunter',
-};
+import 'package:provider/provider.dart';
+
+import 'package:zaragoza_app/providers/login_form_provider.dart';
+
+class User {
+  User({
+    required this.email,
+    required this.password,
+    this.name,
+    this.apellidos,
+    this.nombreEmpresa,
+    this.direccion,
+  });
+
+  String email;
+  String password;
+  String? name;
+  String? apellidos;
+  String? nombreEmpresa;
+  String? direccion;
+}
+
+User juan =
+    User(email: 'juan@gmail.com', password: '123456', nombreEmpresa: 'Bresca');
+User luis = User(email: 'luis@gmail.com', password: '123456');
+List<User> users = [juan, luis];
 final tts = FlutterTts();
 
 class Login2Screen extends StatelessWidget {
@@ -239,11 +253,36 @@ class _loginFormState extends State<_loginForm> {
                   onPressed: () async {
                     FocusScope.of(context).requestFocus(FocusNode());
                     if (addForm.isValidForm()) {
-                      if (users.containsKey(addForm.email)) {
-                        if (users[addForm.email] == addForm.password) {
-                          Navigator.pushNamedAndRemoveUntil(
-                              context, 'tienda', (route) => false);
+                      final List<String> emails = [];
+                      for (User u in users) {
+                        emails.add(u.email);
+                      }
+                      if (emails.contains(addForm.email)) {
+                        if (users[users.indexWhere((element) =>
+                                    element.email == addForm.email)]
+                                .password ==
+                            addForm.password) {
+                          if (users[users.indexWhere((element) =>
+                                      element.email == addForm.email)]
+                                  .nombreEmpresa !=
+                              null) {
+                            Navigator.pushNamed(context, 'tienda');
+                          } else {
+                            Navigator.pushNamed(context, 'userscreen');
+                          }
+                        } else {
+                          CoolAlert.show(
+                              context: context,
+                              type: CoolAlertType.error,
+                              title: 'Datos incorrector',
+                              text: 'Email o Password incorrecto');
                         }
+                      } else {
+                        CoolAlert.show(
+                            context: context,
+                            type: CoolAlertType.error,
+                            title: 'Email incorrecto',
+                            text: 'No existe ninguna cuenta con este email');
                       }
 
                       //Navigator.p ushNamed(context, 'edit');
