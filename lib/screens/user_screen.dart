@@ -25,9 +25,16 @@ class UserScreen extends StatelessWidget {
           const SizedBox(height: 52),
           const _appBar(),
           const _dividerLine(),
-          const _searchBar(),
-          const SizedBox(height: 5),
-          const listProductsUser()
+          SingleChildScrollView(
+            child: Column(
+              children: [
+                const _searchBar(),
+                const SizedBox(height: 5),
+                const _fondoImagen(),
+                const ProductsCategoriesUser(),
+              ],
+            ),
+          )
         ],
       ),
     ));
@@ -135,39 +142,72 @@ class __searchBarState extends State<_searchBar> {
         const Spacer(),
         Container(
             margin: const EdgeInsets.only(right: 20),
-            child: IconButton(
-                onPressed: () {
-                  Navigator.pushNamed(context, 'addproduct');
-                },
-                icon: const Icon(Icons.checkroom)))
+            child: IconButton(onPressed: () {}, icon: const Icon(Icons.menu)))
       ],
     );
   }
 }
 
-class listProductsUser extends StatefulWidget {
-  const listProductsUser({super.key});
+class ProductsCategoriesUser extends StatefulWidget {
+  const ProductsCategoriesUser({super.key});
 
   @override
-  State<listProductsUser> createState() => _listProductsUserState();
+  State<ProductsCategoriesUser> createState() => _ProductsCategoriesUserState();
 }
 
-class _listProductsUserState extends State<listProductsUser> {
+class _ProductsCategoriesUserState extends State<ProductsCategoriesUser> {
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Container(
-        height: 550,
+    return Container(
+        margin: EdgeInsets.only(left: 10),
+        height: 450,
         width: 400,
-        child: GridView.builder(
-          itemBuilder: ((context, index) => const Card()),
-          itemCount: 10,
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2, mainAxisExtent: 350, mainAxisSpacing: 30),
-        ),
-      ),
-    );
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              Row(
+                children: [
+                  Column(
+                    children: [
+                      Container(
+                          width: MediaQuery.of(context).size.width * 0.48,
+                          height: 270,
+                          child: const Card())
+                    ],
+                  ),
+                  Column(
+                    children: [
+                      Container(
+                          width: MediaQuery.of(context).size.width * 0.48,
+                          height: 270,
+                          child: const Card())
+                    ],
+                  )
+                ],
+              ),
+              Row(
+                children: [
+                  Column(
+                    children: [
+                      Container(
+                          width: MediaQuery.of(context).size.width * 0.48,
+                          height: 270,
+                          child: const Card())
+                    ],
+                  ),
+                  Column(
+                    children: [
+                      Container(
+                          width: MediaQuery.of(context).size.width * 0.48,
+                          height: 270,
+                          child: const Card())
+                    ],
+                  )
+                ],
+              ),
+            ],
+          ),
+        ));
   }
 }
 
@@ -178,26 +218,12 @@ class Card extends StatelessWidget {
   Widget build(BuildContext context) {
     TextEditingController customController = TextEditingController();
 
-    createAlertDialog(context, customController) {
-      return showDialog(
-          builder: (BuildContext context) {
-            return AlertDialog(
-                title: const Text('Editar prenda',
-                    style:
-                        TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
-                content: SingleChildScrollView(child: const _ColorBox()),
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20)));
-          },
-          context: context);
-    }
-
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Container(
         padding: const EdgeInsets.all(8.0),
         width: 10,
-        height: 330,
+        height: 320,
         decoration: BoxDecoration(
             border: Border.all(color: Colors.black54),
             color: Colors.white,
@@ -229,35 +255,9 @@ class Card extends StatelessWidget {
                   ),
                 ),
               ),
-              Positioned(
-                  right: 0,
-                  child: IconButton(
-                      style: ButtonStyle(
-                          backgroundColor:
-                              MaterialStateProperty.all(Colors.white)),
-                      iconSize: 30,
-                      onPressed: () {
-                        createAlertDialog(context, customController);
-                      },
-                      icon: const Icon(Icons.edit_outlined)))
             ]),
             const SizedBox(
               height: 5,
-            ),
-            Row(
-              // ignore: prefer_const_literals_to_create_immutables
-              children: [
-                const Text('Prenda',
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold))
-              ],
-            ),
-            Row(
-              // ignore: prefer_const_literals_to_create_immutables
-              children: [
-                const Text('€32,00',
-                    style:
-                        TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
-              ],
             ),
             const SizedBox(
               height: 5,
@@ -266,43 +266,25 @@ class Card extends StatelessWidget {
               height: 0.5,
               color: Colors.black54,
             ),
-            Row(
-              // ignore: prefer_const_literals_to_create_immutables
-              children: [
-                const Text('Eliminar producto',
-                    style:
-                        TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
-                const Spacer(),
-              ],
-            ),
-            Row(
-              children: [
-                IconButton(
-                    onPressed: () {
-                      CoolAlert.show(
-                        context: context,
-                        type: CoolAlertType.warning,
-                        title: '¿Deseas eliminar este articulo?',
-
-                        borderRadius: 30,
-                        //loopAnimation: true,
-                        confirmBtnColor: Colors.blueAccent,
-                        confirmBtnText: 'Aceptar',
-                        cancelBtnText: 'Cancelar',
-                        onConfirmBtnTap: () {
-                          Navigator.pop(context);
-                        },
-                        showCancelBtn: true,
-                        onCancelBtnTap: () {
-                          Navigator.pop(context);
-                        },
-                      );
-                    },
-                    icon: const Icon(Icons.remove_shopping_cart_outlined))
-              ],
-            )
           ],
         ),
+      ),
+    );
+  }
+}
+
+class _fondoImagen extends StatelessWidget {
+  const _fondoImagen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const ClipRRect(
+      child: FadeInImage(
+        placeholder: AssetImage('assets/no-image.jpg'),
+        image: AssetImage('assets/no-image.jpg'),
+        width: 350,
+        height: 200,
+        fit: BoxFit.cover,
       ),
     );
   }
@@ -324,202 +306,9 @@ class _ColorBox extends StatelessWidget {
           Container(
             width: 300,
             margin: const EdgeInsets.only(top: 10, left: 10),
-            child: ChangeNotifierProvider(
-              create: (_) => AddFormProvider(),
-              child: _AddForm(),
-            ),
           ),
         ],
       ),
-    );
-  }
-}
-
-class _AddForm extends StatefulWidget {
-  @override
-  State<_AddForm> createState() => _AddFormState();
-}
-
-class _AddFormState extends State<_AddForm> {
-  late String imagenPath = '';
-  @override
-  Widget build(BuildContext context) {
-    final addForm = Provider.of<AddFormProvider>(context);
-    const List<String> list = <String>['S', 'M', 'L', 'XL', 'XXL'];
-    String dropdownValue = list.first;
-    final size = MediaQuery.of(context).size;
-
-    return Container(
-      margin: const EdgeInsets.all(10),
-      padding: const EdgeInsets.all(10),
-      width: double.infinity,
-      height: 610,
-      child: Form(
-          key: addForm.formKey,
-          autovalidateMode: AutovalidateMode.onUserInteraction,
-          child: Column(
-            children: [
-              Stack(
-                children: [
-                  (imagenPath == '')
-                      ? const FadeInImage(
-                          placeholder: AssetImage('assets/no-image.jpg'),
-                          image: AssetImage('assets/no-image.jpg'),
-                          width: 300,
-                          height: 150,
-                          fit: BoxFit.cover,
-                        )
-                      : Image.file(
-                          File(imagenPath),
-                          width: 300,
-                          height: 180,
-                          fit: BoxFit.cover,
-                        ),
-                  //  getImage(imagenPath),
-
-                  Row(
-                    children: [
-                      IconButton(
-                          iconSize: 30,
-                          color: Colors.black,
-                          onPressed: () async {
-                            print(imagenPath);
-                            final picker = ImagePicker();
-
-                            final PickedFile? pickedFile =
-                                await picker.getImage(
-                                    source: ImageSource.camera,
-                                    imageQuality: 100);
-
-                            print('tenemos imagen ' + pickedFile!.path);
-
-                            imagenPath = pickedFile.path;
-
-                            pickedFile.readAsBytes().then((value) {});
-                            print(imagenPath);
-
-                            pickedFile.readAsBytes().then((value) {});
-                            setState(() {});
-                          },
-                          icon: const Icon(Icons.camera_alt_outlined)),
-                      const Spacer(),
-                      IconButton(
-                          iconSize: 30,
-                          color: Colors.black,
-                          onPressed: () async {
-                            final picker = ImagePicker();
-
-                            final PickedFile? pickedFile =
-                                await picker.getImage(
-                                    source: ImageSource.gallery,
-                                    imageQuality: 100);
-
-                            print('tenemos imagen ' + pickedFile!.path);
-
-                            imagenPath = pickedFile.path;
-
-                            pickedFile.readAsBytes().then((value) {});
-
-                            setState(() {});
-                          },
-                          icon: const Icon(Icons.image_outlined))
-                    ],
-                  ),
-                ],
-              ),
-              TextFormField(
-                  autocorrect: false,
-                  keyboardType: TextInputType.emailAddress,
-                  decoration: const InputDecoration(
-                    focusColor: Colors.black,
-                    hintText: 'Tipo de prenda',
-                    labelText: 'Tipo',
-                    suffixIcon: Icon(Icons.checkroom),
-                    border: UnderlineInputBorder(),
-                  ),
-                  onChanged: (value) => addForm.tipo = value,
-                  validator: (value) {}),
-              const SizedBox(height: 10),
-              TextFormField(
-                autocorrect: false,
-                decoration: const InputDecoration(
-                    focusColor: Colors.black,
-                    hintText: 'Color de prenda',
-                    labelText: 'Color',
-                    border: UnderlineInputBorder(),
-                    suffixIcon: Icon(Icons.color_lens)),
-                onChanged: (value) => addForm.color = value,
-              ),
-              const SizedBox(height: 10),
-              DropdownButtonFormField(
-                  icon: const Icon(Icons.accessibility_sharp),
-                  value: dropdownValue,
-                  items: list.map<DropdownMenuItem<String>>((String value) {
-                    return DropdownMenuItem<String>(
-                      value: value,
-                      child: Text(value),
-                    );
-                  }).toList(),
-                  onChanged: (String? value) {
-                    addForm.talla = value!;
-                    dropdownValue = value;
-                  }),
-              const SizedBox(height: 10),
-              TextFormField(
-                autocorrect: false,
-                decoration: const InputDecoration(
-                    focusColor: Colors.black,
-                    hintText: 'Material de la prenda',
-                    labelText: 'Material',
-                    border: UnderlineInputBorder(),
-                    suffixIcon: Icon(Icons.style)),
-                onChanged: (value) => addForm.material = value,
-              ),
-              const SizedBox(height: 10),
-              TextFormField(
-                autocorrect: false,
-                keyboardType: TextInputType.number,
-                inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                decoration: const InputDecoration(
-                    focusColor: Colors.black,
-                    hintText: 'Precio de la prenda',
-                    labelText: 'Precio',
-                    border: UnderlineInputBorder(),
-                    suffixIcon: Icon(Icons.attach_money)),
-                onChanged: (value) => addForm.precio = value as int,
-              ),
-              const SizedBox(height: 10),
-              SizedBox(
-                width: 300,
-                child: ElevatedButton(
-                  style: ButtonStyle(
-                    shape: MaterialStateProperty.all(RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(18.0),
-                    )),
-                    backgroundColor:
-                        MaterialStateProperty.all(Colors.blueAccent[100]),
-                    fixedSize: MaterialStateProperty.all(
-                        const Size(double.infinity, 30)),
-                  ),
-                  onPressed: () async {
-                    FocusScope.of(context).requestFocus(FocusNode());
-                    if (addForm.isValidForm()) {
-                      //Navigator.pushNamed(context, 'edit');
-                    }
-                  },
-                  // ignore: prefer_const_literals_to_create_immutables
-                  child: Row(children: [
-                    const Text(
-                      'Guardar',
-                      style: TextStyle(fontSize: 15),
-                    ),
-                    const Spacer(),
-                    const Icon(Icons.save)
-                  ]),
-                ),
-              ),
-            ],
-          )),
     );
   }
 }
