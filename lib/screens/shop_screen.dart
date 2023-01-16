@@ -13,19 +13,49 @@ class ShopScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        appBar: _appbar(context),
         body: SingleChildScrollView(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const SizedBox(height: 52),
-          const _appBar(),
-          const _dividerLine(),
-          const _searchBar(),
-          const SizedBox(height: 5),
-          const listProducts()
-        ],
-      ),
-    ));
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            // ignore: prefer_const_literals_to_create_immutables
+            children: [
+              const _dividerLine(),
+              const _searchBar(),
+              const SizedBox(height: 5),
+              const listProducts()
+            ],
+          ),
+        ));
+  }
+
+  AppBar _appbar(BuildContext context) {
+    return AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        title: Row(
+          children: [
+            const Text('Tienda',
+                style: TextStyle(
+                    fontSize: 28,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black)),
+            const Spacer(),
+            IconButton(
+              color: Colors.black,
+              icon: const Icon(Icons.manage_accounts),
+              onPressed: () {},
+            ),
+            const SizedBox(width: 8),
+            IconButton(
+              color: Colors.black,
+              onPressed: () {
+                Navigator.pushNamedAndRemoveUntil(
+                    context, 'login', (route) => false);
+              },
+              icon: const Icon(Icons.logout),
+            )
+          ],
+        ));
   }
 }
 
@@ -62,35 +92,6 @@ class _dividerLine extends StatelessWidget {
         ),
       ],
     );
-  }
-}
-
-class _appBar extends StatelessWidget {
-  const _appBar({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 10),
-        child: Row(
-          children: [
-            const Text('Mi Tienda',
-                style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold)),
-            const Spacer(),
-            IconButton(
-              icon: const Icon(Icons.manage_accounts),
-              onPressed: () {},
-            ),
-            const SizedBox(width: 8),
-            IconButton(
-              onPressed: () {
-                Navigator.pushNamedAndRemoveUntil(
-                    context, 'login', (route) => false);
-              },
-              icon: const Icon(Icons.logout),
-            )
-          ],
-        ));
   }
 }
 
@@ -132,7 +133,7 @@ class __searchBarState extends State<_searchBar> {
             margin: const EdgeInsets.only(right: 20),
             child: IconButton(
                 onPressed: () {
-                  Navigator.pushNamed(context, 'addproduct');
+                  Navigator.pushReplacementNamed(context, 'addproduct');
                 },
                 icon: const Icon(Icons.checkroom)))
       ],
@@ -153,7 +154,7 @@ class _listProductsState extends State<listProducts> {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Container(
-        height: 550,
+        height: 600,
         width: 400,
         child: GridView.builder(
           itemBuilder: ((context, index) => const _Card()),

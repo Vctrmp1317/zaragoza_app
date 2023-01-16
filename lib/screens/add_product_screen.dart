@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:http/http.dart';
+
 import 'package:provider/provider.dart';
 import 'package:zaragoza_app/providers/add_form_provider.dart';
 import 'package:image_picker/image_picker.dart';
@@ -13,20 +13,41 @@ class AddProductScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: Stack(children: [
-      const backGroundAuth(),
-      SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+        appBar: _appBar(context),
+        body: Stack(children: [ 
+          const backGroundAuth(),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            // ignore: prefer_const_literals_to_create_immutables
+            children: [
+              const _dividerLine(),
+              const SizedBox(height: 40),
+            ],
+          ),
+        ]));
+  }
+
+  AppBar _appBar(BuildContext context) {
+    return AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        title: Row(
           children: [
-            const SizedBox(height: 52),
-            const _appBar(),
-            const _dividerLine(),
-            const SizedBox(height: 80),
+            const Text('Añadir Producto',
+                style: TextStyle(
+                  fontSize: 28,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black,
+                )),
+            Spacer(),
+            IconButton(
+                onPressed: () {
+                  Navigator.pushNamedAndRemoveUntil(
+                      context, 'tienda', (route) => false);
+                },
+                icon: const Icon(Icons.logout, color: Colors.black)),
           ],
-        ),
-      ),
-    ]));
+        ));
   }
 }
 

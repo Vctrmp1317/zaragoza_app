@@ -18,29 +18,58 @@ class UserScreen extends StatelessWidget {
     tts2.awaitSpeakCompletion(true);
     tts2.speak('Bienvenido estas en la pantalla de inicio');
     return Scaffold(
+        appBar: _appbar(context),
         body: SingleChildScrollView(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const SizedBox(height: 52),
-          const _appBar(),
-          const _dividerLine(),
-          SingleChildScrollView(
-            child: Column(
-              children: [
-                const _searchBar(),
-                const SizedBox(height: 5),
-                const _fondoImagen(),
-                const ProductsCategoriesUser(),
-              ],
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const _dividerLine(),
+              Column(
+                // ignore: prefer_const_literals_to_create_immutables
+                children: [
+                  const _searchBar(),
+                  const SizedBox(height: 5),
+                  const _fondoImagen(),
+                  const ProductsCategoriesUser(),
+                ],
+              )
+            ],
+          ),
+        ));
+  }
+
+  AppBar _appbar(BuildContext context) {
+    return AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        title: Row(
+          children: [
+            const Text('Inicio',
+                style: TextStyle(
+                    fontSize: 28,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black)),
+            const Spacer(),
+            IconButton(
+              color: Colors.black,
+              icon: const Icon(Icons.manage_accounts),
+              onPressed: () {},
             ),
-          )
-        ],
-      ),
-    ));
+            const SizedBox(width: 8),
+            IconButton(
+              color: Colors.black,
+              onPressed: () {
+                Navigator.pushNamedAndRemoveUntil(
+                    context, 'login', (route) => false);
+              },
+              icon: const Icon(Icons.logout),
+            )
+          ],
+        ));
   }
 }
 
+// ignore: camel_case_types
 class _dividerLine extends StatelessWidget {
   const _dividerLine({
     Key? key,
@@ -77,35 +106,7 @@ class _dividerLine extends StatelessWidget {
   }
 }
 
-class _appBar extends StatelessWidget {
-  const _appBar({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 10),
-        child: Row(
-          children: [
-            const Text('Inicio',
-                style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold)),
-            const Spacer(),
-            IconButton(
-              icon: const Icon(Icons.manage_accounts),
-              onPressed: () {},
-            ),
-            const SizedBox(width: 8),
-            IconButton(
-              onPressed: () {
-                Navigator.pushNamedAndRemoveUntil(
-                    context, 'login', (route) => false);
-              },
-              icon: const Icon(Icons.logout),
-            )
-          ],
-        ));
-  }
-}
-
+// ignore: camel_case_types
 class _searchBar extends StatefulWidget {
   const _searchBar({super.key});
 
@@ -113,6 +114,7 @@ class _searchBar extends StatefulWidget {
   State<_searchBar> createState() => __searchBarState();
 }
 
+// ignore: camel_case_types
 class __searchBarState extends State<_searchBar> {
   void updateList(String value) {
     setState(() {});
@@ -124,8 +126,8 @@ class __searchBarState extends State<_searchBar> {
       children: [
         Container(
           margin:
-              const EdgeInsetsDirectional.only(start: 20, top: 10, bottom: 10),
-          height: 40,
+              const EdgeInsetsDirectional.only(start: 20, top: 5, bottom: 5),
+          height: 30,
           width: 250,
           child: TextField(
             onChanged: ((value) => updateList(value)),
@@ -159,60 +161,77 @@ class _ProductsCategoriesUserState extends State<ProductsCategoriesUser> {
   @override
   Widget build(BuildContext context) {
     return Container(
-        margin: EdgeInsets.only(left: 10),
-        height: 450,
+        margin: const EdgeInsets.only(left: 10),
+        height: 400,
         width: 400,
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              Row(
-                children: [
-                  Column(
-                    children: [
-                      Container(
-                          width: MediaQuery.of(context).size.width * 0.48,
-                          height: 270,
-                          child: const Card())
-                    ],
-                  ),
-                  Column(
-                    children: [
-                      Container(
-                          width: MediaQuery.of(context).size.width * 0.48,
-                          height: 270,
-                          child: const Card())
-                    ],
-                  )
-                ],
-              ),
-              Row(
-                children: [
-                  Column(
-                    children: [
-                      Container(
-                          width: MediaQuery.of(context).size.width * 0.48,
-                          height: 270,
-                          child: const Card())
-                    ],
-                  ),
-                  Column(
-                    children: [
-                      Container(
-                          width: MediaQuery.of(context).size.width * 0.48,
-                          height: 270,
-                          child: const Card())
-                    ],
-                  )
-                ],
-              ),
-            ],
-          ),
+        child: Column(
+          children: [
+            Row(
+              children: [
+                Column(
+                  children: [
+                    SizedBox(
+                        width: MediaQuery.of(context).size.width * 0.48,
+                        height: 200,
+                        child: GestureDetector(
+                          child: const Card(
+                            categoria: 'Niño',
+                          ),
+                          onTap: () => {print('categoria')},
+                        ))
+                  ],
+                ),
+                Column(
+                  children: [
+                    SizedBox(
+                        width: MediaQuery.of(context).size.width * 0.48,
+                        height: 200,
+                        child: GestureDetector(
+                          child: const Card2(categoria: 'Hombre'),
+                          onTap: () => {print('categoria')},
+                        ))
+                  ],
+                )
+              ],
+            ),
+            Row(
+              children: [
+                Column(
+                  children: [
+                    SizedBox(
+                        width: MediaQuery.of(context).size.width * 0.48,
+                        height: 200,
+                        child: GestureDetector(
+                          child: const Card3(categoria: 'Mujer'),
+                          onTap: () => {print('categoria')},
+                        ))
+                  ],
+                ),
+                Column(
+                  children: [
+                    SizedBox(
+                        width: MediaQuery.of(context).size.width * 0.48,
+                        height: 200,
+                        child: GestureDetector(
+                          child: const Card4(categoria: 'Destacados'),
+                          onTap: () => {print('categoria')},
+                        ))
+                  ],
+                )
+              ],
+            ),
+          ],
         ));
   }
 }
 
 class Card extends StatelessWidget {
-  const Card({super.key});
+  const Card({
+    super.key,
+    required String categoria,
+  });
+
+  static final String categoria = categoria;
 
   @override
   Widget build(BuildContext context) {
@@ -223,11 +242,11 @@ class Card extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.all(8.0),
         width: 10,
-        height: 320,
+        height: 220,
         decoration: BoxDecoration(
             border: Border.all(color: Colors.black54),
             color: Colors.white,
-            borderRadius: BorderRadius.circular(8),
+            borderRadius: BorderRadius.circular(2),
             // ignore: prefer_const_literals_to_create_immutables
             boxShadow: [
               const BoxShadow(
@@ -244,16 +263,253 @@ class Card extends StatelessWidget {
                   color: Colors.yellow,
                 ),
                 width: 300,
-                height: 200,
-                child: const ClipRRect(
-                  child: FadeInImage(
-                    placeholder: AssetImage('assets/no-image.jpg'),
-                    image: AssetImage('assets/no-image.jpg'),
-                    width: 300,
-                    height: 200,
-                    fit: BoxFit.cover,
+                height: 150,
+                // ignore: prefer_const_literals_to_create_immutables
+                child: Stack(children: [
+                  const ClipRRect(
+                    child: FadeInImage(
+                      placeholder: AssetImage('assets/no-image.jpg'),
+                      image: AssetImage('assets/ropaNino.jpg'),
+                      width: 300,
+                      height: 200,
+                      fit: BoxFit.cover,
+                    ),
                   ),
+                  const Positioned(
+                      top: 2,
+                      left: 5,
+                      child: Text('Niño',
+                          style: TextStyle(
+                              fontSize: 18, backgroundColor: Colors.white38))),
+                ]),
+              ),
+            ]),
+            const SizedBox(
+              height: 5,
+            ),
+            const SizedBox(
+              height: 5,
+            ),
+            Container(
+              height: 0.5,
+              color: Colors.black54,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class Card4 extends StatelessWidget {
+  const Card4({
+    super.key,
+    required String categoria,
+  });
+
+  static final String categoria = categoria;
+
+  @override
+  Widget build(BuildContext context) {
+    TextEditingController customController = TextEditingController();
+
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Container(
+        padding: const EdgeInsets.all(8.0),
+        width: 10,
+        height: 220,
+        decoration: BoxDecoration(
+            border: Border.all(color: Colors.black54),
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(2),
+            // ignore: prefer_const_literals_to_create_immutables
+            boxShadow: [
+              const BoxShadow(
+                color: Colors.black38,
+                blurRadius: 5,
+                offset: Offset(0, 0),
+              )
+            ]),
+        child: Column(
+          children: [
+            Stack(children: [
+              Container(
+                decoration: const BoxDecoration(
+                  color: Colors.yellow,
                 ),
+                width: 300,
+                height: 150,
+                // ignore: prefer_const_literals_to_create_immutables
+                child: Stack(children: [
+                  const ClipRRect(
+                    child: FadeInImage(
+                      placeholder: AssetImage('assets/no-image.jpg'),
+                      image: AssetImage('assets/ropaDestacado.jpg'),
+                      width: 300,
+                      height: 200,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                  const Positioned(
+                      top: 2,
+                      left: 5,
+                      child: Text('Destacado',
+                          style: TextStyle(
+                              fontSize: 18, backgroundColor: Colors.white38))),
+                ]),
+              ),
+            ]),
+            const SizedBox(
+              height: 5,
+            ),
+            const SizedBox(
+              height: 5,
+            ),
+            Container(
+              height: 0.5,
+              color: Colors.black54,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class Card3 extends StatelessWidget {
+  const Card3({
+    super.key,
+    required String categoria,
+  });
+
+  static final String categoria = categoria;
+
+  @override
+  Widget build(BuildContext context) {
+    TextEditingController customController = TextEditingController();
+
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Container(
+        padding: const EdgeInsets.all(8.0),
+        width: 10,
+        height: 220,
+        decoration: BoxDecoration(
+            border: Border.all(color: Colors.black54),
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(2),
+            // ignore: prefer_const_literals_to_create_immutables
+            boxShadow: [
+              const BoxShadow(
+                color: Colors.black38,
+                blurRadius: 5,
+                offset: Offset(0, 0),
+              )
+            ]),
+        child: Column(
+          children: [
+            Stack(children: [
+              Container(
+                decoration: const BoxDecoration(
+                  color: Colors.yellow,
+                ),
+                width: 300,
+                height: 150,
+                // ignore: prefer_const_literals_to_create_immutables
+                child: Stack(children: [
+                  const ClipRRect(
+                    child: FadeInImage(
+                      placeholder: AssetImage('assets/no-image.jpg'),
+                      image: AssetImage('assets/ropaMujer.jpg'),
+                      width: 300,
+                      height: 200,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                  const Positioned(
+                      top: 2,
+                      left: 5,
+                      child: Text('Mujer',
+                          style: TextStyle(
+                              fontSize: 18, backgroundColor: Colors.white38))),
+                ]),
+              ),
+            ]),
+            const SizedBox(
+              height: 5,
+            ),
+            const SizedBox(
+              height: 5,
+            ),
+            Container(
+              height: 0.5,
+              color: Colors.black54,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class Card2 extends StatelessWidget {
+  const Card2({
+    super.key,
+    required String categoria,
+  });
+
+  static final String categoria = categoria;
+
+  @override
+  Widget build(BuildContext context) {
+    TextEditingController customController = TextEditingController();
+
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Container(
+        padding: const EdgeInsets.all(8.0),
+        width: 10,
+        height: 220,
+        decoration: BoxDecoration(
+            border: Border.all(color: Colors.black54),
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(2),
+            // ignore: prefer_const_literals_to_create_immutables
+            boxShadow: [
+              const BoxShadow(
+                color: Colors.black38,
+                blurRadius: 5,
+                offset: Offset(0, 0),
+              )
+            ]),
+        child: Column(
+          children: [
+            Stack(children: [
+              Container(
+                decoration: const BoxDecoration(
+                  color: Colors.yellow,
+                ),
+                width: 300,
+                height: 150,
+                // ignore: prefer_const_literals_to_create_immutables
+                child: Stack(children: [
+                  const ClipRRect(
+                    child: FadeInImage(
+                      placeholder: AssetImage('assets/no-image.jpg'),
+                      image: AssetImage('assets/ropaHombre.jpg'),
+                      width: 300,
+                      height: 200,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                  const Positioned(
+                      top: 2,
+                      left: 5,
+                      child: Text('Hombre',
+                          style: TextStyle(
+                              fontSize: 18, backgroundColor: Colors.white38))),
+                ]),
               ),
             ]),
             const SizedBox(
@@ -281,7 +537,7 @@ class _fondoImagen extends StatelessWidget {
     return const ClipRRect(
       child: FadeInImage(
         placeholder: AssetImage('assets/no-image.jpg'),
-        image: AssetImage('assets/no-image.jpg'),
+        image: AssetImage('assets/image.jpg'),
         width: 350,
         height: 200,
         fit: BoxFit.cover,

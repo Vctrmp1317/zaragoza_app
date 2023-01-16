@@ -36,22 +36,40 @@ class Login2Screen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    tts.awaitSpeakCompletion(true);
-    tts.speak('Estás en el inicio de sesión');
-
     return Scaffold(
+        appBar: _appbar(context),
         body: SingleChildScrollView(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const SizedBox(height: 52),
-          const _appBar(),
-          const _dividerLine(),
-          const SizedBox(height: 5),
-          const _ColorBox()
-        ],
-      ),
-    ));
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            // ignore: prefer_const_literals_to_create_immutables
+            children: [
+              const _dividerLine(),
+              const SizedBox(height: 5),
+              const _ColorBox()
+            ],
+          ),
+        ));
+  }
+
+  AppBar _appbar(BuildContext context) {
+    return AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        title: Row(
+          // ignore: prefer_const_literals_to_create_immutables
+          children: [
+            SizedBox(
+              width: MediaQuery.of(context).size.width * 0.30,
+            ),
+            const Text(
+              'Dress Up',
+              style: TextStyle(
+                  fontSize: 28,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black),
+            ),
+          ],
+        ));
   }
 }
 
@@ -91,26 +109,6 @@ class _dividerLine extends StatelessWidget {
   }
 }
 
-class _appBar extends StatelessWidget {
-  const _appBar({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 10),
-        child: Row(
-          // ignore: prefer_const_literals_to_create_immutables
-          children: [
-            SizedBox(
-              width: MediaQuery.of(context).size.width * 0.30,
-            ),
-            const Text('Dress Up',
-                style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold)),
-          ],
-        ));
-  }
-}
-
 class _ColorBox extends StatelessWidget {
   const _ColorBox({Key? key}) : super(key: key);
 
@@ -118,8 +116,8 @@ class _ColorBox extends StatelessWidget {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     return Container(
-      margin: const EdgeInsets.only(top: 50),
-      height: size.height * 0.8,
+      margin: const EdgeInsets.only(top: 20),
+      height: size.height * 0.835,
       decoration: const BoxDecoration(
           boxShadow: [BoxShadow(color: Colors.black, blurRadius: 5)],
           color: Colors.white,
@@ -187,7 +185,7 @@ class _loginFormState extends State<_loginForm> {
     final addForm = Provider.of<LoginFormProvider>(context);
 
     final size = MediaQuery.of(context).size;
-
+    tts.speak('Estás en el inicio de sesión');
     return Container(
       decoration: BoxDecoration(
           color: const Color.fromARGB(255, 234, 229, 229),
@@ -266,9 +264,10 @@ class _loginFormState extends State<_loginForm> {
                                       element.email == addForm.email)]
                                   .nombreEmpresa !=
                               null) {
-                            Navigator.pushNamed(context, 'tienda');
+                            Navigator.pushReplacementNamed(context, 'tienda');
                           } else {
-                            Navigator.pushNamed(context, 'userscreen');
+                            Navigator.pushReplacementNamed(
+                                context, 'userscreen');
                           }
                         } else {
                           CoolAlert.show(

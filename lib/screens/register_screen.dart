@@ -1,16 +1,12 @@
-import 'dart:io';
-
-import 'package:cool_alert/cool_alert.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'package:flutter_tts/flutter_tts.dart';
 
-import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
-import 'package:zaragoza_app/providers/add_form_provider.dart';
-import 'package:zaragoza_app/providers/login_form_provider.dart';
 import 'package:zaragoza_app/providers/register_form_provider.dart';
 import 'package:zaragoza_app/screens/screens.dart';
+
+final tts3 = FlutterTts();
 
 class RegisterScreen extends StatelessWidget {
   const RegisterScreen({Key? key}) : super(key: key);
@@ -18,18 +14,34 @@ class RegisterScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        appBar: _appbar(context),
         body: SingleChildScrollView(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: const [
-          SizedBox(height: 52),
-          _appBar(),
-          _dividerLine(),
-          SizedBox(height: 5),
-          _ColorBox()
-        ],
-      ),
-    ));
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: const [_dividerLine(), SizedBox(height: 5), _ColorBox()],
+          ),
+        ));
+  }
+
+  AppBar _appbar(BuildContext context) {
+    return AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        title: Row(
+          // ignore: prefer_const_literals_to_create_immutables
+          children: [
+            SizedBox(
+              width: MediaQuery.of(context).size.width * 0.30,
+            ),
+            const Text(
+              'Dress Up',
+              style: TextStyle(
+                  fontSize: 28,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black),
+            ),
+          ],
+        ));
   }
 }
 
@@ -69,26 +81,6 @@ class _dividerLine extends StatelessWidget {
   }
 }
 
-class _appBar extends StatelessWidget {
-  const _appBar({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 10),
-        child: Row(
-          // ignore: prefer_const_literals_to_create_immutables
-          children: [
-            SizedBox(
-              width: MediaQuery.of(context).size.width * 0.30,
-            ),
-            const Text('Dress Up',
-                style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold)),
-          ],
-        ));
-  }
-}
-
 class _ColorBox extends StatelessWidget {
   const _ColorBox({Key? key}) : super(key: key);
 
@@ -96,8 +88,8 @@ class _ColorBox extends StatelessWidget {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     return Container(
-      margin: const EdgeInsets.only(top: 30),
-      height: size.height * 0.9,
+      margin: const EdgeInsets.only(top: 10),
+      height: size.height * 0.848,
       decoration: const BoxDecoration(
           boxShadow: [BoxShadow(color: Colors.black, blurRadius: 5)],
           color: Colors.white,
@@ -162,11 +154,13 @@ class _registerForm extends StatefulWidget {
 class _registerFormState extends State<_registerForm> {
   bool check = false;
   String confirmarPassword = '';
+
   @override
   Widget build(BuildContext context) {
     final addForm = Provider.of<RegisterFormProvider>(context);
 
     final size = MediaQuery.of(context).size;
+    tts3.speak('Estás en la pantalla de registro');
     @override
     void initState() {
       super.initState();
