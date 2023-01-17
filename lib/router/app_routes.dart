@@ -32,6 +32,11 @@ class AppRoutes {
         name: 'User Screen',
         screen: const UserScreen(),
         icon: Icons.account_balance_outlined),
+    MenuOption(
+        route: 'buscar',
+        name: 'Search Screen',
+        screen: const SearchScreen(),
+        icon: Icons.account_balance_outlined),
   ];
 
   static Map<String, Widget Function(BuildContext)> getAppRoutes() {

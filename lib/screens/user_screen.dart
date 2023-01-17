@@ -125,22 +125,17 @@ class __searchBarState extends State<_searchBar> {
     return Row(
       children: [
         Container(
-          margin:
-              const EdgeInsetsDirectional.only(start: 20, top: 5, bottom: 5),
-          height: 30,
-          width: 250,
-          child: TextField(
-            onChanged: ((value) => updateList(value)),
-            decoration: InputDecoration(
-              prefixIcon: const Icon(Icons.search),
-              focusColor: Colors.black87,
-              border: UnderlineInputBorder(
-                  borderRadius: BorderRadius.circular(8.0),
-                  borderSide: const BorderSide(color: Colors.black)),
-              hintText: "Buscar",
-            ),
-          ),
-        ),
+            margin: const EdgeInsetsDirectional.only(start: 10, bottom: 10),
+            height: 30,
+            width: 250,
+            child: Row(children: [
+              IconButton(
+                icon: const Icon(Icons.search),
+                onPressed: () {
+                  Navigator.pushReplacementNamed(context, 'buscar');
+                },
+              ),
+            ])),
         const Spacer(),
         Container(
             margin: const EdgeInsets.only(right: 20),
@@ -263,7 +258,7 @@ class Card extends StatelessWidget {
                   color: Colors.yellow,
                 ),
                 width: 300,
-                height: 150,
+                height: 145,
                 // ignore: prefer_const_literals_to_create_immutables
                 child: Stack(children: [
                   const ClipRRect(
@@ -275,25 +270,15 @@ class Card extends StatelessWidget {
                       fit: BoxFit.cover,
                     ),
                   ),
-                  const Positioned(
-                      top: 2,
-                      left: 5,
-                      child: Text('Niño',
-                          style: TextStyle(
-                              fontSize: 18, backgroundColor: Colors.white38))),
                 ]),
               ),
             ]),
-            const SizedBox(
-              height: 5,
-            ),
-            const SizedBox(
-              height: 5,
-            ),
-            Container(
-              height: 0.5,
-              color: Colors.black54,
-            ),
+            const Positioned(
+                top: 2,
+                left: 5,
+                child: Text('Niño',
+                    style: TextStyle(
+                        fontSize: 18, backgroundColor: Colors.white38))),
           ],
         ),
       ),
@@ -339,7 +324,7 @@ class Card4 extends StatelessWidget {
                   color: Colors.yellow,
                 ),
                 width: 300,
-                height: 150,
+                height: 145,
                 // ignore: prefer_const_literals_to_create_immutables
                 child: Stack(children: [
                   const ClipRRect(
@@ -360,16 +345,12 @@ class Card4 extends StatelessWidget {
                 ]),
               ),
             ]),
-            const SizedBox(
-              height: 5,
-            ),
-            const SizedBox(
-              height: 5,
-            ),
-            Container(
-              height: 0.5,
-              color: Colors.black54,
-            ),
+            const Positioned(
+                top: 2,
+                left: 5,
+                child: Text('Destacado',
+                    style: TextStyle(
+                        fontSize: 18, backgroundColor: Colors.white38))),
           ],
         ),
       ),
@@ -415,7 +396,7 @@ class Card3 extends StatelessWidget {
                   color: Colors.yellow,
                 ),
                 width: 300,
-                height: 150,
+                height: 145,
                 // ignore: prefer_const_literals_to_create_immutables
                 child: Stack(children: [
                   const ClipRRect(
@@ -423,29 +404,18 @@ class Card3 extends StatelessWidget {
                       placeholder: AssetImage('assets/no-image.jpg'),
                       image: AssetImage('assets/ropaMujer.jpg'),
                       width: 300,
-                      height: 200,
+                      height: 180,
                       fit: BoxFit.cover,
                     ),
                   ),
-                  const Positioned(
-                      top: 2,
-                      left: 5,
-                      child: Text('Mujer',
-                          style: TextStyle(
-                              fontSize: 18, backgroundColor: Colors.white38))),
                 ]),
               ),
             ]),
-            const SizedBox(
-              height: 5,
-            ),
-            const SizedBox(
-              height: 5,
-            ),
-            Container(
-              height: 0.5,
-              color: Colors.black54,
-            ),
+            const Positioned(
+                left: 1,
+                child: Text('Mujer',
+                    style: TextStyle(
+                        fontSize: 18, backgroundColor: Colors.white38))),
           ],
         ),
       ),
@@ -491,7 +461,7 @@ class Card2 extends StatelessWidget {
                   color: Colors.yellow,
                 ),
                 width: 300,
-                height: 150,
+                height: 145,
                 // ignore: prefer_const_literals_to_create_immutables
                 child: Stack(children: [
                   const ClipRRect(
@@ -503,25 +473,15 @@ class Card2 extends StatelessWidget {
                       fit: BoxFit.cover,
                     ),
                   ),
-                  const Positioned(
-                      top: 2,
-                      left: 5,
-                      child: Text('Hombre',
-                          style: TextStyle(
-                              fontSize: 18, backgroundColor: Colors.white38))),
                 ]),
               ),
             ]),
-            const SizedBox(
-              height: 5,
-            ),
-            const SizedBox(
-              height: 5,
-            ),
-            Container(
-              height: 0.5,
-              color: Colors.black54,
-            ),
+            const Positioned(
+                top: 2,
+                left: 5,
+                child: Text('Hombre',
+                    style: TextStyle(
+                        fontSize: 18, backgroundColor: Colors.white38))),
           ],
         ),
       ),

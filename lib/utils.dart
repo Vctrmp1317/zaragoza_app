@@ -9,6 +9,7 @@ class Command {
   static const browser2 = 'open';
   static const signIn = 'iniciar sesion';
   static const signUp = 'registrar';
+  static const search = 'buscar';
 }
 
 class Utils {
@@ -22,10 +23,21 @@ class Utils {
 
         goLogin(body: body, context: context);
       }
+      if (text.contains('registro')) {
+        final body =
+            _getTextAfterCommand(text: text, command: Command.browser1);
+
+        goRegistro(body: body, context: context);
+      }
     } else if (text.contains('iniciar sesion')) {
-      //LLAMA A LA API PARA INICIAR SESION
+      final body = _getTextAfterCommand(text: text, command: Command.signIn);
+      signIn(body: body, context: context);
     } else if (text.contains('registrar')) {
-      //LLAMA A LA API PARA REGISTRAR
+      final body = _getTextAfterCommand(text: text, command: Command.signUp);
+      signIn(body: body, context: context);
+    } else if (text.contains('buscar')) {
+      final body = _getTextAfterCommand(text: text, command: Command.signUp);
+      search(body: body, context: context);
     }
   }
 
@@ -47,5 +59,48 @@ class Utils {
     return Navigator.popAndPushNamed(context, 'login');
   }
 
-  static Future signIn({required String body, required context}) async {}
+  static Future goRegistro({required String body, required context}) async {
+    return Navigator.popAndPushNamed(context, 'registro');
+  }
+
+  static Future signIn({required String body, required context}) async {
+    //LLAMA A LA API PARA INICIAR SESION
+    String email;
+    String password;
+    var cadena = [];
+    cadena = body.split('/');
+    email = cadena[0];
+    password = cadena[1];
+  }
+
+  static Future signUp({required String body, required context}) async {
+    //LLAMA A LA API PARA REGISTRAR
+    String email;
+    String? nombre;
+    String? apellidos;
+    String? nombreDeEmpresa;
+    String direccion;
+    String password;
+
+    if (nombreDeEmpresa != null) {
+      var cadena = [];
+      cadena = body.split('/');
+      email = cadena[0];
+      nombreDeEmpresa = cadena[1];
+      direccion = cadena[2];
+      password = cadena[3];
+    } else {
+      var cadena = [];
+      cadena = body.split('/');
+      email = cadena[0];
+      nombre = cadena[1];
+      apellidos = cadena[2];
+      direccion = cadena[3];
+      password = cadena[4];
+    }
+  }
+
+  static Future search({required String body, required context}) async {
+    return Navigator.popAndPushNamed(context, 'buscar');
+  }
 }
