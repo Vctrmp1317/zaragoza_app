@@ -9,6 +9,7 @@ import 'package:provider/provider.dart';
 import 'package:zaragoza_app/providers/add_form_provider.dart';
 
 final tts2 = FlutterTts();
+final _counter = 0;
 
 class UserScreen extends StatelessWidget {
   const UserScreen({Key? key}) : super(key: key);
@@ -50,11 +51,16 @@ class UserScreen extends StatelessWidget {
                     fontWeight: FontWeight.bold,
                     color: Colors.black)),
             const Spacer(),
-            IconButton(
-              color: Colors.black,
-              icon: const Icon(Icons.manage_accounts),
-              onPressed: () {},
-            ),
+            Stack(children: [
+              IconButton(
+                color: Colors.black,
+                icon: const Icon(Icons.shopping_bag),
+                onPressed: () {},
+              ),
+              Positioned(
+                child: Text('$_counter', style: TextStyle(color: Colors.black)),
+              )
+            ]),
             const SizedBox(width: 8),
             IconButton(
               color: Colors.black,
@@ -132,7 +138,7 @@ class __searchBarState extends State<_searchBar> {
               IconButton(
                 icon: const Icon(Icons.search),
                 onPressed: () {
-                  Navigator.pushReplacementNamed(context, 'buscar');
+                  Navigator.pushReplacementNamed(context, 'searchscreen');
                 },
               ),
             ])),

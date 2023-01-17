@@ -10,12 +10,12 @@ class AppRoutes {
     MenuOption(
         route: 'login2',
         name: 'Login Screen',
-        screen: Login2Screen(),
+        screen: const Login2Screen(),
         icon: Icons.account_balance_outlined),
     MenuOption(
         route: 'registro',
         name: 'Registro Screen',
-        screen: RegisterScreen(),
+        screen: const RegisterScreen(),
         icon: Icons.account_balance_outlined),
     MenuOption(
         route: 'tienda',
@@ -33,9 +33,14 @@ class AppRoutes {
         screen: const UserScreen(),
         icon: Icons.account_balance_outlined),
     MenuOption(
-        route: 'buscar',
+        route: 'searchscreen',
         name: 'Search Screen',
         screen: const SearchScreen(),
+        icon: Icons.account_balance_outlined),
+    MenuOption(
+        route: 'shoppingcartscreen',
+        name: 'Shopping Cart Screen',
+        screen: const ShoppingCartScreen(),
         icon: Icons.account_balance_outlined),
   ];
 
@@ -59,6 +64,6 @@ class AppRoutes {
   // };
 
   static Route<dynamic> onGenerateRoute(settings) {
-    return MaterialPageRoute(builder: (context) => Login2Screen());
+    return MaterialPageRoute(builder: (context) => const Login2Screen());
   }
 }

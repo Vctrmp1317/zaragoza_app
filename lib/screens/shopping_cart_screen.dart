@@ -8,21 +8,21 @@ import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:zaragoza_app/providers/add_form_provider.dart';
 
-final ttsSearch = FlutterTts();
-var _counter = 0;
+final ttsShoppingCart = FlutterTts();
+var _counter = 2;
 
-class SearchScreen extends StatefulWidget {
-  const SearchScreen({Key? key}) : super(key: key);
+class ShoppingCartScreen extends StatefulWidget {
+  const ShoppingCartScreen({Key? key}) : super(key: key);
 
   @override
-  State<SearchScreen> createState() => _SearchScreenState();
+  State<ShoppingCartScreen> createState() => _SearchScreenState();
 }
 
-class _SearchScreenState extends State<SearchScreen> {
+class _SearchScreenState extends State<ShoppingCartScreen> {
   @override
   Widget build(BuildContext context) {
-    ttsSearch.awaitSpeakCompletion(true);
-    ttsSearch.speak('Bienvenido en la pantalla de busqueda');
+    ttsShoppingCart.awaitSpeakCompletion(true);
+    ttsShoppingCart.speak('Bienvenido al carrito de compra');
     return Scaffold(
         appBar: _appbar(context),
         body: SingleChildScrollView(
@@ -34,7 +34,7 @@ class _SearchScreenState extends State<SearchScreen> {
                 // ignore: prefer_const_literals_to_create_immutables
                 children: [
                   const SizedBox(height: 5),
-                  const ProductsSearchUser(),
+                  const ProductsShoppingCartUser(),
                 ],
               )
             ],
@@ -50,13 +50,16 @@ class _SearchScreenState extends State<SearchScreen> {
         children: [
           const _searchBar(),
           const Spacer(),
-          IconButton(
-            color: Colors.black,
-            icon: const Icon(Icons.shopping_bag),
-            onPressed: () {
-              Navigator.pushReplacementNamed(context, 'shoppingcartsscreen');
-            },
-          ),
+          Stack(children: [
+            IconButton(
+              color: Colors.black,
+              icon: const Icon(Icons.shopping_bag),
+              onPressed: () {},
+            ),
+            Positioned(
+              child: Text('$_counter', style: TextStyle(color: Colors.black)),
+            )
+          ]),
           const SizedBox(width: 8),
           Container(
             margin: const EdgeInsets.only(top: 20),
@@ -150,14 +153,15 @@ class __searchBarState extends State<_searchBar> {
   }
 }
 
-class ProductsSearchUser extends StatefulWidget {
-  const ProductsSearchUser({super.key});
+class ProductsShoppingCartUser extends StatefulWidget {
+  const ProductsShoppingCartUser({super.key});
 
   @override
-  State<ProductsSearchUser> createState() => _ProductsSearchUserState();
+  State<ProductsShoppingCartUser> createState() =>
+      _ProductsShoppingCartUserState();
 }
 
-class _ProductsSearchUserState extends State<ProductsSearchUser> {
+class _ProductsShoppingCartUserState extends State<ProductsShoppingCartUser> {
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -165,7 +169,7 @@ class _ProductsSearchUserState extends State<ProductsSearchUser> {
       height: 600,
       width: 400,
       child: GridView.builder(
-        itemBuilder: ((context, index) => const CardSearch()),
+        itemBuilder: ((context, index) => const CardShoppingCart()),
         itemCount: 6,
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 2, mainAxisExtent: 300, mainAxisSpacing: 0),
@@ -174,8 +178,8 @@ class _ProductsSearchUserState extends State<ProductsSearchUser> {
   }
 }
 
-class CardSearch extends StatelessWidget {
-  const CardSearch({
+class CardShoppingCart extends StatelessWidget {
+  const CardShoppingCart({
     super.key,
   });
 

@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:zaragoza_app/screens/screens.dart';
 
 class Command {
-  static final all = {browser1, browser2, signIn, signUp};
+  static final all = {browser1, browser2, signIn, signUp, search};
   static const browser1 = 'go to';
   static const browser2 = 'open';
   static const signIn = 'iniciar sesion';
