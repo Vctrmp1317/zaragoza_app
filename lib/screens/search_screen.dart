@@ -54,7 +54,7 @@ class _SearchScreenState extends State<SearchScreen> {
             color: Colors.black,
             icon: const Icon(Icons.shopping_bag),
             onPressed: () {
-              Navigator.pushReplacementNamed(context, 'shoppingcartsscreen');
+              Navigator.pushReplacementNamed(context, 'shoppingcartscreen');
             },
           ),
           const SizedBox(width: 8),

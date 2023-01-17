@@ -9,7 +9,6 @@ import 'package:provider/provider.dart';
 import 'package:zaragoza_app/providers/add_form_provider.dart';
 
 final ttsShoppingCart = FlutterTts();
-var _counter = 2;
 
 class ShoppingCartScreen extends StatefulWidget {
   const ShoppingCartScreen({Key? key}) : super(key: key);
@@ -35,6 +34,68 @@ class _SearchScreenState extends State<ShoppingCartScreen> {
                 children: [
                   const SizedBox(height: 5),
                   const ProductsShoppingCartUser(),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Container(
+                      padding: const EdgeInsets.all(8.0),
+                      width: 300,
+                      height: 120,
+                      decoration: BoxDecoration(
+                          border: Border.all(color: Colors.black54),
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(2),
+                          // ignore: prefer_const_literals_to_create_immutables
+                          boxShadow: [
+                            const BoxShadow(
+                              color: Colors.black38,
+                              blurRadius: 5,
+                              offset: Offset(0, 0),
+                            )
+                          ]),
+                      child: Column(
+                        children: [
+                          Row(
+                            // ignore: prefer_const_literals_to_create_immutables
+                            children: [
+                              const Text('Total en la cesta de compra: ',
+                                  style: TextStyle(fontSize: 17)),
+                              const Spacer(),
+                              const Text('45€', style: TextStyle(fontSize: 17))
+                            ],
+                          ),
+                          Container(
+                              margin: EdgeInsets.only(top: 10, bottom: 10),
+                              height: 1,
+                              width: 300,
+                              color: Colors.black54),
+                          Row(
+                            // ignore: prefer_const_literals_to_create_immutables
+                            children: [
+                              const Text('Total ',
+                                  style: TextStyle(fontSize: 17)),
+                              const Spacer(),
+                              const Text('45€', style: TextStyle(fontSize: 17))
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 30,
+                  ),
+                  ElevatedButton(
+                      style: ButtonStyle(
+                          shadowColor: MaterialStateProperty.all(Colors.black),
+                          side: MaterialStateProperty.all(
+                              BorderSide(color: Colors.black)),
+                          elevation: MaterialStateProperty.all(10),
+                          fixedSize: MaterialStateProperty.all(Size(300, 50)),
+                          backgroundColor:
+                              MaterialStateProperty.all(Colors.white)),
+                      onPressed: () {},
+                      child: Text('Tramitar Compra',
+                          style: TextStyle(fontSize: 18, color: Colors.black)))
                 ],
               )
             ],
@@ -48,18 +109,9 @@ class _SearchScreenState extends State<ShoppingCartScreen> {
       elevation: 0,
       title: Row(
         children: [
-          const _searchBar(),
+          const Text('Carrito',
+              style: TextStyle(color: Colors.black, fontSize: 25)),
           const Spacer(),
-          Stack(children: [
-            IconButton(
-              color: Colors.black,
-              icon: const Icon(Icons.shopping_bag),
-              onPressed: () {},
-            ),
-            Positioned(
-              child: Text('$_counter', style: TextStyle(color: Colors.black)),
-            )
-          ]),
           const SizedBox(width: 8),
           Container(
             margin: const EdgeInsets.only(top: 20),
@@ -165,16 +217,13 @@ class _ProductsShoppingCartUserState extends State<ProductsShoppingCartUser> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.only(left: 10),
-      height: 600,
-      width: 400,
-      child: GridView.builder(
-        itemBuilder: ((context, index) => const CardShoppingCart()),
-        itemCount: 6,
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 2, mainAxisExtent: 300, mainAxisSpacing: 0),
-      ),
-    );
+        margin: const EdgeInsets.only(left: 10),
+        height: 350,
+        width: 400,
+        child: ListView.builder(
+          itemBuilder: ((context, index) => const CardShoppingCart()),
+          itemCount: 6,
+        ));
   }
 }
 
@@ -192,7 +241,7 @@ class CardShoppingCart extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.all(8.0),
         width: 10,
-        height: 220,
+        height: 120,
         decoration: BoxDecoration(
             border: Border.all(color: Colors.black54),
             color: Colors.white,
@@ -207,83 +256,60 @@ class CardShoppingCart extends StatelessWidget {
             ]),
         child: Column(
           children: [
-            Stack(children: [
-              Container(
-                decoration: const BoxDecoration(
-                  color: Colors.yellow,
-                ),
-                width: 300,
-                height: 145,
-                // ignore: prefer_const_literals_to_create_immutables
-                child: Stack(children: [
-                  const ClipRRect(
-                    child: FadeInImage(
-                      placeholder: AssetImage('assets/no-image.jpg'),
-                      image: AssetImage('assets/no-image.jpg'),
-                      width: 300,
-                      height: 200,
-                      fit: BoxFit.cover,
+            Row(
+              children: [
+                Positioned(
+                  left: 2,
+                  child: Container(
+                    decoration: const BoxDecoration(
+                      color: Colors.yellow,
+                    ),
+                    width: 100,
+                    height: 100,
+                    // ignore: prefer_const_literals_to_create_immutables
+                    child: const ClipRRect(
+                      child: FadeInImage(
+                        placeholder: AssetImage('assets/no-image.jpg'),
+                        image: AssetImage('assets/no-image.jpg'),
+                        width: 100,
+                        height: 100,
+                        fit: BoxFit.cover,
+                      ),
                     ),
                   ),
-                ]),
-              ),
-            ]),
-            Container(
-              margin: const EdgeInsets.only(top: 10),
-              height: 50,
-              width: 200,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                // ignore: prefer_const_literals_to_create_immutables
-                children: [
-                  const Text(
-                    'Descripcion',
-                    style: TextStyle(fontSize: 18),
-                  ),
-                  const SizedBox(
-                    height: 5,
-                  ),
-                  const Text(
-                    '45€',
-                    style: TextStyle(fontSize: 18),
-                  )
-                ],
-              ),
-            ),
-            Container(
-              margin: const EdgeInsets.only(top: 5),
-              height: 1,
-              color: Colors.black45,
-              width: 200,
-            ),
-            Container(
-              margin: const EdgeInsets.only(top: 5),
-              height: 50,
-              width: 200,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                // ignore: prefer_const_literals_to_create_immutables
-                children: [
-                  Row(
+                ),
+                Container(
+                    margin: const EdgeInsets.only(left: 5, right: 5),
+                    width: 1,
+                    height: 100,
+                    color: Colors.black),
+                Container(
+                  margin: const EdgeInsets.only(top: 0),
+                  height: 100,
+                  width: 100,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    // ignore: prefer_const_literals_to_create_immutables
                     children: [
-                      GestureDetector(
-                        onTap: () => Navigator.pushReplacementNamed(
-                            context, 'userscreen'),
-                        child: const Text(
-                          'Compra \n Rapida',
-                          style: TextStyle(fontSize: 15),
-                        ),
+                      const Text(
+                        'Descripcion',
+                        style: TextStyle(fontSize: 18),
                       ),
-                      Spacer(),
-                      IconButton(
-                          onPressed: () {
-                            _counter = _counter++;
-                          },
-                          icon: Icon(Icons.add_shopping_cart))
+                      const SizedBox(
+                        height: 5,
+                      ),
+                      const Text(
+                        '45€',
+                        style: TextStyle(fontSize: 18),
+                      ),
+                      const Text(
+                        'Talla XXL',
+                        style: TextStyle(fontSize: 18),
+                      )
                     ],
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           ],
         ),
