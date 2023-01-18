@@ -55,7 +55,9 @@ class UserScreen extends StatelessWidget {
               IconButton(
                 color: Colors.black,
                 icon: const Icon(Icons.shopping_bag),
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.pushReplacementNamed(context, 'shoppingcartscreen');
+                },
               ),
               Positioned(
                 child: Text('$_counter', style: TextStyle(color: Colors.black)),

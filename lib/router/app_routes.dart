@@ -42,6 +42,11 @@ class AppRoutes {
         name: 'Shopping Cart Screen',
         screen: const ShoppingCartScreen(),
         icon: Icons.account_balance_outlined),
+    MenuOption(
+        route: 'orderscreen',
+        name: 'Order Screen',
+        screen: const OrderScreen(),
+        icon: Icons.account_balance_outlined),
   ];
 
   static Map<String, Widget Function(BuildContext)> getAppRoutes() {

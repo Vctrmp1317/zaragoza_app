@@ -64,7 +64,8 @@ class _SearchScreenState extends State<ShoppingCartScreen> {
                             ],
                           ),
                           Container(
-                              margin: EdgeInsets.only(top: 10, bottom: 10),
+                              margin:
+                                  const EdgeInsets.only(top: 10, bottom: 10),
                               height: 1,
                               width: 300,
                               color: Colors.black54),
@@ -81,20 +82,23 @@ class _SearchScreenState extends State<ShoppingCartScreen> {
                       ),
                     ),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 30,
                   ),
                   ElevatedButton(
                       style: ButtonStyle(
                           shadowColor: MaterialStateProperty.all(Colors.black),
                           side: MaterialStateProperty.all(
-                              BorderSide(color: Colors.black)),
+                              const BorderSide(color: Colors.black)),
                           elevation: MaterialStateProperty.all(10),
-                          fixedSize: MaterialStateProperty.all(Size(300, 50)),
+                          fixedSize:
+                              MaterialStateProperty.all(const Size(300, 50)),
                           backgroundColor:
                               MaterialStateProperty.all(Colors.white)),
-                      onPressed: () {},
-                      child: Text('Tramitar Compra',
+                      onPressed: () {
+                        Navigator.pushReplacementNamed(context, 'orderscreen');
+                      },
+                      child: const Text('Tramitar Compra',
                           style: TextStyle(fontSize: 18, color: Colors.black)))
                 ],
               )

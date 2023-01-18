@@ -22,7 +22,8 @@ class _SearchScreenState extends State<SearchScreen> {
   @override
   Widget build(BuildContext context) {
     ttsSearch.awaitSpeakCompletion(true);
-    ttsSearch.speak('Bienvenido en la pantalla de busqueda');
+
+    ttsSearch.speak('Bienvenido estas en la pantalla de busqueda');
     return Scaffold(
         appBar: _appbar(context),
         body: SingleChildScrollView(
@@ -50,12 +51,15 @@ class _SearchScreenState extends State<SearchScreen> {
         children: [
           const _searchBar(),
           const Spacer(),
-          IconButton(
-            color: Colors.black,
-            icon: const Icon(Icons.shopping_bag),
-            onPressed: () {
-              Navigator.pushReplacementNamed(context, 'shoppingcartscreen');
-            },
+          Container(
+            margin: EdgeInsets.only(top: 20),
+            child: IconButton(
+              color: Colors.black,
+              icon: const Icon(Icons.shopping_bag),
+              onPressed: () {
+                Navigator.pushReplacementNamed(context, 'shoppingcartscreen');
+              },
+            ),
           ),
           const SizedBox(width: 8),
           Container(

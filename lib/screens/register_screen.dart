@@ -183,7 +183,7 @@ class _registerFormState extends State<_registerForm> {
             children: [
               Row(
                 children: [
-                  Text(
+                  const Text(
                     'Tienda: ',
                     style: TextStyle(fontSize: 17),
                   ),

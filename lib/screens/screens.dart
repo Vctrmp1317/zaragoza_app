@@ -5,3 +5,4 @@ export '../screens/user_screen.dart';
 export '../screens/register_screen.dart';
 export '../screens/search_screen.dart';
 export '../screens/shopping_cart_screen.dart';
+export '../screens/order_screen.dart';
