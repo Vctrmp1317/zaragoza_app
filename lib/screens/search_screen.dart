@@ -169,7 +169,11 @@ class _ProductsSearchUserState extends State<ProductsSearchUser> {
       height: 600,
       width: 400,
       child: GridView.builder(
-        itemBuilder: ((context, index) => const CardSearch()),
+        itemBuilder: ((context, index) => GestureDetector(
+            onTap: () {
+              Navigator.pushReplacementNamed(context, 'productscreen');
+            },
+            child: const CardSearch())),
         itemCount: 6,
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 2, mainAxisExtent: 300, mainAxisSpacing: 0),

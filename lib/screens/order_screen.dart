@@ -37,7 +37,7 @@ class _OrderScreenState extends State<OrderScreen> {
                 children: [
                   const SizedBox(height: 5),
                   Container(
-                    margin: const EdgeInsets.all(20),
+                    margin: const EdgeInsets.all(30),
                     decoration: BoxDecoration(
                         border: Border.all(color: Colors.black54),
                         color: Colors.white,
@@ -88,7 +88,7 @@ class _OrderScreenState extends State<OrderScreen> {
                     ),
                   ),
                   Container(
-                    margin: const EdgeInsets.all(20),
+                    margin: const EdgeInsets.all(30),
                     decoration: BoxDecoration(
                         border: Border.all(color: Colors.black54),
                         color: Colors.white,
@@ -147,6 +147,9 @@ class _OrderScreenState extends State<OrderScreen> {
                         ))
                       ],
                     ),
+                  ),
+                  const SizedBox(
+                    height: 30,
                   ),
                   ElevatedButton(
                       style: ButtonStyle(

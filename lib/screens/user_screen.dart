@@ -30,7 +30,9 @@ class UserScreen extends StatelessWidget {
                 children: [
                   const _searchBar(),
                   const SizedBox(height: 5),
-                  const _fondoImagen(),
+                  Container(
+                      margin: const EdgeInsets.only(left: 20, right: 20),
+                      child: const _fondoImagen()),
                   const ProductsCategoriesUser(),
                 ],
               )
@@ -60,7 +62,8 @@ class UserScreen extends StatelessWidget {
                 },
               ),
               Positioned(
-                child: Text('$_counter', style: TextStyle(color: Colors.black)),
+                child: Text('$_counter',
+                    style: const TextStyle(color: Colors.black)),
               )
             ]),
             const SizedBox(width: 8),
