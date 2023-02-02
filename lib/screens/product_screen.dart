@@ -41,7 +41,6 @@ class _ProductScreenState extends State<ProductScreen> {
               Column(
                 // ignore: prefer_const_literals_to_create_immutables
                 children: [
-                  const SizedBox(height: 5),
                   const _fondoImagen(),
                   Row(
                     children: [
@@ -105,7 +104,7 @@ class _ProductScreenState extends State<ProductScreen> {
                                             : Colors.greenAccent[100],
                                         border:
                                             Border.all(color: Colors.black)),
-                                    duration: const Duration(milliseconds: 500),
+                                    duration: const Duration(milliseconds: 200),
                                     child: Text(tallas.elementAt(0),
                                         style: const TextStyle(
                                             color: Colors.black)),
@@ -140,7 +139,7 @@ class _ProductScreenState extends State<ProductScreen> {
                                             : Colors.greenAccent[100],
                                         border:
                                             Border.all(color: Colors.black)),
-                                    duration: const Duration(milliseconds: 500),
+                                    duration: const Duration(milliseconds: 200),
                                     child: Text(tallas.elementAt(1),
                                         style: const TextStyle(
                                             color: Colors.black)),
@@ -175,7 +174,7 @@ class _ProductScreenState extends State<ProductScreen> {
                                             : Colors.greenAccent[100],
                                         border:
                                             Border.all(color: Colors.black)),
-                                    duration: const Duration(milliseconds: 500),
+                                    duration: const Duration(milliseconds: 200),
                                     child: Text(tallas.elementAt(2),
                                         style: const TextStyle(
                                             color: Colors.black)),
@@ -214,7 +213,7 @@ class _ProductScreenState extends State<ProductScreen> {
                                             : Colors.greenAccent[100],
                                         border:
                                             Border.all(color: Colors.black)),
-                                    duration: const Duration(milliseconds: 500),
+                                    duration: const Duration(milliseconds: 200),
                                     child: Text(tallas.elementAt(3),
                                         style: const TextStyle(
                                             color: Colors.black)),
@@ -249,7 +248,7 @@ class _ProductScreenState extends State<ProductScreen> {
                                             : Colors.greenAccent[100],
                                         border:
                                             Border.all(color: Colors.black)),
-                                    duration: const Duration(milliseconds: 500),
+                                    duration: const Duration(milliseconds: 200),
                                     child: Text(tallas.elementAt(4),
                                         style: const TextStyle(
                                             color: Colors.black)),
@@ -295,7 +294,7 @@ class _ProductScreenState extends State<ProductScreen> {
 
   AppBar _appbar(BuildContext context) {
     return AppBar(
-        backgroundColor: Colors.transparent,
+        backgroundColor: Colors.black,
         elevation: 0,
         title: Row(
           children: [
@@ -303,7 +302,7 @@ class _ProductScreenState extends State<ProductScreen> {
             const Spacer(),
             Stack(children: [
               IconButton(
-                color: Colors.black,
+                color: Colors.white,
                 icon: const Icon(Icons.shopping_bag),
                 onPressed: () {
                   Navigator.pushReplacementNamed(context, 'shoppingcartscreen');
@@ -316,7 +315,7 @@ class _ProductScreenState extends State<ProductScreen> {
             ]),
             const SizedBox(width: 8),
             IconButton(
-              color: Colors.black,
+              color: Colors.white,
               onPressed: () {
                 Navigator.pushReplacementNamed(context, 'userscreen');
               },
@@ -383,7 +382,7 @@ class __searchBarState extends State<_searchBar> {
     return Row(
       children: [
         IconButton(
-          icon: const Icon(Icons.search, color: Colors.black),
+          icon: const Icon(Icons.search, color: Colors.white),
           onPressed: () {
             Navigator.pushReplacementNamed(context, 'searchscreen');
           },
@@ -403,7 +402,7 @@ class _fondoImagen extends StatelessWidget {
         placeholder: AssetImage('assets/no-image.jpg'),
         image: AssetImage('assets/no-image.jpg'),
         width: double.infinity,
-        height: 300,
+        height: 260,
         fit: BoxFit.cover,
       ),
     );

@@ -1,15 +1,8 @@
 import 'dart:async';
-import 'dart:io';
 
-import 'package:cool_alert/cool_alert.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:provider/provider.dart';
-import 'package:zaragoza_app/providers/add_form_provider.dart';
-import 'package:zaragoza_app/screens/screens.dart';
 
 final ttsOrder = FlutterTts();
 
@@ -31,7 +24,6 @@ class _OrderScreenState extends State<OrderScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const _dividerLine(),
               Column(
                 // ignore: prefer_const_literals_to_create_immutables
                 children: [
@@ -186,18 +178,17 @@ class _OrderScreenState extends State<OrderScreen> {
 
   AppBar _appbar(BuildContext context) {
     return AppBar(
-      backgroundColor: Colors.transparent,
+      backgroundColor: Colors.black,
       elevation: 0,
       title: Row(
         children: [
-          const Text('Carrito',
-              style: TextStyle(color: Colors.black, fontSize: 25)),
+          const Text('Pedido',
+              style: TextStyle(color: Colors.white, fontSize: 25)),
           const Spacer(),
           const SizedBox(width: 8),
           Container(
-            margin: const EdgeInsets.only(top: 20),
             child: IconButton(
-              color: Colors.black,
+              color: Colors.white,
               onPressed: () {
                 Navigator.pushNamedAndRemoveUntil(
                     context, 'userscreen', (route) => false);

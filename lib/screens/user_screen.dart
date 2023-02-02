@@ -24,7 +24,6 @@ class UserScreen extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const _dividerLine(),
               Column(
                 // ignore: prefer_const_literals_to_create_immutables
                 children: [
@@ -43,7 +42,7 @@ class UserScreen extends StatelessWidget {
 
   AppBar _appbar(BuildContext context) {
     return AppBar(
-        backgroundColor: Colors.transparent,
+        backgroundColor: Colors.black,
         elevation: 0,
         title: Row(
           children: [
@@ -51,11 +50,11 @@ class UserScreen extends StatelessWidget {
                 style: TextStyle(
                     fontSize: 28,
                     fontWeight: FontWeight.bold,
-                    color: Colors.black)),
+                    color: Colors.white)),
             const Spacer(),
             Stack(children: [
               IconButton(
-                color: Colors.black,
+                color: Colors.white,
                 icon: const Icon(Icons.shopping_bag),
                 onPressed: () {
                   Navigator.pushReplacementNamed(context, 'shoppingcartscreen');
@@ -68,7 +67,7 @@ class UserScreen extends StatelessWidget {
             ]),
             const SizedBox(width: 8),
             IconButton(
-              color: Colors.black,
+              color: Colors.white,
               onPressed: () {
                 Navigator.pushNamedAndRemoveUntil(
                     context, 'login', (route) => false);

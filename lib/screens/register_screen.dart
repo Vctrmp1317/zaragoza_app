@@ -18,14 +18,14 @@ class RegisterScreen extends StatelessWidget {
         body: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-            children: const [_dividerLine(), SizedBox(height: 5), _ColorBox()],
+            children: const [SizedBox(height: 5), _ColorBox()],
           ),
         ));
   }
 
   AppBar _appbar(BuildContext context) {
     return AppBar(
-        backgroundColor: Colors.transparent,
+        backgroundColor: Colors.black,
         elevation: 0,
         title: Row(
           // ignore: prefer_const_literals_to_create_immutables
@@ -38,7 +38,7 @@ class RegisterScreen extends StatelessWidget {
               style: TextStyle(
                   fontSize: 28,
                   fontWeight: FontWeight.bold,
-                  color: Colors.black),
+                  color: Colors.white),
             ),
           ],
         ));
@@ -89,7 +89,7 @@ class _ColorBox extends StatelessWidget {
     final size = MediaQuery.of(context).size;
     return Container(
       margin: const EdgeInsets.only(top: 10),
-      height: size.height * 0.848,
+      height: size.height * 0.870,
       decoration: const BoxDecoration(
           boxShadow: [BoxShadow(color: Colors.black, blurRadius: 5)],
           color: Colors.white,

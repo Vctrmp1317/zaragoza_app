@@ -42,18 +42,14 @@ class Login2Screen extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             // ignore: prefer_const_literals_to_create_immutables
-            children: [
-              const _dividerLine(),
-              const SizedBox(height: 5),
-              const _ColorBox()
-            ],
+            children: [const SizedBox(height: 5), const _ColorBox()],
           ),
         ));
   }
 
   AppBar _appbar(BuildContext context) {
     return AppBar(
-        backgroundColor: Colors.transparent,
+        backgroundColor: Colors.black,
         elevation: 0,
         title: Row(
           // ignore: prefer_const_literals_to_create_immutables
@@ -66,7 +62,7 @@ class Login2Screen extends StatelessWidget {
               style: TextStyle(
                   fontSize: 28,
                   fontWeight: FontWeight.bold,
-                  color: Colors.black),
+                  color: Colors.white),
             ),
           ],
         ));
@@ -117,7 +113,7 @@ class _ColorBox extends StatelessWidget {
     final size = MediaQuery.of(context).size;
     return Container(
       margin: const EdgeInsets.only(top: 20),
-      height: size.height * 0.835,
+      height: size.height * 0.855,
       decoration: const BoxDecoration(
           boxShadow: [BoxShadow(color: Colors.black, blurRadius: 5)],
           color: Colors.white,

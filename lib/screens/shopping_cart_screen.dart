@@ -28,7 +28,6 @@ class _SearchScreenState extends State<ShoppingCartScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const _dividerLine(),
               Column(
                 // ignore: prefer_const_literals_to_create_immutables
                 children: [
@@ -109,18 +108,18 @@ class _SearchScreenState extends State<ShoppingCartScreen> {
 
   AppBar _appbar(BuildContext context) {
     return AppBar(
-      backgroundColor: Colors.transparent,
+      backgroundColor: Colors.black,
       elevation: 0,
       title: Row(
         children: [
           const Text('Carrito',
-              style: TextStyle(color: Colors.black, fontSize: 25)),
+              style: TextStyle(color: Colors.white, fontSize: 25)),
           const Spacer(),
           const SizedBox(width: 8),
           Container(
-            margin: const EdgeInsets.only(top: 20),
+            margin: const EdgeInsets.only(top: 10),
             child: IconButton(
-              color: Colors.black,
+              color: Colors.white,
               onPressed: () {
                 Navigator.pushNamedAndRemoveUntil(
                     context, 'userscreen', (route) => false);

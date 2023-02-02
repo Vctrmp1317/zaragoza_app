@@ -19,7 +19,6 @@ class ShopScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             // ignore: prefer_const_literals_to_create_immutables
             children: [
-              const _dividerLine(),
               const _searchBar(),
               const SizedBox(height: 5),
               const listProducts()
@@ -30,7 +29,7 @@ class ShopScreen extends StatelessWidget {
 
   AppBar _appbar(BuildContext context) {
     return AppBar(
-        backgroundColor: Colors.transparent,
+        backgroundColor: Colors.black,
         elevation: 0,
         title: Row(
           children: [
@@ -38,16 +37,16 @@ class ShopScreen extends StatelessWidget {
                 style: TextStyle(
                     fontSize: 28,
                     fontWeight: FontWeight.bold,
-                    color: Colors.black)),
+                    color: Colors.white)),
             const Spacer(),
             IconButton(
-              color: Colors.black,
+              color: Colors.white,
               icon: const Icon(Icons.manage_accounts),
               onPressed: () {},
             ),
             const SizedBox(width: 8),
             IconButton(
-              color: Colors.black,
+              color: Colors.white,
               onPressed: () {
                 Navigator.pushNamedAndRemoveUntil(
                     context, 'login', (route) => false);

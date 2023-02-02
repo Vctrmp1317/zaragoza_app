@@ -14,14 +14,13 @@ class AddProductScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: _appBar(context),
-        body: Stack(children: [ 
+        body: Stack(children: [
           const backGroundAuth(),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             // ignore: prefer_const_literals_to_create_immutables
             children: [
-              const _dividerLine(),
-              const SizedBox(height: 40),
+              const SizedBox(height: 20),
             ],
           ),
         ]));
@@ -29,23 +28,22 @@ class AddProductScreen extends StatelessWidget {
 
   AppBar _appBar(BuildContext context) {
     return AppBar(
-        backgroundColor: Colors.transparent,
+        backgroundColor: Colors.black,
         elevation: 0,
         title: Row(
           children: [
             const Text('Añadir Producto',
                 style: TextStyle(
-                  fontSize: 28,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black,
-                )),
+                    fontSize: 28,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white)),
             Spacer(),
             IconButton(
                 onPressed: () {
                   Navigator.pushNamedAndRemoveUntil(
                       context, 'tienda', (route) => false);
                 },
-                icon: const Icon(Icons.logout, color: Colors.black)),
+                icon: const Icon(Icons.logout, color: Colors.white)),
           ],
         ));
   }
