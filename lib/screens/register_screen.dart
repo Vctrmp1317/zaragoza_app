@@ -1,3 +1,4 @@
+import 'package:cool_alert/cool_alert.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 
@@ -5,6 +6,8 @@ import 'package:provider/provider.dart';
 
 import 'package:zaragoza_app/providers/register_form_provider.dart';
 import 'package:zaragoza_app/screens/screens.dart';
+
+import '../services/services.dart';
 
 final tts3 = FlutterTts();
 
@@ -152,7 +155,6 @@ class _registerForm extends StatefulWidget {
 }
 
 class _registerFormState extends State<_registerForm> {
-  bool check = false;
   String confirmarPassword = '';
 
   @override
@@ -164,7 +166,6 @@ class _registerFormState extends State<_registerForm> {
     @override
     void initState() {
       super.initState();
-      check = false;
     }
 
     return Container(
@@ -181,21 +182,6 @@ class _registerFormState extends State<_registerForm> {
           autovalidateMode: AutovalidateMode.onUserInteraction,
           child: Column(
             children: [
-              Row(
-                children: [
-                  const Text(
-                    'Tienda: ',
-                    style: TextStyle(fontSize: 17),
-                  ),
-                  Checkbox(
-                      value: check,
-                      onChanged: (bool? value) {
-                        setState(() {
-                          check = value!;
-                        });
-                      }),
-                ],
-              ),
               TextFormField(
                 autocorrect: false,
                 keyboardType: TextInputType.emailAddress,
@@ -209,53 +195,32 @@ class _registerFormState extends State<_registerForm> {
                 onChanged: (value) => addForm.email = value,
               ),
               const SizedBox(height: 5),
-              Visibility(
-                visible: !check,
-                child: TextFormField(
-                  autocorrect: false,
-                  keyboardType: TextInputType.emailAddress,
-                  decoration: const InputDecoration(
-                    focusColor: Colors.black,
-                    hintText: 'Nombre',
-                    labelText: 'Nombre',
-                    suffixIcon: Icon(Icons.abc_outlined),
-                    border: UnderlineInputBorder(),
-                  ),
-                  onChanged: (value) => addForm.nombre = value,
+              TextFormField(
+                autocorrect: false,
+                keyboardType: TextInputType.emailAddress,
+                decoration: const InputDecoration(
+                  focusColor: Colors.black,
+                  hintText: 'Nombre',
+                  labelText: 'Nombre',
+                  suffixIcon: Icon(Icons.abc_outlined),
+                  border: UnderlineInputBorder(),
                 ),
+                onChanged: (value) => addForm.name = value,
               ),
               const SizedBox(height: 5),
-              Visibility(
-                visible: !check,
-                child: TextFormField(
-                  autocorrect: false,
-                  keyboardType: TextInputType.emailAddress,
-                  decoration: const InputDecoration(
-                    focusColor: Colors.black,
-                    hintText: 'Apellidos',
-                    labelText: 'Apellidos',
-                    suffixIcon: Icon(Icons.abc_outlined),
-                    border: UnderlineInputBorder(),
-                  ),
-                  onChanged: (value) => addForm.apellidos = value,
+              TextFormField(
+                autocorrect: false,
+                keyboardType: TextInputType.emailAddress,
+                decoration: const InputDecoration(
+                  focusColor: Colors.black,
+                  hintText: 'Apellidos',
+                  labelText: 'Apellidos',
+                  suffixIcon: Icon(Icons.abc_outlined),
+                  border: UnderlineInputBorder(),
                 ),
+                onChanged: (value) => addForm.surname = value,
               ),
               const SizedBox(height: 5),
-              Visibility(
-                visible: check,
-                child: TextFormField(
-                  autocorrect: false,
-                  keyboardType: TextInputType.emailAddress,
-                  decoration: const InputDecoration(
-                    focusColor: Colors.black,
-                    hintText: 'Nombre de empresa',
-                    labelText: 'Nombre de empresa',
-                    suffixIcon: Icon(Icons.shopify),
-                    border: UnderlineInputBorder(),
-                  ),
-                  onChanged: (value) => addForm.nombreEmpresa = value,
-                ),
-              ),
               const SizedBox(height: 5),
               TextFormField(
                 autocorrect: false,
@@ -306,12 +271,37 @@ class _registerFormState extends State<_registerForm> {
                         const Size(double.infinity, 30)),
                   ),
                   onPressed: () async {
+                    print('hola');
                     FocusScope.of(context).requestFocus(FocusNode());
+                    //    if (addForm.isValidForm()) {
+                    //    if (users.contains(addForm.email)) {
+                    //TO DO: ALERTA DE EMAIL YA EXISTENTE
+                    //  } else {
+                    //  if (addForm.password == confirmarPassword) {}
+                    //}
+                    // }
+                    final registerService =
+                        Provider.of<RegisterServices>(context);
                     if (addForm.isValidForm()) {
-                      if (users.contains(addForm.email)) {
-                        //TO DO: ALERTA DE EMAIL YA EXISTENTE
+                      final String? errorMessage =
+                          await registerService.postRegister(
+                              addForm.name,
+                              addForm.surname,
+                              addForm.email,
+                              addForm.password,
+                              addForm.cPassword,
+                              addForm.direccion);
+
+                      if (errorMessage == null) {
+                        Navigator.pushReplacementNamed(context, 'login');
                       } else {
-                        if (addForm.password == confirmarPassword) {}
+                        CoolAlert.show(
+                            context: context,
+                            autoCloseDuration: Duration(milliseconds: 100),
+                            type: CoolAlertType.error,
+                            title: 'Datos incorrectos',
+                            text: errorMessage);
+                        tts3.speak(errorMessage);
                       }
                     }
                   },

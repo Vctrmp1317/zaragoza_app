@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../models/menu_option.dart';
+
 import '../screens/screens.dart';
 
 class AppRoutes {
@@ -51,6 +52,11 @@ class AppRoutes {
         route: 'productscreen',
         name: 'Product Screen',
         screen: const ProductScreen(),
+        icon: Icons.account_balance_outlined),
+    MenuOption(
+        route: 'scannerscreen',
+        name: 'Scanner Screen',
+        screen: const ScannerScreen(),
         icon: Icons.account_balance_outlined),
   ];
 

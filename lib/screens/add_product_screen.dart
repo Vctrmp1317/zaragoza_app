@@ -270,14 +270,16 @@ class _AddFormState extends State<_AddForm> {
                                     source: ImageSource.camera,
                                     imageQuality: 100);
 
-                            print('tenemos imagen ' + pickedFile!.path);
+                            if (pickedFile == null) {
+                            } else {
+                              imagenPath = pickedFile.path;
 
-                            imagenPath = pickedFile.path;
+                              pickedFile.readAsBytes().then((value) {});
+                              print(imagenPath);
 
-                            pickedFile.readAsBytes().then((value) {});
-                            print(imagenPath);
+                              pickedFile.readAsBytes().then((value) {});
+                            }
 
-                            pickedFile.readAsBytes().then((value) {});
                             setState(() {});
                           },
                           icon: const Icon(Icons.camera_alt_outlined)),
@@ -293,11 +295,14 @@ class _AddFormState extends State<_AddForm> {
                                     source: ImageSource.gallery,
                                     imageQuality: 100);
 
-                            print('tenemos imagen ' + pickedFile!.path);
+                            //  print('tenemos imagen ' + pickedFile!.path);
 
-                            imagenPath = pickedFile.path;
+                            if (pickedFile == null) {
+                            } else {
+                              imagenPath = pickedFile.path;
 
-                            pickedFile.readAsBytes().then((value) {});
+                              pickedFile.readAsBytes().then((value) {});
+                            }
 
                             setState(() {});
                           },

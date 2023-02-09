@@ -48,6 +48,7 @@ dependencies:
   flutter_tts: ^3.6.3
   fluttertoast: ^8.1.2
   flutter_bounce: ^1.1.0
+  nfc_in_flutter: ^2.0.5
  
  
 dev_dependencies:

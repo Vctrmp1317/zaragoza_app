@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:cool_alert/cool_alert.dart';
 import 'package:flutter/material.dart';
 
@@ -7,28 +9,8 @@ import 'package:provider/provider.dart';
 
 import 'package:zaragoza_app/providers/login_form_provider.dart';
 
-class User {
-  User({
-    required this.email,
-    required this.password,
-    this.name,
-    this.apellidos,
-    this.nombreEmpresa,
-    this.direccion,
-  });
+import '../services/services.dart';
 
-  String email;
-  String password;
-  String? name;
-  String? apellidos;
-  String? nombreEmpresa;
-  String? direccion;
-}
-
-User juan =
-    User(email: 'juan@gmail.com', password: '123456', nombreEmpresa: 'Bresca');
-User luis = User(email: 'luis@gmail.com', password: '123456');
-List<User> users = [juan, luis];
 final tts = FlutterTts();
 
 class Login2Screen extends StatelessWidget {
@@ -36,13 +18,74 @@ class Login2Screen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
     return Scaffold(
         appBar: _appbar(context),
         body: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             // ignore: prefer_const_literals_to_create_immutables
-            children: [const SizedBox(height: 5), const _ColorBox()],
+            children: [
+              const SizedBox(height: 5),
+              Container(
+                margin: const EdgeInsets.only(top: 20),
+                height: size.height * 0.855,
+                decoration: const BoxDecoration(
+                    boxShadow: [BoxShadow(color: Colors.black, blurRadius: 5)],
+                    color: Colors.white,
+                    borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(30),
+                        topRight: Radius.circular(30))),
+                width: double.infinity,
+                child: Stack(
+                  children: [
+                    Positioned(
+                        top: 100,
+                        child: Container(
+                          decoration: const BoxDecoration(
+                              boxShadow: [
+                                BoxShadow(color: Colors.black, blurRadius: 20)
+                              ],
+                              color: Colors.white,
+                              borderRadius: BorderRadius.only(
+                                  topLeft: Radius.circular(30),
+                                  topRight: Radius.circular(30))),
+                        )),
+                    Positioned(
+                      top: 100,
+                      child: Container(
+                        width: 300,
+                        margin: const EdgeInsets.only(top: 10, left: 30),
+                        child: ChangeNotifierProvider(
+                            create: (context) => LoginFormProvider(),
+                            child: _loginForm()),
+                      ),
+                    ),
+                    const Positioned(
+                        left: 50,
+                        top: 50,
+                        child: Text(
+                          'Login',
+                          style: TextStyle(
+                            fontSize: 28,
+                          ),
+                        )),
+                    Positioned(
+                      left: 50,
+                      bottom: 200,
+                      child: TextButton(
+                          onPressed: () {
+                            Navigator.popAndPushNamed(context, 'registro');
+                          },
+                          child: const Text('Registrate',
+                              style: TextStyle(
+                                fontSize: 24,
+                              ))),
+                    )
+                  ],
+                ),
+              ),
+            ],
           ),
         ));
   }
@@ -138,8 +181,125 @@ class _ColorBox extends StatelessWidget {
               width: 300,
               margin: const EdgeInsets.only(top: 10, left: 30),
               child: ChangeNotifierProvider(
-                create: (_) => LoginFormProvider(),
-                child: _loginForm(),
+                create: (context) => LoginFormProvider(),
+                child: Builder(builder: (BuildContext newContext) {
+                  final addForm = Provider.of<LoginFormProvider>(newContext);
+
+                  final size = MediaQuery.of(newContext).size;
+                  tts.speak('Estás en el inicio de sesión');
+                  return Container(
+                    decoration: BoxDecoration(
+                        color: const Color.fromARGB(255, 234, 229, 229),
+                        borderRadius: BorderRadius.circular(20),
+                        boxShadow: [const BoxShadow(color: Colors.black)]),
+                    margin: const EdgeInsets.all(10),
+                    padding: const EdgeInsets.all(10),
+                    width: double.infinity,
+                    height: 250,
+                    child: Form(
+                        key: addForm.formKey,
+                        autovalidateMode: AutovalidateMode.onUserInteraction,
+                        child: Column(
+                          children: [
+                            TextFormField(
+                                autocorrect: false,
+                                keyboardType: TextInputType.emailAddress,
+                                decoration: const InputDecoration(
+                                  focusColor: Colors.black,
+                                  hintText: 'Email',
+                                  labelText: 'Email',
+                                  suffixIcon:
+                                      Icon(Icons.alternate_email_outlined),
+                                  border: UnderlineInputBorder(),
+                                ),
+                                onChanged: (value) => addForm.email = value,
+                                validator: (value) {
+                                  String pattern =
+                                      r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
+
+                                  RegExp regExp = new RegExp(pattern);
+                                  return regExp.hasMatch(value ?? '')
+                                      ? null
+                                      : 'Insert email';
+                                }),
+                            const SizedBox(height: 10),
+                            TextFormField(
+                              obscureText: true,
+                              autocorrect: false,
+                              decoration: const InputDecoration(
+                                  focusColor: Colors.black,
+                                  hintText: 'Password',
+                                  labelText: 'Password',
+                                  border: UnderlineInputBorder(),
+                                  suffixIcon: Icon(Icons.password)),
+                              onChanged: (value) => addForm.password = value,
+                              validator: ((value) {
+                                return (value != null && value.length >= 1)
+                                    ? null
+                                    : 'Please, enter your password';
+                              }),
+                            ),
+                            const SizedBox(height: 10),
+                            SizedBox(
+                              width: 300,
+                              child: ElevatedButton(
+                                style: ButtonStyle(
+                                  shape: MaterialStateProperty.all(
+                                      RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(18.0),
+                                  )),
+                                  backgroundColor: MaterialStateProperty.all(
+                                      Colors.blueAccent[100]),
+                                  fixedSize: MaterialStateProperty.all(
+                                      const Size(double.infinity, 30)),
+                                ),
+                                onPressed: () async {
+                                  FocusScope.of(newContext)
+                                      .requestFocus(FocusNode());
+                                  final loginService =
+                                      Provider.of<LoginServices>(newContext,
+                                          listen: false);
+                                  final userServices =
+                                      Provider.of<UserServices>(newContext,
+                                          listen: false);
+                                  if (addForm.isValidForm()) {
+                                    final String? errorMessage =
+                                        await loginService.postLogin(
+                                            addForm.email, addForm.password);
+                                    if (errorMessage == 'a') {
+                                      Navigator.pushNamed(
+                                          newContext, 'shopscreen');
+                                    } else if (errorMessage == 'u') {
+                                      userServices.loadUser;
+
+                                      Navigator.pushNamed(
+                                          newContext, 'userscreen');
+                                    } else {
+                                      CoolAlert.show(
+                                          context: newContext,
+                                          type: CoolAlertType.error,
+                                          title: 'Datos incorrectos',
+                                          text: 'Email o Password incorrecto');
+                                    }
+                                  }
+
+                                  //Navigator.p ushNamed(newContext, 'edit');
+                                },
+                                // ignore: prefer_const_literals_to_create_immutables
+                                child: Row(children: [
+                                  const Text(
+                                    'Iniciar Sesion',
+                                    style: TextStyle(fontSize: 15),
+                                  ),
+                                  const Spacer(),
+                                  const Icon(Icons.save)
+                                ]),
+                              ),
+                            ),
+                          ],
+                        )),
+                  );
+                }),
               ),
             ),
           ),
@@ -170,12 +330,7 @@ class _ColorBox extends StatelessWidget {
   }
 }
 
-class _loginForm extends StatefulWidget {
-  @override
-  State<_loginForm> createState() => _loginFormState();
-}
-
-class _loginFormState extends State<_loginForm> {
+class _loginForm extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final addForm = Provider.of<LoginFormProvider>(context);
@@ -246,42 +401,30 @@ class _loginFormState extends State<_loginForm> {
                   ),
                   onPressed: () async {
                     FocusScope.of(context).requestFocus(FocusNode());
+                    final loginService =
+                        Provider.of<LoginServices>(context, listen: false);
+                    final userServices =
+                        Provider.of<UserServices>(context, listen: false);
                     if (addForm.isValidForm()) {
-                      final List<String> emails = [];
-                      for (User u in users) {
-                        emails.add(u.email);
-                      }
-                      if (emails.contains(addForm.email)) {
-                        if (users[users.indexWhere((element) =>
-                                    element.email == addForm.email)]
-                                .password ==
-                            addForm.password) {
-                          if (users[users.indexWhere((element) =>
-                                      element.email == addForm.email)]
-                                  .nombreEmpresa !=
-                              null) {
-                            Navigator.pushReplacementNamed(context, 'tienda');
-                          } else {
-                            Navigator.pushReplacementNamed(
-                                context, 'userscreen');
-                          }
-                        } else {
-                          CoolAlert.show(
-                              context: context,
-                              type: CoolAlertType.error,
-                              title: 'Datos incorrector',
-                              text: 'Email o Password incorrecto');
-                        }
+                      final String? errorMessage = await loginService.postLogin(
+                          addForm.email, addForm.password);
+                      if (errorMessage == 'A') {
+                        Navigator.pushNamed(context, 'shopscreen');
+                      } else if (errorMessage == 'U') {
+                        Navigator.pushNamed(context, 'userscreen');
+                        userServices.loadUser;
+
+                        Navigator.pushNamed(context, 'userscreen');
                       } else {
                         CoolAlert.show(
                             context: context,
                             type: CoolAlertType.error,
-                            title: 'Email incorrecto',
-                            text: 'No existe ninguna cuenta con este email');
+                            title: 'Datos incorrectos',
+                            text: 'Email o Password incorrecto');
                       }
-
-                      //Navigator.p ushNamed(context, 'edit');
                     }
+
+                    //Navigator.p ushNamed(context, 'edit');
                   },
                   // ignore: prefer_const_literals_to_create_immutables
                   child: Row(children: [

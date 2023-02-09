@@ -4,9 +4,9 @@ class RegisterFormProvider extends ChangeNotifier {
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
   String email = '';
-  String nombre = '';
-  String apellidos = '';
-  String nombreEmpresa = '';
+  String name = '';
+  String surname = '';
+  String cPassword = '';
   String direccion = '';
   String password = '';
 

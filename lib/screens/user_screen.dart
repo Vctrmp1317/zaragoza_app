@@ -149,7 +149,11 @@ class __searchBarState extends State<_searchBar> {
         const Spacer(),
         Container(
             margin: const EdgeInsets.only(right: 20),
-            child: IconButton(onPressed: () {}, icon: const Icon(Icons.menu)))
+            child: IconButton(
+                onPressed: () {
+                  Navigator.pushReplacementNamed(context, 'scannerscreen');
+                },
+                icon: const Icon(Icons.nfc)))
       ],
     );
   }
