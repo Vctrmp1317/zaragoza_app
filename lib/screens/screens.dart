@@ -7,4 +7,3 @@ export '../screens/search_screen.dart';
 export '../screens/shopping_cart_screen.dart';
 export '../screens/order_screen.dart';
 export '../screens/product_screen.dart';
-export '../screens/scanner_screen.dart';

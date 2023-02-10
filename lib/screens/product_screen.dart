@@ -4,13 +4,12 @@ import 'package:cool_alert/cool_alert.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bounce/flutter_bounce.dart';
-import 'package:flutter_tts/flutter_tts.dart';
+
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:zaragoza_app/providers/add_form_provider.dart';
 import 'package:zaragoza_app/screens/screens.dart';
 
-final ttsProduct = FlutterTts();
 final _counter = 0;
 final tallas = {'XL', 'L', 'M', 'S', 'XS'};
 
@@ -29,9 +28,6 @@ class _ProductScreenState extends State<ProductScreen> {
   bool xs = true;
   @override
   Widget build(BuildContext context) {
-    ttsProduct.awaitSpeakCompletion(true);
-    ttsProduct.speak('Bienvenido a la pantalla del producto');
-
     return Scaffold(
         appBar: _appbar(context),
         body: SingleChildScrollView(

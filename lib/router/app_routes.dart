@@ -53,11 +53,6 @@ class AppRoutes {
         name: 'Product Screen',
         screen: const ProductScreen(),
         icon: Icons.account_balance_outlined),
-    MenuOption(
-        route: 'scannerscreen',
-        name: 'Scanner Screen',
-        screen: const ScannerScreen(),
-        icon: Icons.account_balance_outlined),
   ];
 
   static Map<String, Widget Function(BuildContext)> getAppRoutes() {

@@ -3,12 +3,13 @@ import 'dart:io';
 import 'package:cool_alert/cool_alert.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_tts/flutter_tts.dart';
+
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:zaragoza_app/providers/add_form_provider.dart';
 
-final tts2 = FlutterTts();
+import '../services/services.dart';
+
 final _counter = 0;
 
 class UserScreen extends StatelessWidget {
@@ -16,8 +17,6 @@ class UserScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    tts2.awaitSpeakCompletion(true);
-    tts2.speak('Bienvenido estas en la pantalla de inicio');
     return Scaffold(
         appBar: _appbar(context),
         body: SingleChildScrollView(
@@ -69,6 +68,9 @@ class UserScreen extends StatelessWidget {
             IconButton(
               color: Colors.white,
               onPressed: () {
+                final loginService =
+                    Provider.of<LoginServices>(context, listen: false);
+                loginService.logout();
                 Navigator.pushNamedAndRemoveUntil(
                     context, 'login', (route) => false);
               },

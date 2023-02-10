@@ -1,6 +1,5 @@
 import 'package:cool_alert/cool_alert.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_tts/flutter_tts.dart';
 
 import 'package:provider/provider.dart';
 
@@ -8,8 +7,6 @@ import 'package:zaragoza_app/providers/register_form_provider.dart';
 import 'package:zaragoza_app/screens/screens.dart';
 
 import '../services/services.dart';
-
-final tts3 = FlutterTts();
 
 class RegisterScreen extends StatelessWidget {
   const RegisterScreen({Key? key}) : super(key: key);
@@ -162,7 +159,7 @@ class _registerFormState extends State<_registerForm> {
     final addForm = Provider.of<RegisterFormProvider>(context);
 
     final size = MediaQuery.of(context).size;
-    tts3.speak('Estás en la pantalla de registro');
+
     @override
     void initState() {
       super.initState();
@@ -255,7 +252,7 @@ class _registerFormState extends State<_registerForm> {
                     labelText: 'Confirmar Password',
                     border: UnderlineInputBorder(),
                     suffixIcon: Icon(Icons.password)),
-                onChanged: (value) => confirmarPassword = value,
+                onChanged: (value) => addForm.cPassword = value,
               ),
               const SizedBox(height: 5),
               SizedBox(
@@ -271,7 +268,6 @@ class _registerFormState extends State<_registerForm> {
                         const Size(double.infinity, 30)),
                   ),
                   onPressed: () async {
-                    print('hola');
                     FocusScope.of(context).requestFocus(FocusNode());
                     //    if (addForm.isValidForm()) {
                     //    if (users.contains(addForm.email)) {
@@ -281,7 +277,8 @@ class _registerFormState extends State<_registerForm> {
                     //}
                     // }
                     final registerService =
-                        Provider.of<RegisterServices>(context);
+                        Provider.of<RegisterServices>(context, listen: false);
+
                     if (addForm.isValidForm()) {
                       final String? errorMessage =
                           await registerService.postRegister(
@@ -291,17 +288,15 @@ class _registerFormState extends State<_registerForm> {
                               addForm.password,
                               addForm.cPassword,
                               addForm.direccion);
-
-                      if (errorMessage == null) {
+                      print(errorMessage);
+                      if (errorMessage == 'Usuario registrado correctamente') {
                         Navigator.pushReplacementNamed(context, 'login');
                       } else {
                         CoolAlert.show(
                             context: context,
-                            autoCloseDuration: Duration(milliseconds: 100),
                             type: CoolAlertType.error,
                             title: 'Datos incorrectos',
                             text: errorMessage);
-                        tts3.speak(errorMessage);
                       }
                     }
                   },

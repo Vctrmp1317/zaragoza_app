@@ -29,7 +29,7 @@ class UserServices extends ChangeNotifier {
     String? id = await LoginServices().readId();
 
     notifyListeners();
-    final url = Uri.http(url1, '/api/user/$id');
+    final url = Uri.http(_baseUrl, '/api/user/$id');
     final resp = await http.get(url, headers: {
       HttpHeaders.acceptHeader: 'application/json',
       HttpHeaders.authorizationHeader: 'Bearer $token'

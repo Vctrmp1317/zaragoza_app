@@ -45,10 +45,10 @@ dependencies:
   cool_alert: ^1.1.0
   image_picker: ^0.8.6
   http: ^0.13.5
-  flutter_tts: ^3.6.3
+
   fluttertoast: ^8.1.2
   flutter_bounce: ^1.1.0
-  nfc_in_flutter: ^2.0.5
+
  
  
 dev_dependencies:

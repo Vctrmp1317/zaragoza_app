@@ -1,10 +1,8 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_tts/flutter_tts.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 
-final ttsOrder = FlutterTts();
+import 'package:fluttertoast/fluttertoast.dart';
 
 class OrderScreen extends StatefulWidget {
   const OrderScreen({Key? key}) : super(key: key);
@@ -16,8 +14,6 @@ class OrderScreen extends StatefulWidget {
 class _OrderScreenState extends State<OrderScreen> {
   @override
   Widget build(BuildContext context) {
-    ttsOrder.awaitSpeakCompletion(true);
-    ttsOrder.speak('Estas en la pantalla de trámite de pedido');
     return Scaffold(
         appBar: _appbar(context),
         body: SingleChildScrollView(
@@ -154,7 +150,6 @@ class _OrderScreenState extends State<OrderScreen> {
                           backgroundColor:
                               MaterialStateProperty.all(Colors.white)),
                       onPressed: () {
-                        ttsOrder.speak('Pedido efectuado con exito');
                         Fluttertoast.showToast(
                             msg: "Pedido efectuado con exito",
                             toastLength: Toast.LENGTH_SHORT,

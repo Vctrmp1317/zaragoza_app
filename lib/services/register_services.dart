@@ -6,7 +6,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 
 class RegisterServices extends ChangeNotifier {
-  final String _baseUrl = 'http://127.0.0.1:8000';
+  final String _baseUrl = '127.0.0.1:8000';
 
   final storage = const FlutterSecureStorage();
 
@@ -14,6 +14,7 @@ class RegisterServices extends ChangeNotifier {
 
   postRegister(String name, String surname, String email, String password,
       String cPassword, String direccion) async {
+    print(cPassword);
     final url = Uri.http(_baseUrl, '/api/register', {
       'name': name,
       'surname': surname,
@@ -27,21 +28,21 @@ class RegisterServices extends ChangeNotifier {
 
     String resp = '';
     final Map<String, dynamic> register = json.decode(response.body);
-    if (register.containsValue(true)) {
-      register.forEach((key, value) {
-        if (key == 'data') {
-          String? msg = '';
-          msg = 'Usuario registrado correctamente';
-          resp = msg;
-        }
-      });
-    } else {
-      String? error = '';
+    print(register);
+    register.forEach((key, value) {
+      if (register.containsKey('success')) {
+        String? msg = '';
+        msg = 'Usuario registrado correctamente';
+        resp = msg;
+      } else {
+        String? error = '';
 
-      error = 'Error al registrarse, ya existe una cuenta con ese email';
+        error = 'Error al registrarse, ya existe una cuenta con ese email';
 
-      resp = error;
-    }
+        resp = error;
+      }
+    });
+
     return resp;
   }
 

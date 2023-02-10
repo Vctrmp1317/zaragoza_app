@@ -17,8 +17,8 @@ class LoginServices extends ChangeNotifier {
   LoginServices();
 
   postLogin(String email, String password) async {
-    final url =
-        Uri.http(url1, '/api/login', {'email': email, 'password': password});
+    final url = Uri.http(
+        _baseUrl, '/api/login', {'email': email, 'password': password});
 
     final response = await http
         .post(url, headers: {HttpHeaders.acceptHeader: 'application/json'});
@@ -27,9 +27,9 @@ class LoginServices extends ChangeNotifier {
     String error;
     var resp;
     final Map<String, dynamic> login = json.decode(response.body);
-
+    print(login);
     login.forEach((key, value) {
-      if (login.containsKey('token')) {
+      if (login.containsKey('success')) {
         storage.write(key: 'token', value: value['token']);
         storage.write(key: 'id', value: value['id'].toString());
         type = value['tipo'];

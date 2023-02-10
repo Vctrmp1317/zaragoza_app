@@ -3,12 +3,11 @@ import 'dart:io';
 import 'package:cool_alert/cool_alert.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_tts/flutter_tts.dart';
+
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:zaragoza_app/providers/add_form_provider.dart';
 
-final ttsSearch = FlutterTts();
 var _counter = 0;
 
 class SearchScreen extends StatefulWidget {
@@ -21,9 +20,6 @@ class SearchScreen extends StatefulWidget {
 class _SearchScreenState extends State<SearchScreen> {
   @override
   Widget build(BuildContext context) {
-    ttsSearch.awaitSpeakCompletion(true);
-
-    ttsSearch.speak('Bienvenido estas en la pantalla de busqueda');
     return Scaffold(
         appBar: _appbar(context),
         body: SingleChildScrollView(

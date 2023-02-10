@@ -1,17 +1,15 @@
 // ignore_for_file: use_build_context_synchronously
 
+import 'dart:math';
+
 import 'package:cool_alert/cool_alert.dart';
 import 'package:flutter/material.dart';
-
-import 'package:flutter_tts/flutter_tts.dart';
 
 import 'package:provider/provider.dart';
 
 import 'package:zaragoza_app/providers/login_form_provider.dart';
 
 import '../services/services.dart';
-
-final tts = FlutterTts();
 
 class Login2Screen extends StatelessWidget {
   const Login2Screen({Key? key}) : super(key: key);
@@ -186,7 +184,7 @@ class _ColorBox extends StatelessWidget {
                   final addForm = Provider.of<LoginFormProvider>(newContext);
 
                   final size = MediaQuery.of(newContext).size;
-                  tts.speak('Estás en el inicio de sesión');
+
                   return Container(
                     decoration: BoxDecoration(
                         color: const Color.fromARGB(255, 234, 229, 229),
@@ -336,7 +334,7 @@ class _loginForm extends StatelessWidget {
     final addForm = Provider.of<LoginFormProvider>(context);
 
     final size = MediaQuery.of(context).size;
-    tts.speak('Estás en el inicio de sesión');
+
     return Container(
       decoration: BoxDecoration(
           color: const Color.fromARGB(255, 234, 229, 229),
@@ -408,8 +406,9 @@ class _loginForm extends StatelessWidget {
                     if (addForm.isValidForm()) {
                       final String? errorMessage = await loginService.postLogin(
                           addForm.email, addForm.password);
+                      print(errorMessage);
                       if (errorMessage == 'A') {
-                        Navigator.pushNamed(context, 'shopscreen');
+                        Navigator.pushNamed(context, 'tienda');
                       } else if (errorMessage == 'U') {
                         Navigator.pushNamed(context, 'userscreen');
                         userServices.loadUser;
@@ -441,12 +440,4 @@ class _loginForm extends StatelessWidget {
           )),
     );
   }
-}
-
-Future<void> speak(String cadena) async {
-  await tts.speak(cadena);
-}
-
-void stop() async {
-  await tts.stop();
 }
