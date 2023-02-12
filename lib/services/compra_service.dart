@@ -43,4 +43,33 @@ class CompraServices extends ChangeNotifier {
     }
     return resp;
   }
+
+  confirmCompra() async {
+    String? token = await LoginServices().readToken();
+    int? idCliente = int.parse(await LoginServices().readId());
+    isLoading = true;
+
+    final url = Uri.http(
+      _baseUrl,
+      '/api/compras/confirmar/$idCliente',
+    );
+    final response = await http.patch(url, headers: {
+      HttpHeaders.acceptHeader: 'application/json',
+      HttpHeaders.authorizationHeader: 'Bearer $token'
+    });
+
+    final Map<String, dynamic> articulossMap = json.decode(response.body);
+
+    String resp;
+    if (articulossMap.containsKey("Compras")) {
+      resp = 'Pedido realizado correctamente';
+    } else {
+      String? error = '';
+
+      error = 'Error to add';
+
+      resp = error;
+    }
+    return resp;
+  }
 }

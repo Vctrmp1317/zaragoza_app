@@ -21,6 +21,7 @@ class DataArticulo {
 class Articulo {
   int? id;
   String? modelo;
+  String? talla;
   String? marca;
   String? tipo;
   String? genero;
@@ -38,6 +39,7 @@ class Articulo {
   Articulo(
       {this.id,
       this.modelo,
+      this.talla,
       this.marca,
       this.tipo,
       this.genero,
@@ -55,6 +57,7 @@ class Articulo {
   Articulo.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     modelo = json['modelo'];
+    talla = json['talla'];
     marca = json['marca'];
     tipo = json['tipo'];
     genero = json['genero'];
@@ -71,9 +74,10 @@ class Articulo {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['id'] = this.id;
     data['modelo'] = this.modelo;
+    data['talla'] = this.talla;
     data['marca'] = this.marca;
     data['tipo'] = this.tipo;
     data['genero'] = this.genero;

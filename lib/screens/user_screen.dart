@@ -199,7 +199,10 @@ class _ProductsCategoriesUserState extends State<ProductsCategoriesUser> {
                         height: 200,
                         child: GestureDetector(
                           child: const Card2(categoria: 'Hombre'),
-                          onTap: () => {print('categoria')},
+                          onTap: () => {
+                            Navigator.pushReplacementNamed(
+                                context, 'manshopscreen')
+                          },
                         ))
                   ],
                 )
@@ -214,7 +217,10 @@ class _ProductsCategoriesUserState extends State<ProductsCategoriesUser> {
                         height: 200,
                         child: GestureDetector(
                           child: const Card3(categoria: 'Mujer'),
-                          onTap: () => {print('categoria')},
+                          onTap: () => {
+                            Navigator.pushReplacementNamed(
+                                context, 'womanshopscreen')
+                          },
                         ))
                   ],
                 ),

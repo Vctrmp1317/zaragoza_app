@@ -7,3 +7,5 @@ export '../screens/search_screen.dart';
 export '../screens/shopping_cart_screen.dart';
 export '../screens/order_screen.dart';
 export '../screens/product_screen.dart';
+export '../screens/mancloth_screen.dart';
+export '../screens/womancloth_screen.dart';

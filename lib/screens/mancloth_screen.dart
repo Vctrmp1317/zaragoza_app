@@ -13,10 +13,10 @@ import '../models/models.dart';
 import '../services/services.dart';
 
 var _counter = 0;
-late int idArticulo = 0;
+late int idArticuloHombre = 0;
 
-class SearchScreen extends StatelessWidget {
-  const SearchScreen({Key? key}) : super(key: key);
+class ManClothScreen extends StatelessWidget {
+  const ManClothScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +37,7 @@ class SearchScreen extends StatelessWidget {
                     children: [
                       const SizedBox(height: 5),
                       // const ProductsSearchUser(),
-                      listProducts1()
+                      const manProducts1()
                     ],
                   )
                 ],
@@ -54,7 +54,13 @@ class SearchScreen extends StatelessWidget {
           const _searchBar(),
           const Spacer(),
           Container(
-            margin: EdgeInsets.only(top: 20),
+              margin: const EdgeInsets.only(top: 20),
+              child: const Text(
+                'Ropa de Hombre',
+                style: TextStyle(fontSize: 16),
+              )),
+          Container(
+            margin: const EdgeInsets.only(top: 20),
             child: IconButton(
               color: Colors.black,
               icon: const Icon(Icons.shopping_bag),
@@ -156,21 +162,21 @@ class __searchBarState extends State<_searchBar> {
   }
 }
 
-class listProducts1 extends StatefulWidget {
-  const listProducts1({super.key});
+class manProducts1 extends StatefulWidget {
+  const manProducts1({super.key});
 
   @override
-  State<listProducts1> createState() => _listProductsState();
+  State<manProducts1> createState() => _listProductsState();
 }
 
-class _listProductsState extends State<listProducts1> {
+class _listProductsState extends State<manProducts1> {
   List<Articulos> articulos = [];
   final articulosService = ArticulosServices();
 
   Future refresh() async {
     setState(() => articulos.clear());
 
-    await articulosService.getArticulos();
+    await articulosService.getArticulosGenero('Hombre');
 
     setState(() {
       articulos = articulosService.articulos;
@@ -196,13 +202,11 @@ class _listProductsState extends State<listProducts1> {
 
             return GestureDetector(
               onTap: () {
-                final articuloService =
-                    Provider.of<ArticuloService>(context, listen: false);
+                ArticuloService().addVistaArticulo;
                 setState(() {
-                  idArticulo = articulos[index].id!;
-                  articuloService.addVistaArticulo(idArticulo);
+                  idArticuloHombre = articulos[index].id!;
 
-                  articulosService.loadArticulo(idArticulo);
+                  articulosService.loadArticulo(idArticuloHombre);
                 });
                 Navigator.pushReplacementNamed(context, 'productscreen');
               },
@@ -313,7 +317,7 @@ class _listProductsState extends State<listProducts1> {
                               style: TextStyle(fontSize: 15),
                             ),
                           ),
-                          Spacer(),
+                          const Spacer(),
                           IconButton(
                               onPressed: () async {
                                 final compraService =
@@ -346,7 +350,7 @@ class _listProductsState extends State<listProducts1> {
                                   },
                                 );
                               },
-                              icon: Icon(Icons.add_shopping_cart))
+                              icon: const Icon(Icons.add_shopping_cart))
                         ],
                       ),
                     ],
@@ -358,120 +362,6 @@ class _listProductsState extends State<listProducts1> {
           itemCount: articulos.length,
           gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2, mainAxisExtent: 350, mainAxisSpacing: 30),
-        ),
-      ),
-    );
-  }
-}
-
-class CardSearch extends StatelessWidget {
-  const CardSearch({
-    super.key,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    TextEditingController customController = TextEditingController();
-
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Container(
-        padding: const EdgeInsets.all(8.0),
-        width: 10,
-        height: 220,
-        decoration: BoxDecoration(
-            border: Border.all(color: Colors.black54),
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(2),
-            // ignore: prefer_const_literals_to_create_immutables
-            boxShadow: [
-              const BoxShadow(
-                color: Colors.black38,
-                blurRadius: 5,
-                offset: Offset(0, 0),
-              )
-            ]),
-        child: Column(
-          children: [
-            Stack(children: [
-              Container(
-                decoration: const BoxDecoration(
-                  color: Colors.yellow,
-                ),
-                width: 300,
-                height: 145,
-                // ignore: prefer_const_literals_to_create_immutables
-                child: Stack(children: [
-                  const ClipRRect(
-                    child: FadeInImage(
-                      placeholder: AssetImage('assets/no-image.jpg'),
-                      image: AssetImage('assets/no-image.jpg'),
-                      width: 300,
-                      height: 200,
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                ]),
-              ),
-            ]),
-            Container(
-              margin: const EdgeInsets.only(top: 10),
-              height: 50,
-              width: 200,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                // ignore: prefer_const_literals_to_create_immutables
-                children: [
-                  const Text(
-                    'Descripcion',
-                    style: TextStyle(fontSize: 18),
-                  ),
-                  const SizedBox(
-                    height: 5,
-                  ),
-                  const Text(
-                    '45€',
-                    style: TextStyle(fontSize: 18),
-                  )
-                ],
-              ),
-            ),
-            Container(
-              margin: const EdgeInsets.only(top: 5),
-              height: 1,
-              color: Colors.black45,
-              width: 200,
-            ),
-            Container(
-              margin: const EdgeInsets.only(top: 5),
-              height: 50,
-              width: 200,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                // ignore: prefer_const_literals_to_create_immutables
-                children: [
-                  Row(
-                    children: [
-                      GestureDetector(
-                        onTap: () => Navigator.pushReplacementNamed(
-                            context, 'userscreen'),
-                        child: const Text(
-                          'Compra \n Rapida',
-                          style: TextStyle(fontSize: 15),
-                        ),
-                      ),
-                      Spacer(),
-                      IconButton(
-                          onPressed: () {
-                            _counter = _counter++;
-                          },
-                          icon: Icon(Icons.add_shopping_cart))
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          ],
         ),
       ),
     );

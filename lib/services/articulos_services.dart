@@ -47,6 +47,34 @@ class ArticulosServices extends ChangeNotifier {
     return articulos;
   }
 
+  getArticulosGenero(String genero) async {
+    String? token = await LoginServices().readToken();
+    isLoading = true;
+
+    notifyListeners();
+    final url = Uri.http(_baseUrl, '/api/articulos/genero/$genero');
+    final response = await http.get(url, headers: {
+      HttpHeaders.acceptHeader: 'application/json',
+      HttpHeaders.authorizationHeader: 'Bearer $token'
+    });
+
+    final Map<String, dynamic> articulossMap = json.decode(response.body);
+
+    articulossMap.forEach((key, value) {
+      if (articulossMap.containsKey('Articulos')) {
+        final List<dynamic> articulosMap1 = value;
+        for (int i = 0; i < articulosMap1.length; i++) {
+          final tempArticulo = Articulos.fromJson(articulosMap1[i]);
+
+          articulos.add(tempArticulo);
+        }
+      }
+    });
+    isLoading = false;
+    notifyListeners();
+    return articulos;
+  }
+
   Future loadArticulo(int id) async {
     String? token = await LoginServices().readToken();
     storage.write(key: 'id', value: id.toString());

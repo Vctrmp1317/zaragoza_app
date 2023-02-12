@@ -16,6 +16,7 @@ import '../services/services.dart';
 
 final _counter = 0;
 final tallas = {'XL', 'L', 'M', 'S', 'XS'};
+late String talla = '';
 
 class ProductScreen extends StatefulWidget {
   const ProductScreen({Key? key}) : super(key: key);
@@ -134,6 +135,7 @@ class _ProductScreenState extends State<ProductScreen> {
                                       ),
                                       onTap: () {
                                         setState(() {
+                                          talla = tallas.elementAt(0);
                                           xl = false;
                                           l = true;
                                           m = true;
@@ -172,6 +174,7 @@ class _ProductScreenState extends State<ProductScreen> {
                                       ),
                                       onTap: () {
                                         setState(() {
+                                          talla = tallas.elementAt(1);
                                           xl = true;
                                           l = false;
                                           m = true;
@@ -210,6 +213,7 @@ class _ProductScreenState extends State<ProductScreen> {
                                       ),
                                       onTap: () {
                                         setState(() {
+                                          talla = tallas.elementAt(2);
                                           xl = true;
                                           l = true;
                                           m = false;
@@ -252,6 +256,7 @@ class _ProductScreenState extends State<ProductScreen> {
                                       ),
                                       onTap: () {
                                         setState(() {
+                                          talla = tallas.elementAt(3);
                                           xl = true;
                                           l = true;
                                           m = true;
@@ -290,6 +295,7 @@ class _ProductScreenState extends State<ProductScreen> {
                                       ),
                                       onTap: () {
                                         setState(() {
+                                          talla = tallas.elementAt(4);
                                           xl = true;
                                           l = true;
                                           m = true;

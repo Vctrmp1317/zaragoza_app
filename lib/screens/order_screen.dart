@@ -1,8 +1,14 @@
 import 'dart:async';
 
+import 'package:cool_alert/cool_alert.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:provider/provider.dart';
+import 'package:zaragoza_app/services/services.dart';
+
+import '../models/models.dart';
 
 class OrderScreen extends StatefulWidget {
   const OrderScreen({Key? key}) : super(key: key);
@@ -12,163 +18,202 @@ class OrderScreen extends StatefulWidget {
 }
 
 class _OrderScreenState extends State<OrderScreen> {
+  final userService = UserServices();
+  DataUser user = UserServices().selectedUser;
+  Future refresh() async {
+    await userService.loadUser();
+
+    setState(() {
+      user = userService.selectedUser;
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    refresh();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: _appbar(context),
-        body: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Column(
-                // ignore: prefer_const_literals_to_create_immutables
+    return userService.isLoading
+        ? const Center(
+            child: SpinKitWave(color: Color.fromRGBO(0, 153, 153, 1), size: 50))
+        : Scaffold(
+            appBar: _appbar(context),
+            body: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const SizedBox(height: 5),
-                  Container(
-                    margin: const EdgeInsets.all(30),
-                    decoration: BoxDecoration(
-                        border: Border.all(color: Colors.black54),
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(2),
-                        // ignore: prefer_const_literals_to_create_immutables
-                        boxShadow: [
-                          const BoxShadow(
-                            color: Colors.black38,
-                            blurRadius: 5,
-                            offset: Offset(0, 0),
-                          )
-                        ]),
-                    width: 300,
-                    height: 200,
-                    padding: const EdgeInsets.all(8.0),
-                    child: Column(
-                      children: [
-                        Row(
-                          // ignore: prefer_const_literals_to_create_immutables
+                  Column(
+                    // ignore: prefer_const_literals_to_create_immutables
+                    children: [
+                      const SizedBox(height: 5),
+                      Container(
+                        margin: const EdgeInsets.all(30),
+                        decoration: BoxDecoration(
+                            border: Border.all(color: Colors.black54),
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(2),
+                            // ignore: prefer_const_literals_to_create_immutables
+                            boxShadow: [
+                              const BoxShadow(
+                                color: Colors.black38,
+                                blurRadius: 5,
+                                offset: Offset(0, 0),
+                              )
+                            ]),
+                        width: 300,
+                        height: 200,
+                        padding: const EdgeInsets.all(8.0),
+                        child: Column(
                           children: [
-                            const Text('Mis direcciones',
-                                style: TextStyle(fontSize: 18)),
-                          ],
-                        ),
-                        Container(
-                            height: 1,
-                            width: 300,
-                            color: Colors.black54,
-                            margin: const EdgeInsets.only(top: 10, bottom: 10)),
-                        Row(
-                          // ignore: prefer_const_literals_to_create_immutables
-                          children: [
-                            const Text('Calle Hernan Cortes Nº20',
-                                style: TextStyle(fontSize: 18)),
-                          ],
-                        ),
-                        const SizedBox(
-                          height: 5,
-                        ),
-                        Row(
-                          // ignore: prefer_const_literals_to_create_immutables
-                          children: [
-                            const Text('Codigo Postal: 11245',
-                                style: TextStyle(fontSize: 18)),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                  Container(
-                    margin: const EdgeInsets.all(30),
-                    decoration: BoxDecoration(
-                        border: Border.all(color: Colors.black54),
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(2),
-                        // ignore: prefer_const_literals_to_create_immutables
-                        boxShadow: [
-                          const BoxShadow(
-                            color: Colors.black38,
-                            blurRadius: 5,
-                            offset: Offset(0, 0),
-                          )
-                        ]),
-                    width: 300,
-                    height: 200,
-                    padding: const EdgeInsets.all(8.0),
-                    child: Column(
-                      children: [
-                        Row(
-                          // ignore: prefer_const_literals_to_create_immutables
-                          children: [
-                            const Text('Usar otra direccion',
-                                style: TextStyle(fontSize: 18)),
-                          ],
-                        ),
-                        Container(
-                            height: 1,
-                            width: 300,
-                            color: Colors.black54,
-                            margin: const EdgeInsets.only(top: 10, bottom: 10)),
-                        Form(
-                            child: Column(
-                          children: [
-                            TextFormField(
-                              autocorrect: false,
-                              keyboardType: TextInputType.emailAddress,
-                              decoration: const InputDecoration(
-                                focusColor: Colors.black,
-                                hintText: 'Direccion:',
-                                labelText: 'Direccion:',
-                                suffixIcon: Icon(Icons.fmd_good_sharp),
-                                border: InputBorder.none,
-                              ),
+                            Row(
+                              // ignore: prefer_const_literals_to_create_immutables
+                              children: [
+                                const Text('Mis direcciones',
+                                    style: TextStyle(fontSize: 18)),
+                              ],
                             ),
-                            TextFormField(
-                              autocorrect: false,
-                              keyboardType: TextInputType.number,
-                              decoration: const InputDecoration(
-                                focusColor: Colors.black,
-                                hintText: 'Codigo Postal:',
-                                labelText: 'Codigo Postal:',
-                                suffixIcon: Icon(Icons.numbers),
-                                border: InputBorder.none,
-                              ),
+                            Container(
+                                height: 1,
+                                width: 300,
+                                color: Colors.black54,
+                                margin:
+                                    const EdgeInsets.only(top: 10, bottom: 10)),
+                            Row(
+                              // ignore: prefer_const_literals_to_create_immutables
+                              children: [
+                                Text(user.direccion!,
+                                    style: TextStyle(fontSize: 18)),
+                              ],
+                            ),
+                            const SizedBox(
+                              height: 5,
                             ),
                           ],
-                        ))
-                      ],
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 30,
-                  ),
-                  ElevatedButton(
-                      style: ButtonStyle(
-                          shadowColor: MaterialStateProperty.all(Colors.black),
-                          side: MaterialStateProperty.all(
-                              const BorderSide(color: Colors.black)),
-                          elevation: MaterialStateProperty.all(10),
-                          fixedSize:
-                              MaterialStateProperty.all(const Size(300, 50)),
-                          backgroundColor:
-                              MaterialStateProperty.all(Colors.white)),
-                      onPressed: () {
-                        Fluttertoast.showToast(
-                            msg: "Pedido efectuado con exito",
-                            toastLength: Toast.LENGTH_SHORT,
-                            gravity: ToastGravity.CENTER,
-                            timeInSecForIosWeb: 1,
-                            backgroundColor: Colors.green,
-                            textColor: Colors.black,
-                            fontSize: 16.0);
-                        Timer(const Duration(seconds: 1), () {
-                          Navigator.pushReplacementNamed(context, 'userscreen');
-                        });
-                      },
-                      child: const Text('Confirmar Pedido',
-                          style: TextStyle(fontSize: 18, color: Colors.black)))
+                        ),
+                      ),
+                      Container(
+                        margin: const EdgeInsets.all(30),
+                        decoration: BoxDecoration(
+                            border: Border.all(color: Colors.black54),
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(2),
+                            // ignore: prefer_const_literals_to_create_immutables
+                            boxShadow: [
+                              const BoxShadow(
+                                color: Colors.black38,
+                                blurRadius: 5,
+                                offset: Offset(0, 0),
+                              )
+                            ]),
+                        width: 300,
+                        height: 200,
+                        padding: const EdgeInsets.all(8.0),
+                        child: Column(
+                          children: [
+                            Row(
+                              // ignore: prefer_const_literals_to_create_immutables
+                              children: [
+                                const Text('Usar otra direccion',
+                                    style: TextStyle(fontSize: 18)),
+                              ],
+                            ),
+                            Container(
+                                height: 1,
+                                width: 300,
+                                color: Colors.black54,
+                                margin:
+                                    const EdgeInsets.only(top: 10, bottom: 10)),
+                            Form(
+                                child: Column(
+                              children: [
+                                TextFormField(
+                                  autocorrect: false,
+                                  keyboardType: TextInputType.emailAddress,
+                                  decoration: const InputDecoration(
+                                    focusColor: Colors.black,
+                                    hintText: 'Direccion:',
+                                    labelText: 'Direccion:',
+                                    suffixIcon: Icon(Icons.fmd_good_sharp),
+                                    border: InputBorder.none,
+                                  ),
+                                ),
+                                TextFormField(
+                                  autocorrect: false,
+                                  keyboardType: TextInputType.number,
+                                  decoration: const InputDecoration(
+                                    focusColor: Colors.black,
+                                    hintText: 'Codigo Postal:',
+                                    labelText: 'Codigo Postal:',
+                                    suffixIcon: Icon(Icons.numbers),
+                                    border: InputBorder.none,
+                                  ),
+                                ),
+                              ],
+                            ))
+                          ],
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 30,
+                      ),
+                      ElevatedButton(
+                          style: ButtonStyle(
+                              shadowColor:
+                                  MaterialStateProperty.all(Colors.black),
+                              side: MaterialStateProperty.all(
+                                  const BorderSide(color: Colors.black)),
+                              elevation: MaterialStateProperty.all(10),
+                              fixedSize: MaterialStateProperty.all(
+                                  const Size(300, 50)),
+                              backgroundColor:
+                                  MaterialStateProperty.all(Colors.white)),
+                          onPressed: () async {
+                            final compraService = Provider.of<CompraServices>(
+                                context,
+                                listen: false);
+                            final String? msg =
+                                await compraService.confirmCompra();
+                            if (msg == 'Pedido realizado correctamente') {
+                              Fluttertoast.showToast(
+                                  msg: "Pedido efectuado con exito",
+                                  toastLength: Toast.LENGTH_SHORT,
+                                  gravity: ToastGravity.CENTER,
+                                  timeInSecForIosWeb: 1,
+                                  backgroundColor: Colors.green,
+                                  textColor: Colors.black,
+                                  fontSize: 16.0);
+                              Timer(const Duration(seconds: 1), () {
+                                Navigator.pushReplacementNamed(
+                                    context, 'userscreen');
+                              });
+                            } else {
+                              CoolAlert.show(
+                                context: context,
+                                type: CoolAlertType.warning,
+                                title: msg,
+
+                                borderRadius: 30,
+                                //loopAnimation: true,
+                                confirmBtnColor: Colors.blueAccent,
+                                confirmBtnText: 'Aceptar',
+
+                                onConfirmBtnTap: () {
+                                  Navigator.pop(context);
+                                },
+                              );
+                            }
+                          },
+                          child: const Text('Confirmar Pedido',
+                              style:
+                                  TextStyle(fontSize: 18, color: Colors.black)))
+                    ],
+                  )
                 ],
-              )
-            ],
-          ),
-        ));
+              ),
+            ));
   }
 
   AppBar _appbar(BuildContext context) {

@@ -24,26 +24,55 @@ class ArticuloService extends ChangeNotifier {
     String? id = await ArticulosServices().readId();
     isLoading = true;
     notifyListeners();
-    final url = Uri.http(_baseUrl, '/api/articulos/$id');
+    final url = Uri.http(_baseUrl, '/api/articulo/$id');
     final resp = await http.get(url, headers: {
       HttpHeaders.acceptHeader: 'application/json',
       HttpHeaders.authorizationHeader: 'Bearer $token'
     });
 
     final Map<String, dynamic> articuloMap = json.decode(resp.body);
-    print('Modelo');
+
     articuloMap.forEach((key, value) {
       if (articuloMap.containsKey("Articulo")) {
         final tempArticulo = Articulo.fromJson(value);
 
         selectedArticulo = tempArticulo;
-        print(selectedArticulo.modelo);
       }
     });
 
     isLoading = false;
-    print(isLoading);
+
     notifyListeners();
     return selectedArticulo;
+  }
+
+  addVistaArticulo(int id) async {
+    String? token = await LoginServices().readToken();
+
+    isLoading = true;
+
+    final url = Uri.http(
+      _baseUrl,
+      '/api/articulo/vistas/$id',
+    );
+    final response = await http.patch(url, headers: {
+      HttpHeaders.acceptHeader: 'application/json',
+      HttpHeaders.authorizationHeader: 'Bearer $token'
+    });
+
+    final Map<String, dynamic> articulossMap = json.decode(response.body);
+
+    String resp;
+    if (articulossMap.containsKey("Articulo")) {
+      resp = 'articulo añadido correctamente';
+    } else {
+      String? error = '';
+
+      error = 'Error to add';
+
+      resp = error;
+    }
+    print(resp);
+    return resp;
   }
 }

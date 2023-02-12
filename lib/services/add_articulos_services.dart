@@ -60,7 +60,8 @@ class AddArticulosServices extends ChangeNotifier {
       'stock': '$stock',
       'precio': '$precio',
       'marca': 'marca',
-      'tipo': 'tipo'
+      'tipo': 'tipo',
+      'talla': 'talla',
     });
     final response = await http.put(url, headers: {
       HttpHeaders.acceptHeader: 'application/json',

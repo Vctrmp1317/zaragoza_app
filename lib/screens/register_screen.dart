@@ -303,7 +303,7 @@ class _registerFormState extends State<_registerForm> {
                   // ignore: prefer_const_literals_to_create_immutables
                   child: Row(children: [
                     const Text(
-                      'Iniciar Sesion',
+                      'Registrarse',
                       style: TextStyle(fontSize: 15),
                     ),
                     const Spacer(),

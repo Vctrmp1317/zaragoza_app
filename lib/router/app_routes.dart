@@ -53,6 +53,16 @@ class AppRoutes {
         name: 'Product Screen',
         screen: const ProductScreen(),
         icon: Icons.account_balance_outlined),
+    MenuOption(
+        route: 'mansshopcreen',
+        name: 'Man Screen',
+        screen: const ManClothScreen(),
+        icon: Icons.account_balance_outlined),
+    MenuOption(
+        route: 'womanshopcreen',
+        name: 'Man Screen',
+        screen: const WomanClothScreen(),
+        icon: Icons.account_balance_outlined),
   ];
 
   static Map<String, Widget Function(BuildContext)> getAppRoutes() {
