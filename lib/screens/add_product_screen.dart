@@ -240,22 +240,6 @@ class _AddFormState extends State<_AddForm> {
             children: [
               Stack(
                 children: [
-                  (imagenPath == '')
-                      ? const FadeInImage(
-                          placeholder: AssetImage('assets/no-image.jpg'),
-                          image: AssetImage('assets/no-image.jpg'),
-                          width: 300,
-                          height: 150,
-                          fit: BoxFit.cover,
-                        )
-                      : Image.file(
-                          File(imagenPath),
-                          width: 300,
-                          height: 180,
-                          fit: BoxFit.cover,
-                        ),
-                  //  getImage(imagenPath),
-
                   Row(
                     children: [
                       IconButton(
@@ -335,19 +319,60 @@ class _AddFormState extends State<_AddForm> {
                 onChanged: (value) => addForm.color = value,
               ),
               const SizedBox(height: 10),
-              DropdownButtonFormField(
-                  icon: const Icon(Icons.accessibility_sharp),
-                  value: dropdownValue,
-                  items: list.map<DropdownMenuItem<String>>((String value) {
-                    return DropdownMenuItem<String>(
-                      value: value,
-                      child: Text(value),
-                    );
-                  }).toList(),
-                  onChanged: (String? value) {
-                    addForm.talla = value!;
-                    dropdownValue = value;
-                  }),
+              TextFormField(
+                autocorrect: false,
+                decoration: const InputDecoration(
+                    focusColor: Colors.black,
+                    hintText: 'Genero de la prenda',
+                    labelText: 'Genero',
+                    border: UnderlineInputBorder(),
+                    suffixIcon: Icon(Icons.style)),
+                onChanged: (value) => addForm.genero = value,
+              ),
+              const SizedBox(height: 10),
+              TextFormField(
+                autocorrect: false,
+                decoration: const InputDecoration(
+                    focusColor: Colors.black,
+                    hintText: 'Edad',
+                    labelText: 'Edad',
+                    border: UnderlineInputBorder(),
+                    suffixIcon: Icon(Icons.style)),
+                onChanged: (value) => addForm.edad = value,
+              ),
+              const SizedBox(height: 10),
+              TextFormField(
+                autocorrect: false,
+                decoration: const InputDecoration(
+                    focusColor: Colors.black,
+                    hintText: 'Marca de la prenda',
+                    labelText: 'Marca',
+                    border: UnderlineInputBorder(),
+                    suffixIcon: Icon(Icons.style)),
+                onChanged: (value) => addForm.marca = value,
+              ),
+              const SizedBox(height: 10),
+              TextFormField(
+                autocorrect: false,
+                decoration: const InputDecoration(
+                    focusColor: Colors.black,
+                    hintText: 'Modelo de la prenda',
+                    labelText: 'Modelo',
+                    border: UnderlineInputBorder(),
+                    suffixIcon: Icon(Icons.style)),
+                onChanged: (value) => addForm.modelo = value,
+              ),
+              const SizedBox(height: 10),
+              TextFormField(
+                autocorrect: false,
+                decoration: const InputDecoration(
+                    focusColor: Colors.black,
+                    hintText: 'Stock de la prenda',
+                    labelText: 'Stock',
+                    border: UnderlineInputBorder(),
+                    suffixIcon: Icon(Icons.style)),
+                onChanged: (value) => addForm.stock = value as int,
+              ),
               const SizedBox(height: 10),
               TextFormField(
                 autocorrect: false,
@@ -360,17 +385,21 @@ class _AddFormState extends State<_AddForm> {
                 onChanged: (value) => addForm.material = value,
               ),
               const SizedBox(height: 10),
-              TextFormField(
-                autocorrect: false,
-                keyboardType: TextInputType.number,
-                inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                decoration: const InputDecoration(
-                    focusColor: Colors.black,
-                    hintText: 'Precio de la prenda',
-                    labelText: 'Precio',
-                    border: UnderlineInputBorder(),
-                    suffixIcon: Icon(Icons.attach_money)),
-                onChanged: (value) => addForm.precio = value as int,
+              Row(
+                children: [
+                  TextFormField(
+                    autocorrect: false,
+                    keyboardType: TextInputType.number,
+                    inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                    decoration: const InputDecoration(
+                        focusColor: Colors.black,
+                        hintText: 'Precio de la prenda',
+                        labelText: 'Precio',
+                        border: UnderlineInputBorder(),
+                        suffixIcon: Icon(Icons.attach_money)),
+                    onChanged: (value) => addForm.precio = value as int,
+                  ),
+                ],
               ),
               const SizedBox(height: 10),
               SizedBox(

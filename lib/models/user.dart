@@ -6,60 +6,59 @@ import 'dart:convert';
 //
 //     final user = userFromMap(jsonString);
 
-class User {
-  User({
-    required this.success,
-    required this.data,
-    required this.message,
-  });
-
-  bool success;
-  DataUser data;
-  String message;
-
-  factory User.fromJson(String str) => User.fromMap(json.decode(str));
-
-  factory User.fromMap(Map<String, dynamic> json) => User(
-        success: json["success"],
-        data: DataUser.fromMap(json["data"]),
-        message: json["message"],
-      );
-}
-
 class DataUser {
-  DataUser({
-    this.id,
-    this.name,
-    this.surname,
-    this.actived,
-    this.email,
-    this.email_verified_at,
-    this.direccion,
-    this.deleted,
-    this.tipo,
-  });
-
   int? id;
   String? name;
   String? surname;
   String? direccion;
-  int? actived;
   String? email;
+  Null? emailVerifiedAt;
   String? tipo;
-  int? email_verified_at;
+  int? actived;
   int? deleted;
+  String? createdAt;
+  String? updatedAt;
 
-  factory DataUser.fromJson(String str) => DataUser.fromMap(json.decode(str));
+  DataUser(
+      {this.id,
+      this.name,
+      this.surname,
+      this.direccion,
+      this.email,
+      this.emailVerifiedAt,
+      this.tipo,
+      this.actived,
+      this.deleted,
+      this.createdAt,
+      this.updatedAt});
 
-  factory DataUser.fromMap(Map<String, dynamic> json) => DataUser(
-        id: json["id"],
-        direccion: json["direccion"],
-        name: json["name"],
-        surname: json["surname"],
-        actived: json["actived"],
-        email: json["email"],
-        tipo: json["tipo"],
-        email_verified_at: json["email_verified_at"],
-        deleted: json["deleted"],
-      );
+  DataUser.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    name = json['name'];
+    surname = json['surname'];
+    direccion = json['direccion'];
+    email = json['email'];
+    emailVerifiedAt = json['email_verified_at'];
+    tipo = json['tipo'];
+    actived = json['actived'];
+    deleted = json['deleted'];
+    createdAt = json['created_at'];
+    updatedAt = json['updated_at'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['id'] = this.id;
+    data['name'] = this.name;
+    data['surname'] = this.surname;
+    data['direccion'] = this.direccion;
+    data['email'] = this.email;
+    data['email_verified_at'] = this.emailVerifiedAt;
+    data['tipo'] = this.tipo;
+    data['actived'] = this.actived;
+    data['deleted'] = this.deleted;
+    data['created_at'] = this.createdAt;
+    data['updated_at'] = this.updatedAt;
+    return data;
+  }
 }

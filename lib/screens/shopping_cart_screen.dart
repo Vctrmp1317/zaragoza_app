@@ -8,6 +8,8 @@ import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:zaragoza_app/providers/add_form_provider.dart';
 
+import '../services/services.dart';
+
 class ShoppingCartScreen extends StatefulWidget {
   const ShoppingCartScreen({Key? key}) : super(key: key);
 
@@ -18,6 +20,7 @@ class ShoppingCartScreen extends StatefulWidget {
 class _SearchScreenState extends State<ShoppingCartScreen> {
   @override
   Widget build(BuildContext context) {
+    final articulosService = Provider.of<ArticulosServices>(context);
     return Scaffold(
         appBar: _appbar(context),
         body: SingleChildScrollView(

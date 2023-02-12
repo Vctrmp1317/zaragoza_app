@@ -1,30 +1,42 @@
 import 'dart:io';
-
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:cool_alert/cool_alert.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:zaragoza_app/providers/add_form_provider.dart';
+import 'package:zaragoza_app/providers/update_form_provider.dart';
+import 'package:zaragoza_app/services/add_articulos_services.dart';
+
+import '../models/models.dart';
+import '../services/services.dart';
+
+late int id = 0;
 
 class ShopScreen extends StatelessWidget {
   const ShopScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: _appbar(context),
-        body: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            // ignore: prefer_const_literals_to_create_immutables
-            children: [
-              const _searchBar(),
-              const SizedBox(height: 5),
-              const listProducts()
-            ],
-          ),
-        ));
+    final articulosService = Provider.of<ArticulosServices>(context);
+
+    return articulosService.isLoading
+        ? const Center(
+            child: SpinKitWave(color: Color.fromRGBO(0, 153, 153, 1), size: 50))
+        : Scaffold(
+            appBar: _appbar(context),
+            body: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                // ignore: prefer_const_literals_to_create_immutables
+                children: [
+                  const _searchBar(),
+                  const SizedBox(height: 5),
+                  const listProducts()
+                ],
+              ),
+            ));
   }
 
   AppBar _appbar(BuildContext context) {
@@ -49,7 +61,10 @@ class ShopScreen extends StatelessWidget {
               color: Colors.white,
               onPressed: () {
                 Navigator.pushNamedAndRemoveUntil(
-                    context, 'login', (route) => false);
+                    context, 'login2', (route) => false);
+                final loginService =
+                    Provider.of<LoginServices>(context, listen: false);
+                loginService.logout();
               },
               icon: const Icon(Icons.logout),
             )
@@ -148,6 +163,25 @@ class listProducts extends StatefulWidget {
 }
 
 class _listProductsState extends State<listProducts> {
+  List<Articulos> articulos = [];
+  final articulosService = ArticulosServices();
+
+  Future refresh() async {
+    setState(() => articulos.clear());
+
+    await articulosService.getArticulos();
+
+    setState(() {
+      articulos = articulosService.articulos;
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    refresh();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -156,147 +190,150 @@ class _listProductsState extends State<listProducts> {
         height: 600,
         width: 400,
         child: GridView.builder(
-          itemBuilder: ((context, index) => const _Card()),
-          itemCount: 10,
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2, mainAxisExtent: 350, mainAxisSpacing: 30),
-        ),
-      ),
-    );
-  }
-}
+          itemBuilder: ((context, index) {
+            TextEditingController customController = TextEditingController();
 
-class _Card extends StatelessWidget {
-  const _Card({super.key});
+            createAlertDialog(context, customController) {
+              return showDialog(
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                        title: const Text('Editar prenda',
+                            style: TextStyle(
+                                fontSize: 22, fontWeight: FontWeight.bold)),
+                        content:
+                            const SingleChildScrollView(child: _ColorBox()),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20)));
+                  },
+                  context: context);
+            }
 
-  @override
-  Widget build(BuildContext context) {
-    TextEditingController customController = TextEditingController();
+            return Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Container(
+                padding: const EdgeInsets.all(8.0),
+                width: 10,
+                height: 330,
+                decoration: BoxDecoration(
+                    border: Border.all(color: Colors.black54),
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(8),
+                    // ignore: prefer_const_literals_to_create_immutables
+                    boxShadow: [
+                      const BoxShadow(
+                        color: Colors.black38,
+                        blurRadius: 5,
+                        offset: Offset(0, 0),
+                      )
+                    ]),
+                child: Column(
+                  children: [
+                    Stack(children: [
+                      Container(
+                        decoration: const BoxDecoration(
+                          color: Colors.yellow,
+                        ),
+                        width: 300,
+                        height: 200,
+                        child: const ClipRRect(
+                          child: FadeInImage(
+                            placeholder: AssetImage('assets/no-image.jpg'),
+                            image: AssetImage('assets/no-image.jpg'),
+                            width: 300,
+                            height: 200,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      ),
+                      Positioned(
+                          right: 0,
+                          child: IconButton(
+                              style: ButtonStyle(
+                                  backgroundColor:
+                                      MaterialStateProperty.all(Colors.white)),
+                              iconSize: 30,
+                              onPressed: () {
+                                setState(() {
+                                  id = articulos[index].id!;
+                                });
+                                createAlertDialog(context, customController);
+                              },
+                              icon: const Icon(Icons.edit_outlined)))
+                    ]),
+                    const SizedBox(
+                      height: 5,
+                    ),
+                    Row(
+                      // ignore: prefer_const_literals_to_create_immutables
+                      children: [
+                        Text(articulos[index].modelo!,
+                            style: const TextStyle(
+                                fontSize: 18, fontWeight: FontWeight.bold))
+                      ],
+                    ),
+                    Row(
+                      // ignore: prefer_const_literals_to_create_immutables
+                      children: [
+                        Text(articulos[index].precio.toString() + '€',
+                            style: const TextStyle(
+                                fontSize: 15, fontWeight: FontWeight.bold)),
+                        const Spacer(),
+                        Text(articulos[index].marca!,
+                            style: const TextStyle(
+                                fontSize: 15, fontWeight: FontWeight.bold)),
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 5,
+                    ),
+                    Container(
+                      height: 0.5,
+                      color: Colors.black54,
+                    ),
+                    Row(
+                      // ignore: prefer_const_literals_to_create_immutables
+                      children: [
+                        const Text('Eliminar producto',
+                            style: TextStyle(
+                                fontSize: 15, fontWeight: FontWeight.bold)),
+                        const Spacer(),
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        IconButton(
+                            onPressed: () {
+                              CoolAlert.show(
+                                context: context,
+                                type: CoolAlertType.warning,
+                                title: '¿Deseas eliminar este articulo?',
 
-    createAlertDialog(context, customController) {
-      return showDialog(
-          builder: (BuildContext context) {
-            return AlertDialog(
-                title: const Text('Editar prenda',
-                    style:
-                        TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
-                content: SingleChildScrollView(child: const _ColorBox()),
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20)));
-          },
-          context: context);
-    }
-
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Container(
-        padding: const EdgeInsets.all(8.0),
-        width: 10,
-        height: 330,
-        decoration: BoxDecoration(
-            border: Border.all(color: Colors.black54),
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(8),
-            // ignore: prefer_const_literals_to_create_immutables
-            boxShadow: [
-              const BoxShadow(
-                color: Colors.black38,
-                blurRadius: 5,
-                offset: Offset(0, 0),
-              )
-            ]),
-        child: Column(
-          children: [
-            Stack(children: [
-              Container(
-                decoration: const BoxDecoration(
-                  color: Colors.yellow,
-                ),
-                width: 300,
-                height: 200,
-                child: const ClipRRect(
-                  child: FadeInImage(
-                    placeholder: AssetImage('assets/no-image.jpg'),
-                    image: AssetImage('assets/no-image.jpg'),
-                    width: 300,
-                    height: 200,
-                    fit: BoxFit.cover,
-                  ),
+                                borderRadius: 30,
+                                //loopAnimation: true,
+                                confirmBtnColor: Colors.blueAccent,
+                                confirmBtnText: 'Aceptar',
+                                cancelBtnText: 'Cancelar',
+                                onConfirmBtnTap: () {
+                                  Navigator.pop(context);
+                                },
+                                showCancelBtn: true,
+                                onCancelBtnTap: () {
+                                  Navigator.pop(context);
+                                },
+                              );
+                            },
+                            icon:
+                                const Icon(Icons.remove_shopping_cart_outlined))
+                      ],
+                    )
+                  ],
                 ),
               ),
-              Positioned(
-                  right: 0,
-                  child: IconButton(
-                      style: ButtonStyle(
-                          backgroundColor:
-                              MaterialStateProperty.all(Colors.white)),
-                      iconSize: 30,
-                      onPressed: () {
-                        createAlertDialog(context, customController);
-                      },
-                      icon: const Icon(Icons.edit_outlined)))
-            ]),
-            const SizedBox(
-              height: 5,
-            ),
-            Row(
-              // ignore: prefer_const_literals_to_create_immutables
-              children: [
-                const Text('Prenda',
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold))
-              ],
-            ),
-            Row(
-              // ignore: prefer_const_literals_to_create_immutables
-              children: [
-                const Text('€32,00',
-                    style:
-                        TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
-              ],
-            ),
-            const SizedBox(
-              height: 5,
-            ),
-            Container(
-              height: 0.5,
-              color: Colors.black54,
-            ),
-            Row(
-              // ignore: prefer_const_literals_to_create_immutables
-              children: [
-                const Text('Eliminar producto',
-                    style:
-                        TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
-                const Spacer(),
-              ],
-            ),
-            Row(
-              children: [
-                IconButton(
-                    onPressed: () {
-                      CoolAlert.show(
-                        context: context,
-                        type: CoolAlertType.warning,
-                        title: '¿Deseas eliminar este articulo?',
-
-                        borderRadius: 30,
-                        //loopAnimation: true,
-                        confirmBtnColor: Colors.blueAccent,
-                        confirmBtnText: 'Aceptar',
-                        cancelBtnText: 'Cancelar',
-                        onConfirmBtnTap: () {
-                          Navigator.pop(context);
-                        },
-                        showCancelBtn: true,
-                        onCancelBtnTap: () {
-                          Navigator.pop(context);
-                        },
-                      );
-                    },
-                    icon: const Icon(Icons.remove_shopping_cart_outlined))
-              ],
-            )
-          ],
+            );
+          }),
+          itemCount: articulos.length,
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2, mainAxisExtent: 350, mainAxisSpacing: 30),
         ),
       ),
     );
@@ -339,7 +376,7 @@ class _AddFormState extends State<_AddForm> {
   late String imagenPath = '';
   @override
   Widget build(BuildContext context) {
-    final addForm = Provider.of<AddFormProvider>(context);
+    final addForm = Provider.of<UpdateFormProvider>(context);
     const List<String> list = <String>['S', 'M', 'L', 'XL', 'XXL'];
     String dropdownValue = list.first;
     final size = MediaQuery.of(context).size;
@@ -423,54 +460,29 @@ class _AddFormState extends State<_AddForm> {
                 ],
               ),
               TextFormField(
-                  autocorrect: false,
-                  keyboardType: TextInputType.emailAddress,
-                  decoration: const InputDecoration(
-                    focusColor: Colors.black,
-                    hintText: 'Tipo de prenda',
-                    labelText: 'Tipo',
-                    suffixIcon: Icon(Icons.checkroom),
-                    border: UnderlineInputBorder(),
-                  ),
-                  onChanged: (value) => addForm.tipo = value,
-                  validator: (value) {}),
-              const SizedBox(height: 10),
-              TextFormField(
                 autocorrect: false,
                 decoration: const InputDecoration(
                     focusColor: Colors.black,
-                    hintText: 'Color de prenda',
-                    labelText: 'Color',
+                    hintText: 'Modelo de prenda',
+                    labelText: 'Modelo',
                     border: UnderlineInputBorder(),
                     suffixIcon: Icon(Icons.color_lens)),
-                onChanged: (value) => addForm.color = value,
+                onChanged: (value) => addForm.modelo = value,
               ),
-              const SizedBox(height: 10),
-              DropdownButtonFormField(
-                  icon: const Icon(Icons.accessibility_sharp),
-                  value: dropdownValue,
-                  items: list.map<DropdownMenuItem<String>>((String value) {
-                    return DropdownMenuItem<String>(
-                      value: value,
-                      child: Text(value),
-                    );
-                  }).toList(),
-                  onChanged: (String? value) {
-                    addForm.talla = value!;
-                    dropdownValue = value;
-                  }),
-              const SizedBox(height: 10),
+              const SizedBox(height: 5),
               TextFormField(
                 autocorrect: false,
+                keyboardType: TextInputType.number,
+                inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                 decoration: const InputDecoration(
                     focusColor: Colors.black,
-                    hintText: 'Material de la prenda',
-                    labelText: 'Material',
+                    hintText: 'Stock de la prenda',
+                    labelText: 'Stock',
                     border: UnderlineInputBorder(),
                     suffixIcon: Icon(Icons.style)),
-                onChanged: (value) => addForm.material = value,
+                onChanged: (value) => addForm.stock = value,
               ),
-              const SizedBox(height: 10),
+              const SizedBox(height: 5),
               TextFormField(
                 autocorrect: false,
                 keyboardType: TextInputType.number,
@@ -481,9 +493,9 @@ class _AddFormState extends State<_AddForm> {
                     labelText: 'Precio',
                     border: UnderlineInputBorder(),
                     suffixIcon: Icon(Icons.attach_money)),
-                onChanged: (value) => addForm.precio = value as int,
+                onChanged: (value) => addForm.precio = value,
               ),
-              const SizedBox(height: 10),
+              const SizedBox(height: 5),
               SizedBox(
                 width: 300,
                 child: ElevatedButton(
@@ -500,6 +512,30 @@ class _AddFormState extends State<_AddForm> {
                     FocusScope.of(context).requestFocus(FocusNode());
                     if (addForm.isValidForm()) {
                       //Navigator.pushNamed(context, 'edit');
+                      final addArticuloService =
+                          Provider.of<AddArticulosServices>(context,
+                              listen: false);
+
+                      addArticuloService.updateArticulo(
+                          addForm.modelo,
+                          int.parse(addForm.stock),
+                          int.parse(addForm.precio),
+                          id);
+
+                      List<Articulos> articulos = [];
+                      final articulosService = ArticulosServices();
+
+                      Future refresh() async {
+                        setState(() => articulos.clear());
+
+                        await articulosService.getArticulos();
+                      }
+
+                      Navigator.pushReplacementNamed(context, 'tienda');
+
+                      setState(() {
+                        refresh();
+                      });
                     }
                   },
                   // ignore: prefer_const_literals_to_create_immutables

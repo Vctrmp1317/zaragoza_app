@@ -3,9 +3,13 @@ import 'package:flutter/material.dart';
 class AddFormProvider extends ChangeNotifier {
   GlobalKey<FormState> formKey = new GlobalKey<FormState>();
 
-  String tipo = '';
+  String modelo = '';
+  String marca = '';
+  String genero = '';
+  int stock = 0;
+  String edad = '';
   String color = '';
-  String talla = '';
+  String tipo = '';
   String material = '';
   int precio = 0;
 

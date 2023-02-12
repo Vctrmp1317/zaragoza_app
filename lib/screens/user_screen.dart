@@ -72,7 +72,7 @@ class UserScreen extends StatelessWidget {
                     Provider.of<LoginServices>(context, listen: false);
                 loginService.logout();
                 Navigator.pushNamedAndRemoveUntil(
-                    context, 'login', (route) => false);
+                    context, 'login2', (route) => false);
               },
               icon: const Icon(Icons.logout),
             )

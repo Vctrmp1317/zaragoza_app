@@ -38,8 +38,8 @@ class UserServices extends ChangeNotifier {
     final Map<String, dynamic> usersMap = json.decode(resp.body);
 
     usersMap.forEach((key, value) {
-      if (key == "data") {
-        final tempUser = DataUser.fromMap(value);
+      if (key == "success") {
+        final tempUser = DataUser.fromJson(value);
 
         selectedUser = tempUser;
       }

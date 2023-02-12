@@ -16,8 +16,8 @@ class RegisterServices extends ChangeNotifier {
       String cPassword, String direccion) async {
     print(cPassword);
     final url = Uri.http(_baseUrl, '/api/register', {
-      'name': name,
-      'surname': surname,
+      'nombre': name,
+      'apellidos': surname,
       'direccion': direccion,
       'email': email,
       'password': password,

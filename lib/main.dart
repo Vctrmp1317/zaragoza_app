@@ -5,6 +5,7 @@ import 'package:zaragoza_app/providers/login_form_provider.dart';
 import 'package:zaragoza_app/providers/register_form_provider.dart';
 import 'package:zaragoza_app/screens/screens.dart';
 
+import 'providers/update_form_provider.dart';
 import 'router/app_routes.dart';
 import 'services/services.dart';
 
@@ -17,9 +18,14 @@ class AppState extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(providers: [
       ChangeNotifierProvider(create: (_) => LoginServices()),
+      ChangeNotifierProvider(create: (_) => ArticulosServices()),
+      ChangeNotifierProvider(create: (_) => CompraServices()),
+      ChangeNotifierProvider(create: (_) => ArticuloService()),
+      ChangeNotifierProvider(create: (_) => AddArticulosServices()),
       ChangeNotifierProvider(create: (_) => UserServices()),
       ChangeNotifierProvider(create: (_) => RegisterServices()),
       ChangeNotifierProvider(create: (_) => AddFormProvider()),
+      ChangeNotifierProvider(create: (_) => UpdateFormProvider()),
       ChangeNotifierProvider(create: (_) => LoginFormProvider()),
       ChangeNotifierProvider(create: (_) => RegisterFormProvider()),
     ], child: const MyApp());

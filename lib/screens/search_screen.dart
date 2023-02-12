@@ -3,40 +3,46 @@ import 'dart:io';
 import 'package:cool_alert/cool_alert.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:zaragoza_app/providers/add_form_provider.dart';
 
-var _counter = 0;
+import '../models/models.dart';
+import '../services/services.dart';
 
-class SearchScreen extends StatefulWidget {
+var _counter = 0;
+late int idArticulo = 0;
+
+class SearchScreen extends StatelessWidget {
   const SearchScreen({Key? key}) : super(key: key);
 
   @override
-  State<SearchScreen> createState() => _SearchScreenState();
-}
-
-class _SearchScreenState extends State<SearchScreen> {
-  @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: _appbar(context),
-        body: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const _dividerLine(),
-              Column(
-                // ignore: prefer_const_literals_to_create_immutables
+    final articulosService = Provider.of<ArticulosServices>(context);
+
+    return articulosService.isLoading
+        ? const Center(
+            child: SpinKitWave(color: Color.fromRGBO(0, 153, 153, 1), size: 50))
+        : Scaffold(
+            appBar: _appbar(context),
+            body: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const SizedBox(height: 5),
-                  const ProductsSearchUser(),
+                  const _dividerLine(),
+                  Column(
+                    // ignore: prefer_const_literals_to_create_immutables
+                    children: [
+                      const SizedBox(height: 5),
+                      // const ProductsSearchUser(),
+                      listProducts1()
+                    ],
+                  )
                 ],
-              )
-            ],
-          ),
-        ));
+              ),
+            ));
   }
 
   AppBar _appbar(BuildContext context) {
@@ -150,29 +156,206 @@ class __searchBarState extends State<_searchBar> {
   }
 }
 
-class ProductsSearchUser extends StatefulWidget {
-  const ProductsSearchUser({super.key});
+class listProducts1 extends StatefulWidget {
+  const listProducts1({super.key});
 
   @override
-  State<ProductsSearchUser> createState() => _ProductsSearchUserState();
+  State<listProducts1> createState() => _listProductsState();
 }
 
-class _ProductsSearchUserState extends State<ProductsSearchUser> {
+class _listProductsState extends State<listProducts1> {
+  List<Articulos> articulos = [];
+  final articulosService = ArticulosServices();
+
+  Future refresh() async {
+    setState(() => articulos.clear());
+
+    await articulosService.getArticulos();
+
+    setState(() {
+      articulos = articulosService.articulos;
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    refresh();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.only(left: 10),
-      height: 600,
-      width: 400,
-      child: GridView.builder(
-        itemBuilder: ((context, index) => GestureDetector(
-            onTap: () {
-              Navigator.pushReplacementNamed(context, 'productscreen');
-            },
-            child: const CardSearch())),
-        itemCount: 6,
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 2, mainAxisExtent: 300, mainAxisSpacing: 0),
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Container(
+        height: 600,
+        width: 400,
+        child: GridView.builder(
+          itemBuilder: ((context, index) {
+            TextEditingController customController = TextEditingController();
+
+            return GestureDetector(
+              onTap: () {
+                setState(() {
+                  idArticulo = articulos[index].id!;
+                  print(idArticulo);
+                  articulosService.loadArticulo(idArticulo);
+                });
+                Navigator.pushReplacementNamed(context, 'productscreen');
+              },
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Container(
+                  padding: const EdgeInsets.all(8.0),
+                  width: 10,
+                  height: 330,
+                  decoration: BoxDecoration(
+                      border: Border.all(color: Colors.black54),
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(8),
+                      // ignore: prefer_const_literals_to_create_immutables
+                      boxShadow: [
+                        const BoxShadow(
+                          color: Colors.black38,
+                          blurRadius: 5,
+                          offset: Offset(0, 0),
+                        )
+                      ]),
+                  child: Column(
+                    children: [
+                      Stack(children: [
+                        Container(
+                          decoration: const BoxDecoration(
+                            color: Colors.yellow,
+                          ),
+                          width: 300,
+                          height: 200,
+                          child: const ClipRRect(
+                            child: FadeInImage(
+                              placeholder: AssetImage('assets/no-image.jpg'),
+                              image: AssetImage('assets/no-image.jpg'),
+                              width: 300,
+                              height: 200,
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                        ),
+                      ]),
+                      const SizedBox(
+                        height: 5,
+                      ),
+                      Row(
+                        // ignore: prefer_const_literals_to_create_immutables
+                        children: [
+                          Text(articulos[index].modelo!,
+                              style: const TextStyle(
+                                  fontSize: 18, fontWeight: FontWeight.bold))
+                        ],
+                      ),
+                      Row(
+                        // ignore: prefer_const_literals_to_create_immutables
+                        children: [
+                          Text(articulos[index].precio.toString() + '€',
+                              style: const TextStyle(
+                                  fontSize: 15, fontWeight: FontWeight.bold)),
+                          const Spacer(),
+                          Text(articulos[index].marca!,
+                              style: const TextStyle(
+                                  fontSize: 15, fontWeight: FontWeight.bold)),
+                        ],
+                      ),
+                      const SizedBox(
+                        height: 5,
+                      ),
+                      Container(
+                        height: 0.5,
+                        color: Colors.black54,
+                      ),
+                      Row(
+                        children: [
+                          GestureDetector(
+                            onTap: () async {
+                              final compraService = Provider.of<CompraServices>(
+                                  context,
+                                  listen: false);
+                              final userService = Provider.of<LoginServices>(
+                                  context,
+                                  listen: false);
+                              int userId =
+                                  int.parse(await userService.readId());
+
+                              String? msg = await compraService.addCompra(
+                                  userId, articulos[index].id!, 1);
+                              CoolAlert.show(
+                                context: context,
+                                type: CoolAlertType.warning,
+                                title: msg,
+
+                                borderRadius: 30,
+                                //loopAnimation: true,
+                                confirmBtnColor: Colors.blueAccent,
+                                confirmBtnText: 'Aceptar',
+
+                                onConfirmBtnTap: () {
+                                  Navigator.pop(context);
+                                },
+                                showCancelBtn: true,
+                                onCancelBtnTap: () {
+                                  Navigator.pop(context);
+                                },
+                              );
+                            },
+                            child: const Text(
+                              'Compra \n Rapida',
+                              style: TextStyle(fontSize: 15),
+                            ),
+                          ),
+                          Spacer(),
+                          IconButton(
+                              onPressed: () async {
+                                final compraService =
+                                    Provider.of<CompraServices>(context,
+                                        listen: false);
+                                final userService = Provider.of<LoginServices>(
+                                    context,
+                                    listen: false);
+                                int userId =
+                                    int.parse(await userService.readId());
+
+                                String? msg = await compraService.addCompra(
+                                    userId, articulos[index].id!, 1);
+                                CoolAlert.show(
+                                  context: context,
+                                  type: CoolAlertType.warning,
+                                  title: msg,
+
+                                  borderRadius: 30,
+                                  //loopAnimation: true,
+                                  confirmBtnColor: Colors.blueAccent,
+                                  confirmBtnText: 'Aceptar',
+
+                                  onConfirmBtnTap: () {
+                                    Navigator.pop(context);
+                                  },
+                                  showCancelBtn: true,
+                                  onCancelBtnTap: () {
+                                    Navigator.pop(context);
+                                  },
+                                );
+                              },
+                              icon: Icon(Icons.add_shopping_cart))
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            );
+          }),
+          itemCount: articulos.length,
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2, mainAxisExtent: 350, mainAxisSpacing: 30),
+        ),
       ),
     );
   }
