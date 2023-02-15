@@ -61,12 +61,12 @@ class CompraServices extends ChangeNotifier {
     final Map<String, dynamic> articulossMap = json.decode(response.body);
 
     String resp;
-    if (articulossMap.containsKey("Compras")) {
+    if (articulossMap.containsKey("Compra")) {
       resp = 'Pedido realizado correctamente';
     } else {
       String? error = '';
 
-      error = 'Error to add';
+      error = 'Error al efectuar el pedido';
 
       resp = error;
     }

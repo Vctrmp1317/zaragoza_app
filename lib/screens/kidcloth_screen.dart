@@ -13,10 +13,10 @@ import '../models/models.dart';
 import '../services/services.dart';
 
 var _counter = 0;
-late int idArticuloMujer = 0;
+late int idArticuloNinio = 0;
 
-class WomanClothScreen extends StatelessWidget {
-  const WomanClothScreen({Key? key}) : super(key: key);
+class KidClothScreen extends StatelessWidget {
+  const KidClothScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +37,7 @@ class WomanClothScreen extends StatelessWidget {
                     children: [
                       const SizedBox(height: 5),
                       // const ProductsSearchUser(),
-                      const womanProducts1()
+                      const kidProducts1()
                     ],
                   )
                 ],
@@ -54,7 +54,7 @@ class WomanClothScreen extends StatelessWidget {
           Container(
               margin: const EdgeInsets.only(top: 20),
               child: const Text(
-                'Ropa de Mujer',
+                'Ropa Infantil',
                 style: TextStyle(fontSize: 26, color: Colors.black),
               )),
           const Spacer(),
@@ -161,14 +161,14 @@ class __searchBarState extends State<_searchBar> {
   }
 }
 
-class womanProducts1 extends StatefulWidget {
-  const womanProducts1({super.key});
+class kidProducts1 extends StatefulWidget {
+  const kidProducts1({super.key});
 
   @override
-  State<womanProducts1> createState() => _listProductsState();
+  State<kidProducts1> createState() => _listProductsState();
 }
 
-class _listProductsState extends State<womanProducts1> {
+class _listProductsState extends State<kidProducts1> {
   List<Articulos> articulos = [];
 
   Future refresh() async {
@@ -184,7 +184,7 @@ class _listProductsState extends State<womanProducts1> {
   @override
   Widget build(BuildContext context) {
     final articulosService = Provider.of<ArticulosGeneroServices>(context);
-    articulos = articulosService.articulosMujer;
+    articulos = articulosService.articulos;
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Container(
@@ -198,9 +198,9 @@ class _listProductsState extends State<womanProducts1> {
               onTap: () {
                 ArticuloService().addVistaArticulo;
                 setState(() {
-                  idArticuloMujer = articulos[index].id!;
+                  idArticuloNinio = articulos[index].id!;
 
-                  articulosService.loadArticulo(idArticuloMujer);
+                  articulosService.loadArticulo(idArticuloNinio);
                 });
                 Navigator.pushReplacementNamed(context, 'productscreen');
               },

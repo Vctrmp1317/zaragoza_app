@@ -22,6 +22,8 @@ class AppState extends StatelessWidget {
       ChangeNotifierProvider(create: (_) => CompraServices()),
       ChangeNotifierProvider(create: (_) => CarritoServices()),
       ChangeNotifierProvider(create: (_) => ArticuloService()),
+      ChangeNotifierProvider(create: (_) => ArticulosGeneroServices()),
+      ChangeNotifierProvider(create: (_) => ArticulosCompradosServices()),
       ChangeNotifierProvider(create: (_) => AddArticulosServices()),
       ChangeNotifierProvider(create: (_) => UserServices()),
       ChangeNotifierProvider(create: (_) => RegisterServices()),

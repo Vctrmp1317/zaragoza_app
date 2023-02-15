@@ -54,14 +54,24 @@ class AppRoutes {
         screen: const ProductScreen(),
         icon: Icons.account_balance_outlined),
     MenuOption(
-        route: 'mansshopcreen',
-        name: 'Man Screen',
+        route: 'manclothscreen',
+        name: 'Man Cloth Screen',
         screen: const ManClothScreen(),
         icon: Icons.account_balance_outlined),
     MenuOption(
-        route: 'womanshopcreen',
-        name: 'Man Screen',
+        route: 'womanclothscreen',
+        name: 'Woman Screen',
         screen: const WomanClothScreen(),
+        icon: Icons.account_balance_outlined),
+    MenuOption(
+        route: 'kidsclothscreen',
+        name: 'Kid cloth Screen',
+        screen: const KidClothScreen(),
+        icon: Icons.account_balance_outlined),
+    MenuOption(
+        route: 'buyscreen',
+        name: 'Buy Screen',
+        screen: const BuyScreen(),
         icon: Icons.account_balance_outlined),
   ];
 

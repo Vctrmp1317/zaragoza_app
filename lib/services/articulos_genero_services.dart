@@ -8,15 +8,19 @@ import 'package:http/http.dart' as http;
 import '../models/models.dart';
 import 'services.dart';
 
-class ArticulosServices extends ChangeNotifier {
+class ArticulosGeneroServices extends ChangeNotifier {
   final String _baseUrl = '127.0.0.1:8000';
 
+  final List<Articulos> articulosHombre = [];
   final List<Articulos> articulos = [];
+  final List<Articulos> articulosMujer = [];
   Articulo selectedArticulo = Articulo();
   bool isLoading = true;
   final storage = const FlutterSecureStorage();
-  ArticulosServices() {
-    getArticulos();
+  ArticulosGeneroServices() {
+    getArticulosHombre();
+    getArticulosMujer();
+    getArticulosInfantil();
   }
 
   getArticulos() async {
@@ -47,12 +51,13 @@ class ArticulosServices extends ChangeNotifier {
     return articulos;
   }
 
-  getArticulosGenero(String genero) async {
+  getArticulosMujer() async {
+    articulosMujer.clear();
     String? token = await LoginServices().readToken();
     isLoading = true;
 
     notifyListeners();
-    final url = Uri.http(_baseUrl, '/api/articulos/genero/$genero');
+    final url = Uri.http(_baseUrl, '/api/articulos/genero/mujer');
     final response = await http.get(url, headers: {
       HttpHeaders.acceptHeader: 'application/json',
       HttpHeaders.authorizationHeader: 'Bearer $token'
@@ -66,21 +71,50 @@ class ArticulosServices extends ChangeNotifier {
         for (int i = 0; i < articulosMap1.length; i++) {
           final tempArticulo = Articulos.fromJson(articulosMap1[i]);
 
-          articulos.add(tempArticulo);
+          articulosMujer.add(tempArticulo);
         }
       }
     });
     isLoading = false;
     notifyListeners();
-    return articulos;
+    return articulosMujer;
   }
 
-  getArticulosEdad(String edad) async {
+  getArticulosHombre() async {
+    articulosHombre.clear();
     String? token = await LoginServices().readToken();
     isLoading = true;
 
     notifyListeners();
-    final url = Uri.http(_baseUrl, '/api/articulos/edad/$edad');
+    final url = Uri.http(_baseUrl, '/api/articulos/genero/hombre');
+    final response = await http.get(url, headers: {
+      HttpHeaders.acceptHeader: 'application/json',
+      HttpHeaders.authorizationHeader: 'Bearer $token'
+    });
+
+    final Map<String, dynamic> articulossMap = json.decode(response.body);
+
+    articulossMap.forEach((key, value) {
+      if (articulossMap.containsKey('Articulos')) {
+        final List<dynamic> articulosMap1 = value;
+        for (int i = 0; i < articulosMap1.length; i++) {
+          final tempArticulo = Articulos.fromJson(articulosMap1[i]);
+
+          articulosHombre.add(tempArticulo);
+        }
+      }
+    });
+    isLoading = false;
+    notifyListeners();
+    return articulosHombre;
+  }
+
+  getArticulosInfantil() async {
+    String? token = await LoginServices().readToken();
+    isLoading = true;
+
+    notifyListeners();
+    final url = Uri.http(_baseUrl, '/api/articulos/edad/infantil');
     final response = await http.get(url, headers: {
       HttpHeaders.acceptHeader: 'application/json',
       HttpHeaders.authorizationHeader: 'Bearer $token'

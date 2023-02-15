@@ -12,7 +12,7 @@ class DataUser {
   String? surname;
   String? direccion;
   String? email;
-  Null? emailVerifiedAt;
+  String? emailVerifiedAt;
   String? tipo;
   int? actived;
   int? deleted;

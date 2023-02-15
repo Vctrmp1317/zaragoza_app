@@ -43,6 +43,17 @@ class UserScreen extends StatelessWidget {
     return AppBar(
         backgroundColor: Colors.black,
         elevation: 0,
+        leading: IconButton(
+          color: Colors.white,
+          onPressed: () {
+            final loginService =
+                Provider.of<LoginServices>(context, listen: false);
+            loginService.logout();
+            Navigator.pushNamedAndRemoveUntil(
+                context, 'login2', (route) => false);
+          },
+          icon: const Icon(Icons.logout),
+        ),
         title: Row(
           children: [
             const Text('Inicio',
@@ -64,17 +75,12 @@ class UserScreen extends StatelessWidget {
                     style: const TextStyle(color: Colors.black)),
               )
             ]),
-            const SizedBox(width: 8),
             IconButton(
               color: Colors.white,
               onPressed: () {
-                final loginService =
-                    Provider.of<LoginServices>(context, listen: false);
-                loginService.logout();
-                Navigator.pushNamedAndRemoveUntil(
-                    context, 'login2', (route) => false);
+                Navigator.pushReplacementNamed(context, 'buyscreen');
               },
-              icon: const Icon(Icons.logout),
+              icon: const Icon(Icons.schedule_send_sharp),
             )
           ],
         ));
@@ -188,7 +194,10 @@ class _ProductsCategoriesUserState extends State<ProductsCategoriesUser> {
                           child: const Card(
                             categoria: 'Niño',
                           ),
-                          onTap: () => {print('categoria')},
+                          onTap: () => {
+                            Navigator.pushReplacementNamed(
+                                context, 'kidsclothscreen')
+                          },
                         ))
                   ],
                 ),
@@ -201,7 +210,7 @@ class _ProductsCategoriesUserState extends State<ProductsCategoriesUser> {
                           child: const Card2(categoria: 'Hombre'),
                           onTap: () => {
                             Navigator.pushReplacementNamed(
-                                context, 'manshopscreen')
+                                context, 'manclothscreen')
                           },
                         ))
                   ],
@@ -219,7 +228,7 @@ class _ProductsCategoriesUserState extends State<ProductsCategoriesUser> {
                           child: const Card3(categoria: 'Mujer'),
                           onTap: () => {
                             Navigator.pushReplacementNamed(
-                                context, 'womanshopscreen')
+                                context, 'womanclothscreen')
                           },
                         ))
                   ],

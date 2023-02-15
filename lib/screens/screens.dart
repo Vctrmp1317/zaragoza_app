@@ -9,3 +9,5 @@ export '../screens/order_screen.dart';
 export '../screens/product_screen.dart';
 export '../screens/mancloth_screen.dart';
 export '../screens/womancloth_screen.dart';
+export '../screens/kidcloth_screen.dart';
+export '../screens/buy_screen.dart';

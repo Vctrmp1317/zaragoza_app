@@ -20,7 +20,7 @@ class ManClothScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final articulosService = Provider.of<ArticulosServices>(context);
+    final articulosService = Provider.of<ArticulosGeneroServices>(context);
 
     return articulosService.isLoading
         ? const Center(
@@ -51,14 +51,13 @@ class ManClothScreen extends StatelessWidget {
       elevation: 0,
       title: Row(
         children: [
-          const _searchBar(),
-          const Spacer(),
           Container(
               margin: const EdgeInsets.only(top: 20),
               child: const Text(
                 'Ropa de Hombre',
-                style: TextStyle(fontSize: 16),
+                style: TextStyle(fontSize: 26, color: Colors.black),
               )),
+          Spacer(),
           Container(
             margin: const EdgeInsets.only(top: 20),
             child: IconButton(
@@ -171,16 +170,9 @@ class manProducts1 extends StatefulWidget {
 
 class _listProductsState extends State<manProducts1> {
   List<Articulos> articulos = [];
-  final articulosService = ArticulosServices();
 
   Future refresh() async {
     setState(() => articulos.clear());
-
-    await articulosService.getArticulosGenero('Hombre');
-
-    setState(() {
-      articulos = articulosService.articulos;
-    });
   }
 
   @override
@@ -191,179 +183,193 @@ class _listProductsState extends State<manProducts1> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Container(
-        height: 600,
-        width: 400,
-        child: GridView.builder(
-          itemBuilder: ((context, index) {
-            TextEditingController customController = TextEditingController();
+    final articulosService = Provider.of<ArticulosGeneroServices>(context);
 
-            return GestureDetector(
-              onTap: () {
-                ArticuloService().addVistaArticulo;
-                setState(() {
-                  idArticuloHombre = articulos[index].id!;
+    articulos = articulosService.articulosHombre;
+    return articulosService.isLoading
+        ? const Center(
+            child: SpinKitWave(color: Color.fromRGBO(0, 153, 153, 1), size: 50))
+        : Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Container(
+              height: 600,
+              width: 400,
+              child: GridView.builder(
+                itemBuilder: ((context, index) {
+                  TextEditingController customController =
+                      TextEditingController();
 
-                  articulosService.loadArticulo(idArticuloHombre);
-                });
-                Navigator.pushReplacementNamed(context, 'productscreen');
-              },
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Container(
-                  padding: const EdgeInsets.all(8.0),
-                  width: 10,
-                  height: 330,
-                  decoration: BoxDecoration(
-                      border: Border.all(color: Colors.black54),
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(8),
-                      // ignore: prefer_const_literals_to_create_immutables
-                      boxShadow: [
-                        const BoxShadow(
-                          color: Colors.black38,
-                          blurRadius: 5,
-                          offset: Offset(0, 0),
-                        )
-                      ]),
-                  child: Column(
-                    children: [
-                      Stack(children: [
-                        Container(
-                          decoration: const BoxDecoration(
-                            color: Colors.yellow,
-                          ),
-                          width: 300,
-                          height: 200,
-                          child: const ClipRRect(
-                            child: FadeInImage(
-                              placeholder: AssetImage('assets/no-image.jpg'),
-                              image: AssetImage('assets/no-image.jpg'),
-                              width: 300,
-                              height: 200,
-                              fit: BoxFit.cover,
+                  return GestureDetector(
+                    onTap: () {
+                      ArticuloService().addVistaArticulo;
+                      setState(() {
+                        idArticuloHombre = articulos[index].id!;
+
+                        articulosService.loadArticulo(idArticuloHombre);
+                      });
+                      Navigator.pushReplacementNamed(context, 'productscreen');
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Container(
+                        padding: const EdgeInsets.all(8.0),
+                        width: 10,
+                        height: 330,
+                        decoration: BoxDecoration(
+                            border: Border.all(color: Colors.black54),
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(8),
+                            // ignore: prefer_const_literals_to_create_immutables
+                            boxShadow: [
+                              const BoxShadow(
+                                color: Colors.black38,
+                                blurRadius: 5,
+                                offset: Offset(0, 0),
+                              )
+                            ]),
+                        child: Column(
+                          children: [
+                            Stack(children: [
+                              Container(
+                                decoration: const BoxDecoration(
+                                  color: Colors.yellow,
+                                ),
+                                width: 300,
+                                height: 200,
+                                child: const ClipRRect(
+                                  child: FadeInImage(
+                                    placeholder:
+                                        AssetImage('assets/no-image.jpg'),
+                                    image: AssetImage('assets/no-image.jpg'),
+                                    width: 300,
+                                    height: 200,
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
+                              ),
+                            ]),
+                            const SizedBox(
+                              height: 5,
                             ),
-                          ),
+                            Row(
+                              // ignore: prefer_const_literals_to_create_immutables
+                              children: [
+                                Text(articulos[index].modelo!,
+                                    style: const TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold))
+                              ],
+                            ),
+                            Row(
+                              // ignore: prefer_const_literals_to_create_immutables
+                              children: [
+                                Text(articulos[index].precio.toString() + '€',
+                                    style: const TextStyle(
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.bold)),
+                                const Spacer(),
+                                Text(articulos[index].marca!,
+                                    style: const TextStyle(
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.bold)),
+                              ],
+                            ),
+                            const SizedBox(
+                              height: 5,
+                            ),
+                            Container(
+                              height: 0.5,
+                              color: Colors.black54,
+                            ),
+                            Row(
+                              children: [
+                                GestureDetector(
+                                  onTap: () async {
+                                    final compraService =
+                                        Provider.of<CompraServices>(context,
+                                            listen: false);
+                                    final userService =
+                                        Provider.of<LoginServices>(context,
+                                            listen: false);
+                                    int userId =
+                                        int.parse(await userService.readId());
+
+                                    String? msg = await compraService.addCompra(
+                                        userId, articulos[index].id!, 1);
+                                    CoolAlert.show(
+                                      context: context,
+                                      type: CoolAlertType.warning,
+                                      title: msg,
+
+                                      borderRadius: 30,
+                                      //loopAnimation: true,
+                                      confirmBtnColor: Colors.blueAccent,
+                                      confirmBtnText: 'Aceptar',
+
+                                      onConfirmBtnTap: () {
+                                        Navigator.pop(context);
+                                      },
+                                      showCancelBtn: true,
+                                      onCancelBtnTap: () {
+                                        Navigator.pop(context);
+                                      },
+                                    );
+                                  },
+                                  child: const Text(
+                                    'Compra \n Rapida',
+                                    style: TextStyle(fontSize: 15),
+                                  ),
+                                ),
+                                const Spacer(),
+                                IconButton(
+                                    onPressed: () async {
+                                      final compraService =
+                                          Provider.of<CompraServices>(context,
+                                              listen: false);
+                                      final userService =
+                                          Provider.of<LoginServices>(context,
+                                              listen: false);
+                                      int userId =
+                                          int.parse(await userService.readId());
+
+                                      String? msg =
+                                          await compraService.addCompra(
+                                              userId, articulos[index].id!, 1);
+                                      CoolAlert.show(
+                                        context: context,
+                                        type: CoolAlertType.warning,
+                                        title: msg,
+
+                                        borderRadius: 30,
+                                        //loopAnimation: true,
+                                        confirmBtnColor: Colors.blueAccent,
+                                        confirmBtnText: 'Aceptar',
+
+                                        onConfirmBtnTap: () {
+                                          Navigator.pop(context);
+                                        },
+                                        showCancelBtn: true,
+                                        onCancelBtnTap: () {
+                                          Navigator.pop(context);
+                                        },
+                                      );
+                                    },
+                                    icon: const Icon(Icons.add_shopping_cart))
+                              ],
+                            ),
+                          ],
                         ),
-                      ]),
-                      const SizedBox(
-                        height: 5,
                       ),
-                      Row(
-                        // ignore: prefer_const_literals_to_create_immutables
-                        children: [
-                          Text(articulos[index].modelo!,
-                              style: const TextStyle(
-                                  fontSize: 18, fontWeight: FontWeight.bold))
-                        ],
-                      ),
-                      Row(
-                        // ignore: prefer_const_literals_to_create_immutables
-                        children: [
-                          Text(articulos[index].precio.toString() + '€',
-                              style: const TextStyle(
-                                  fontSize: 15, fontWeight: FontWeight.bold)),
-                          const Spacer(),
-                          Text(articulos[index].marca!,
-                              style: const TextStyle(
-                                  fontSize: 15, fontWeight: FontWeight.bold)),
-                        ],
-                      ),
-                      const SizedBox(
-                        height: 5,
-                      ),
-                      Container(
-                        height: 0.5,
-                        color: Colors.black54,
-                      ),
-                      Row(
-                        children: [
-                          GestureDetector(
-                            onTap: () async {
-                              final compraService = Provider.of<CompraServices>(
-                                  context,
-                                  listen: false);
-                              final userService = Provider.of<LoginServices>(
-                                  context,
-                                  listen: false);
-                              int userId =
-                                  int.parse(await userService.readId());
-
-                              String? msg = await compraService.addCompra(
-                                  userId, articulos[index].id!, 1);
-                              CoolAlert.show(
-                                context: context,
-                                type: CoolAlertType.warning,
-                                title: msg,
-
-                                borderRadius: 30,
-                                //loopAnimation: true,
-                                confirmBtnColor: Colors.blueAccent,
-                                confirmBtnText: 'Aceptar',
-
-                                onConfirmBtnTap: () {
-                                  Navigator.pop(context);
-                                },
-                                showCancelBtn: true,
-                                onCancelBtnTap: () {
-                                  Navigator.pop(context);
-                                },
-                              );
-                            },
-                            child: const Text(
-                              'Compra \n Rapida',
-                              style: TextStyle(fontSize: 15),
-                            ),
-                          ),
-                          const Spacer(),
-                          IconButton(
-                              onPressed: () async {
-                                final compraService =
-                                    Provider.of<CompraServices>(context,
-                                        listen: false);
-                                final userService = Provider.of<LoginServices>(
-                                    context,
-                                    listen: false);
-                                int userId =
-                                    int.parse(await userService.readId());
-
-                                String? msg = await compraService.addCompra(
-                                    userId, articulos[index].id!, 1);
-                                CoolAlert.show(
-                                  context: context,
-                                  type: CoolAlertType.warning,
-                                  title: msg,
-
-                                  borderRadius: 30,
-                                  //loopAnimation: true,
-                                  confirmBtnColor: Colors.blueAccent,
-                                  confirmBtnText: 'Aceptar',
-
-                                  onConfirmBtnTap: () {
-                                    Navigator.pop(context);
-                                  },
-                                  showCancelBtn: true,
-                                  onCancelBtnTap: () {
-                                    Navigator.pop(context);
-                                  },
-                                );
-                              },
-                              icon: const Icon(Icons.add_shopping_cart))
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
+                    ),
+                  );
+                }),
+                itemCount: articulos.length,
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    mainAxisExtent: 350,
+                    mainAxisSpacing: 30),
               ),
-            );
-          }),
-          itemCount: articulos.length,
-          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2, mainAxisExtent: 350, mainAxisSpacing: 30),
-        ),
-      ),
-    );
+            ),
+          );
   }
 }

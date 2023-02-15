@@ -11,13 +11,14 @@ import 'services.dart';
 class CarritoServices extends ChangeNotifier {
   final String _baseUrl = '127.0.0.1:8000';
   final List<Articulos> articulos = [];
-  double total = 0.0;
+
   bool isLoading = true;
   final storage = const FlutterSecureStorage();
 
-  CarritoServices() {}
+  CarritoServices();
 
   getCarrito() async {
+    articulos.clear();
     String? token = await LoginServices().readToken();
     String? idCliente = await LoginServices().readId();
     isLoading = true;
@@ -36,11 +37,13 @@ class CarritoServices extends ChangeNotifier {
         final List<dynamic> articulosMap1 = value;
         for (int i = 0; i < articulosMap1.length; i++) {
           final tempArticulo = Articulos.fromJson(articulosMap1[i]);
-          total = total + tempArticulo.precio!;
+
           articulos.add(tempArticulo);
         }
       }
     });
+    print(articulos.length);
+    print('llega');
     isLoading = false;
     notifyListeners();
     return articulos;
