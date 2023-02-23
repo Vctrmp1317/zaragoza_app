@@ -8,9 +8,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 
 class LoginServices extends ChangeNotifier {
-  final String url1 =
-      Platform.isAndroid ? '192.168.178.23:3006' : 'localhost:3006';
-  final String _baseUrl = '127.0.0.1:8000';
+  final String _baseUrl = 'dressup.allsites.es';
 
   final storage = const FlutterSecureStorage();
 
@@ -18,7 +16,7 @@ class LoginServices extends ChangeNotifier {
 
   postLogin(String email, String password) async {
     final url = Uri.http(
-        _baseUrl, '/api/login', {'email': email, 'password': password});
+        _baseUrl, '/public/api/login', {'email': email, 'password': password});
 
     final response = await http
         .post(url, headers: {HttpHeaders.acceptHeader: 'application/json'});
@@ -32,6 +30,7 @@ class LoginServices extends ChangeNotifier {
       if (login.containsKey('success')) {
         storage.write(key: 'token', value: value['token']);
         storage.write(key: 'id', value: value['id'].toString());
+
         type = value['tipo'];
         resp = type;
       } else {
@@ -57,7 +56,7 @@ class LoginServices extends ChangeNotifier {
 
   Future<String> readId() async {
     String? i = await storage.read(key: 'id') ?? '';
-    print(i);
+    print(i + 'idUser');
     return i;
   }
 }

@@ -175,6 +175,13 @@ class _listProductsState extends State<listProducts1> {
 
   @override
   Widget build(BuildContext context) {
+    List<AssetImage> imagenes = [];
+    imagenes.add(const AssetImage('assets/camiseta.jpg'));
+    imagenes.add(const AssetImage('assets/camiseta2.jpg'));
+    imagenes.add(const AssetImage('assets/camiseta3.jpg'));
+    imagenes.add(const AssetImage('assets/pantalon.jpg'));
+    imagenes.add(const AssetImage('assets/pantalon2.jpg'));
+    imagenes.add(const AssetImage('assets/pantalon3.jpg'));
     return Column(
       children: [
         Row(
@@ -259,11 +266,18 @@ class _listProductsState extends State<listProducts1> {
                               ),
                               width: 300,
                               height: 200,
-                              child: const ClipRRect(
+                              child: ClipRRect(
                                 child: FadeInImage(
                                   placeholder:
                                       AssetImage('assets/no-image.jpg'),
-                                  image: AssetImage('assets/no-image.jpg'),
+                                  image: articulos[index].modelo == 'modelo 7'
+                                      ? AssetImage('assets/pantalonVerde.jpg')
+                                      : articulos[index].tipo == 'Pantalon'
+                                          ? AssetImage('assets/pantalon.jpg')
+                                          : index > imagenes.length
+                                              ? AssetImage(
+                                                  'assets/no-image.jpg')
+                                              : imagenes[index],
                                   width: 300,
                                   height: 200,
                                   fit: BoxFit.cover,
@@ -318,7 +332,10 @@ class _listProductsState extends State<listProducts1> {
                                       int.parse(await userService.readId());
 
                                   String? msg = await compraService.addCompra(
-                                      userId, articulos[index].id!, 1);
+                                      userId,
+                                      articulos[index].modelo!,
+                                      1,
+                                      articulos[index].talla!);
                                   CoolAlert.show(
                                     context: context,
                                     type: CoolAlertType.warning,
@@ -355,8 +372,13 @@ class _listProductsState extends State<listProducts1> {
                                     int userId =
                                         int.parse(await userService.readId());
 
+                                    print(userId);
+
                                     String? msg = await compraService.addCompra(
-                                        userId, articulos[index].id!, 1);
+                                        userId,
+                                        articulos[index].modelo!,
+                                        1,
+                                        articulos[index].talla!);
                                     CoolAlert.show(
                                       context: context,
                                       type: CoolAlertType.warning,

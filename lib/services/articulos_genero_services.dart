@@ -9,7 +9,7 @@ import '../models/models.dart';
 import 'services.dart';
 
 class ArticulosGeneroServices extends ChangeNotifier {
-  final String _baseUrl = '127.0.0.1:8000';
+  final String _baseUrl = 'dressup.allsites.es';
 
   final List<Articulos> articulosHombre = [];
   final List<Articulos> articulos = [];
@@ -28,7 +28,7 @@ class ArticulosGeneroServices extends ChangeNotifier {
     isLoading = true;
 
     notifyListeners();
-    final url = Uri.http(_baseUrl, '/api/articulos');
+    final url = Uri.http(_baseUrl, '/public/api/articulos');
     final response = await http.get(url, headers: {
       HttpHeaders.acceptHeader: 'application/json',
       HttpHeaders.authorizationHeader: 'Bearer $token'
@@ -57,7 +57,7 @@ class ArticulosGeneroServices extends ChangeNotifier {
     isLoading = true;
 
     notifyListeners();
-    final url = Uri.http(_baseUrl, '/api/articulos/genero/mujer');
+    final url = Uri.http(_baseUrl, '/public/api/articulos/genero/mujer');
     final response = await http.get(url, headers: {
       HttpHeaders.acceptHeader: 'application/json',
       HttpHeaders.authorizationHeader: 'Bearer $token'
@@ -86,7 +86,7 @@ class ArticulosGeneroServices extends ChangeNotifier {
     isLoading = true;
 
     notifyListeners();
-    final url = Uri.http(_baseUrl, '/api/articulos/genero/hombre');
+    final url = Uri.http(_baseUrl, '/public/api/articulos/genero/hombre');
     final response = await http.get(url, headers: {
       HttpHeaders.acceptHeader: 'application/json',
       HttpHeaders.authorizationHeader: 'Bearer $token'
@@ -114,7 +114,7 @@ class ArticulosGeneroServices extends ChangeNotifier {
     isLoading = true;
 
     notifyListeners();
-    final url = Uri.http(_baseUrl, '/api/articulos/edad/infantil');
+    final url = Uri.http(_baseUrl, '/public/api/articulos/edad/infantil');
     final response = await http.get(url, headers: {
       HttpHeaders.acceptHeader: 'application/json',
       HttpHeaders.authorizationHeader: 'Bearer $token'
@@ -142,7 +142,7 @@ class ArticulosGeneroServices extends ChangeNotifier {
     storage.write(key: 'id', value: id.toString());
     isLoading = true;
     notifyListeners();
-    final url = Uri.http(_baseUrl, '/api/articulos/$id');
+    final url = Uri.http(_baseUrl, '/public/api/articulos/$id');
     final resp = await http.get(url, headers: {
       HttpHeaders.acceptHeader: 'application/json',
       HttpHeaders.authorizationHeader: 'Bearer $token'

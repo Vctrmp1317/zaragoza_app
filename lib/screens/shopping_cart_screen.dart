@@ -27,7 +27,6 @@ class _SearchScreenState extends State<ShoppingCartScreen> {
   List<Articulos> articulos = [];
   final carritoService = CarritoServices();
   Future refresh() async {
-    setState(() => articulos.clear());
     await carritoService.getCarrito();
     setState(() {
       articulos = carritoService.articulos;

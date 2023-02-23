@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bounce/flutter_bounce.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-
+import 'package:flutter_tts/flutter_tts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:zaragoza_app/providers/add_form_provider.dart';
@@ -17,6 +17,7 @@ import '../services/services.dart';
 final _counter = 0;
 final tallas = {'XL', 'L', 'M', 'S', 'XS'};
 late String talla = '';
+final ttsProduct = FlutterTts();
 
 class ProductScreen extends StatefulWidget {
   const ProductScreen({Key? key}) : super(key: key);
@@ -39,6 +40,13 @@ class _ProductScreenState extends State<ProductScreen> {
 
     setState(() {
       articulo = articuloService.selectedArticulo;
+
+      ttsProduct.speak(articulo.tipo!.toString() +
+          '. color: ' +
+          articulo.color!.toString() +
+          ', marca:' +
+          articulo.marca!.toString() +
+          '. ');
     });
   }
 
@@ -319,8 +327,10 @@ class _ProductScreenState extends State<ProductScreen> {
                               listen: false);
                           int userId = int.parse(await userService.readId());
 
+                          print(userId);
+
                           String? msg = await compraService.addCompra(
-                              userId, articulo.id!, 1);
+                              userId, articulo.modelo!, 1, articulo.talla!);
                           CoolAlert.show(
                             context: context,
                             type: CoolAlertType.warning,
@@ -368,6 +378,13 @@ class _ProductScreenState extends State<ProductScreen> {
     return AppBar(
         backgroundColor: Colors.black,
         elevation: 0,
+        leading: IconButton(
+          color: Colors.white,
+          onPressed: () {
+            Navigator.pushReplacementNamed(context, 'userscreen');
+          },
+          icon: const Icon(Icons.logout),
+        ),
         title: Row(
           children: [
             const _searchBar(),
@@ -386,13 +403,6 @@ class _ProductScreenState extends State<ProductScreen> {
               )
             ]),
             const SizedBox(width: 8),
-            IconButton(
-              color: Colors.white,
-              onPressed: () {
-                Navigator.pushReplacementNamed(context, 'userscreen');
-              },
-              icon: const Icon(Icons.logout),
-            )
           ],
         ));
   }
@@ -472,9 +482,9 @@ class _fondoImagen extends StatelessWidget {
     return const ClipRRect(
       child: FadeInImage(
         placeholder: AssetImage('assets/no-image.jpg'),
-        image: AssetImage('assets/no-image.jpg'),
+        image: AssetImage('assets/pantalonVerde.jpg'),
         width: double.infinity,
-        height: 260,
+        height: 360,
         fit: BoxFit.cover,
       ),
     );

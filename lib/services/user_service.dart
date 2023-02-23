@@ -11,9 +11,7 @@ import 'package:http/http.dart' as http;
 import 'login_services.dart';
 
 class UserServices extends ChangeNotifier {
-  final String url1 =
-      Platform.isAndroid ? '192.168.178.23:3006' : 'localhost:3006';
-  final String _baseUrl = '127.0.0.1:8000';
+  final String _baseUrl = 'dressup.allsites.es';
 
   late DataUser selectedUser = DataUser();
   final storage = const FlutterSecureStorage();
@@ -29,7 +27,7 @@ class UserServices extends ChangeNotifier {
     String? id = await LoginServices().readId();
 
     notifyListeners();
-    final url = Uri.http(_baseUrl, '/api/user/$id');
+    final url = Uri.http(_baseUrl, '/public/api/user/$id');
     final resp = await http.get(url, headers: {
       HttpHeaders.acceptHeader: 'application/json',
       HttpHeaders.authorizationHeader: 'Bearer $token'
@@ -42,6 +40,7 @@ class UserServices extends ChangeNotifier {
         final tempUser = DataUser.fromJson(value);
 
         selectedUser = tempUser;
+        print(selectedUser.direccion);
       }
     });
 

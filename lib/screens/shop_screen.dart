@@ -13,6 +13,7 @@ import '../models/models.dart';
 import '../services/services.dart';
 
 late int id = 0;
+late int ind = 0;
 
 class ShopScreen extends StatelessWidget {
   const ShopScreen({Key? key}) : super(key: key);
@@ -254,6 +255,7 @@ class _listProductsState extends State<listProducts> {
                               iconSize: 30,
                               onPressed: () {
                                 setState(() {
+                                  ind = index;
                                   id = articulos[index].id!;
                                 });
                                 createAlertDialog(context, customController);
@@ -374,6 +376,17 @@ class _AddForm extends StatefulWidget {
 
 class _AddFormState extends State<_AddForm> {
   late String imagenPath = '';
+
+  List<Articulos> articulo = [];
+
+  @override
+  void initState() {
+    super.initState();
+    final articulosService =
+        Provider.of<ArticulosServices>(context, listen: false);
+    articulo = articulosService.articulos;
+  }
+
   @override
   Widget build(BuildContext context) {
     final addForm = Provider.of<UpdateFormProvider>(context);
@@ -520,22 +533,22 @@ class _AddFormState extends State<_AddForm> {
                           addForm.modelo,
                           int.parse(addForm.stock),
                           int.parse(addForm.precio),
+                          articulo[ind].tipo!,
+                          articulo[ind].marca!,
+                          articulo[ind].talla!,
                           id);
 
-                      List<Articulos> articulos = [];
                       final articulosService = ArticulosServices();
 
                       Future refresh() async {
-                        setState(() => articulos.clear());
-
                         await articulosService.getArticulos();
                       }
-
-                      Navigator.pushReplacementNamed(context, 'tienda');
 
                       setState(() {
                         refresh();
                       });
+
+                      Navigator.pushReplacementNamed(context, 'tienda');
                     }
                   },
                   // ignore: prefer_const_literals_to_create_immutables

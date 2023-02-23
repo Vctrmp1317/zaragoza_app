@@ -30,6 +30,12 @@ class AddProductScreen extends StatelessWidget {
     return AppBar(
         backgroundColor: Colors.black,
         elevation: 0,
+        leading: IconButton(
+            onPressed: () {
+              Navigator.pushNamedAndRemoveUntil(
+                  context, 'tienda', (route) => false);
+            },
+            icon: const Icon(Icons.logout, color: Colors.white)),
         title: Row(
           children: [
             const Text('Añadir Producto',
@@ -38,12 +44,6 @@ class AddProductScreen extends StatelessWidget {
                     fontWeight: FontWeight.bold,
                     color: Colors.white)),
             Spacer(),
-            IconButton(
-                onPressed: () {
-                  Navigator.pushNamedAndRemoveUntil(
-                      context, 'tienda', (route) => false);
-                },
-                icon: const Icon(Icons.logout, color: Colors.white)),
           ],
         ));
   }
@@ -168,7 +168,9 @@ class backGroundAuth extends StatelessWidget {
         height: double.infinity,
         color: const Color.fromARGB(255, 243, 242, 242),
       ),
-      const SingleChildScrollView(child: _ColorBox()),
+      SingleChildScrollView(
+        child: _ColorBox(),
+      )
     ]);
   }
 }
@@ -180,8 +182,8 @@ class _ColorBox extends StatelessWidget {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     return Container(
-      margin: const EdgeInsets.only(top: 150),
-      height: size.height * 0.8,
+      margin: const EdgeInsets.only(top: 20),
+      height: size.height * 0.9,
       decoration: const BoxDecoration(
           boxShadow: [BoxShadow(color: Colors.black, blurRadius: 5)],
           color: Colors.white,
@@ -236,202 +238,200 @@ class _AddFormState extends State<_AddForm> {
       child: Form(
           key: addForm.formKey,
           autovalidateMode: AutovalidateMode.onUserInteraction,
-          child: Column(
-            children: [
-              Stack(
-                children: [
-                  Row(
-                    children: [
-                      IconButton(
-                          iconSize: 30,
-                          color: Colors.black,
-                          onPressed: () async {
-                            print(imagenPath);
-                            final picker = ImagePicker();
-
-                            final PickedFile? pickedFile =
-                                await picker.getImage(
-                                    source: ImageSource.camera,
-                                    imageQuality: 100);
-
-                            if (pickedFile == null) {
-                            } else {
-                              imagenPath = pickedFile.path;
-
-                              pickedFile.readAsBytes().then((value) {});
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                Stack(
+                  children: [
+                    Row(
+                      children: [
+                        IconButton(
+                            iconSize: 30,
+                            color: Colors.black,
+                            onPressed: () async {
                               print(imagenPath);
+                              final picker = ImagePicker();
 
-                              pickedFile.readAsBytes().then((value) {});
-                            }
+                              final PickedFile? pickedFile =
+                                  await picker.getImage(
+                                      source: ImageSource.camera,
+                                      imageQuality: 100);
 
-                            setState(() {});
-                          },
-                          icon: const Icon(Icons.camera_alt_outlined)),
-                      const Spacer(),
-                      IconButton(
-                          iconSize: 30,
-                          color: Colors.black,
-                          onPressed: () async {
-                            final picker = ImagePicker();
+                              if (pickedFile == null) {
+                              } else {
+                                imagenPath = pickedFile.path;
 
-                            final PickedFile? pickedFile =
-                                await picker.getImage(
-                                    source: ImageSource.gallery,
-                                    imageQuality: 100);
+                                pickedFile.readAsBytes().then((value) {});
+                                print(imagenPath);
 
-                            //  print('tenemos imagen ' + pickedFile!.path);
+                                pickedFile.readAsBytes().then((value) {});
+                              }
 
-                            if (pickedFile == null) {
-                            } else {
-                              imagenPath = pickedFile.path;
+                              setState(() {});
+                            },
+                            icon: const Icon(Icons.camera_alt_outlined)),
+                        const Spacer(),
+                        IconButton(
+                            iconSize: 30,
+                            color: Colors.black,
+                            onPressed: () async {
+                              final picker = ImagePicker();
 
-                              pickedFile.readAsBytes().then((value) {});
-                            }
+                              final PickedFile? pickedFile =
+                                  await picker.getImage(
+                                      source: ImageSource.gallery,
+                                      imageQuality: 100);
 
-                            setState(() {});
-                          },
-                          icon: const Icon(Icons.image_outlined))
-                    ],
-                  ),
-                ],
-              ),
-              TextFormField(
-                  autocorrect: false,
-                  keyboardType: TextInputType.emailAddress,
-                  decoration: const InputDecoration(
-                    focusColor: Colors.black,
-                    hintText: 'Tipo de prenda',
-                    labelText: 'Tipo',
-                    suffixIcon: Icon(Icons.checkroom),
-                    border: UnderlineInputBorder(),
-                  ),
-                  onChanged: (value) => addForm.tipo = value,
-                  validator: (value) {}),
-              const SizedBox(height: 10),
-              TextFormField(
-                autocorrect: false,
-                decoration: const InputDecoration(
-                    focusColor: Colors.black,
-                    hintText: 'Color de prenda',
-                    labelText: 'Color',
-                    border: UnderlineInputBorder(),
-                    suffixIcon: Icon(Icons.color_lens)),
-                onChanged: (value) => addForm.color = value,
-              ),
-              const SizedBox(height: 10),
-              TextFormField(
-                autocorrect: false,
-                decoration: const InputDecoration(
-                    focusColor: Colors.black,
-                    hintText: 'Genero de la prenda',
-                    labelText: 'Genero',
-                    border: UnderlineInputBorder(),
-                    suffixIcon: Icon(Icons.style)),
-                onChanged: (value) => addForm.genero = value,
-              ),
-              const SizedBox(height: 10),
-              TextFormField(
-                autocorrect: false,
-                decoration: const InputDecoration(
-                    focusColor: Colors.black,
-                    hintText: 'Edad',
-                    labelText: 'Edad',
-                    border: UnderlineInputBorder(),
-                    suffixIcon: Icon(Icons.style)),
-                onChanged: (value) => addForm.edad = value,
-              ),
-              const SizedBox(height: 10),
-              TextFormField(
-                autocorrect: false,
-                decoration: const InputDecoration(
-                    focusColor: Colors.black,
-                    hintText: 'Marca de la prenda',
-                    labelText: 'Marca',
-                    border: UnderlineInputBorder(),
-                    suffixIcon: Icon(Icons.style)),
-                onChanged: (value) => addForm.marca = value,
-              ),
-              const SizedBox(height: 10),
-              TextFormField(
-                autocorrect: false,
-                decoration: const InputDecoration(
-                    focusColor: Colors.black,
-                    hintText: 'Modelo de la prenda',
-                    labelText: 'Modelo',
-                    border: UnderlineInputBorder(),
-                    suffixIcon: Icon(Icons.style)),
-                onChanged: (value) => addForm.modelo = value,
-              ),
-              const SizedBox(height: 10),
-              TextFormField(
-                autocorrect: false,
-                decoration: const InputDecoration(
-                    focusColor: Colors.black,
-                    hintText: 'Stock de la prenda',
-                    labelText: 'Stock',
-                    border: UnderlineInputBorder(),
-                    suffixIcon: Icon(Icons.style)),
-                onChanged: (value) => addForm.stock = value as int,
-              ),
-              const SizedBox(height: 10),
-              TextFormField(
-                autocorrect: false,
-                decoration: const InputDecoration(
-                    focusColor: Colors.black,
-                    hintText: 'Material de la prenda',
-                    labelText: 'Material',
-                    border: UnderlineInputBorder(),
-                    suffixIcon: Icon(Icons.style)),
-                onChanged: (value) => addForm.material = value,
-              ),
-              const SizedBox(height: 10),
-              Row(
-                children: [
-                  TextFormField(
-                    autocorrect: false,
-                    keyboardType: TextInputType.number,
-                    inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                    decoration: const InputDecoration(
-                        focusColor: Colors.black,
-                        hintText: 'Precio de la prenda',
-                        labelText: 'Precio',
-                        border: UnderlineInputBorder(),
-                        suffixIcon: Icon(Icons.attach_money)),
-                    onChanged: (value) => addForm.precio = value as int,
-                  ),
-                ],
-              ),
-              const SizedBox(height: 10),
-              SizedBox(
-                width: 300,
-                child: ElevatedButton(
-                  style: ButtonStyle(
-                    shape: MaterialStateProperty.all(RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(18.0),
-                    )),
-                    backgroundColor:
-                        MaterialStateProperty.all(Colors.blueAccent[100]),
-                    fixedSize: MaterialStateProperty.all(
-                        const Size(double.infinity, 30)),
-                  ),
-                  onPressed: () async {
-                    FocusScope.of(context).requestFocus(FocusNode());
-                    if (addForm.isValidForm()) {
-                      //Navigator.pushNamed(context, 'edit');
-                    }
-                  },
-                  // ignore: prefer_const_literals_to_create_immutables
-                  child: Row(children: [
-                    const Text(
-                      'Guardar',
-                      style: TextStyle(fontSize: 15),
+                              //  print('tenemos imagen ' + pickedFile!.path);
+
+                              if (pickedFile == null) {
+                              } else {
+                                imagenPath = pickedFile.path;
+
+                                pickedFile.readAsBytes().then((value) {});
+                              }
+
+                              setState(() {});
+                            },
+                            icon: const Icon(Icons.image_outlined))
+                      ],
                     ),
-                    const Spacer(),
-                    const Icon(Icons.save)
-                  ]),
+                  ],
                 ),
-              ),
-            ],
+                TextFormField(
+                    autocorrect: false,
+                    keyboardType: TextInputType.emailAddress,
+                    decoration: const InputDecoration(
+                      focusColor: Colors.black,
+                      hintText: 'Tipo de prenda',
+                      labelText: 'Tipo',
+                      suffixIcon: Icon(Icons.checkroom),
+                      border: UnderlineInputBorder(),
+                    ),
+                    onChanged: (value) => addForm.tipo = value,
+                    validator: (value) {}),
+                const SizedBox(height: 10),
+                TextFormField(
+                  autocorrect: false,
+                  decoration: const InputDecoration(
+                      focusColor: Colors.black,
+                      hintText: 'Color de prenda',
+                      labelText: 'Color',
+                      border: UnderlineInputBorder(),
+                      suffixIcon: Icon(Icons.color_lens)),
+                  onChanged: (value) => addForm.color = value,
+                ),
+                const SizedBox(height: 10),
+                TextFormField(
+                  autocorrect: false,
+                  decoration: const InputDecoration(
+                      focusColor: Colors.black,
+                      hintText: 'Genero de la prenda',
+                      labelText: 'Genero',
+                      border: UnderlineInputBorder(),
+                      suffixIcon: Icon(Icons.style)),
+                  onChanged: (value) => addForm.genero = value,
+                ),
+                const SizedBox(height: 10),
+                TextFormField(
+                  autocorrect: false,
+                  decoration: const InputDecoration(
+                      focusColor: Colors.black,
+                      hintText: 'Edad',
+                      labelText: 'Edad',
+                      border: UnderlineInputBorder(),
+                      suffixIcon: Icon(Icons.style)),
+                  onChanged: (value) => addForm.edad = value,
+                ),
+                const SizedBox(height: 10),
+                TextFormField(
+                  autocorrect: false,
+                  decoration: const InputDecoration(
+                      focusColor: Colors.black,
+                      hintText: 'Marca de la prenda',
+                      labelText: 'Marca',
+                      border: UnderlineInputBorder(),
+                      suffixIcon: Icon(Icons.style)),
+                  onChanged: (value) => addForm.marca = value,
+                ),
+                const SizedBox(height: 10),
+                TextFormField(
+                  autocorrect: false,
+                  decoration: const InputDecoration(
+                      focusColor: Colors.black,
+                      hintText: 'Modelo de la prenda',
+                      labelText: 'Modelo',
+                      border: UnderlineInputBorder(),
+                      suffixIcon: Icon(Icons.style)),
+                  onChanged: (value) => addForm.modelo = value,
+                ),
+                const SizedBox(height: 10),
+                TextFormField(
+                  autocorrect: false,
+                  decoration: const InputDecoration(
+                      focusColor: Colors.black,
+                      hintText: 'Stock de la prenda',
+                      labelText: 'Stock',
+                      border: UnderlineInputBorder(),
+                      suffixIcon: Icon(Icons.style)),
+                  onChanged: (value) => addForm.stock = value as int,
+                ),
+                const SizedBox(height: 10),
+                TextFormField(
+                  autocorrect: false,
+                  decoration: const InputDecoration(
+                      focusColor: Colors.black,
+                      hintText: 'Material de la prenda',
+                      labelText: 'Material',
+                      border: UnderlineInputBorder(),
+                      suffixIcon: Icon(Icons.style)),
+                  onChanged: (value) => addForm.material = value,
+                ),
+                const SizedBox(height: 10),
+                TextFormField(
+                  autocorrect: false,
+                  keyboardType: TextInputType.number,
+                  inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                  decoration: const InputDecoration(
+                      focusColor: Colors.black,
+                      hintText: 'Precio de la prenda',
+                      labelText: 'Precio',
+                      border: UnderlineInputBorder(),
+                      suffixIcon: Icon(Icons.attach_money)),
+                  onChanged: (value) => addForm.precio = value as int,
+                ),
+                const SizedBox(height: 10),
+                SizedBox(
+                  width: 300,
+                  child: ElevatedButton(
+                    style: ButtonStyle(
+                      shape: MaterialStateProperty.all(RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(18.0),
+                      )),
+                      backgroundColor:
+                          MaterialStateProperty.all(Colors.blueAccent[100]),
+                      fixedSize: MaterialStateProperty.all(
+                          const Size(double.infinity, 30)),
+                    ),
+                    onPressed: () async {
+                      FocusScope.of(context).requestFocus(FocusNode());
+                      if (addForm.isValidForm()) {
+                        //Navigator.pushNamed(context, 'edit');
+                      }
+                    },
+                    // ignore: prefer_const_literals_to_create_immutables
+                    child: Row(children: [
+                      const Text(
+                        'Guardar',
+                        style: TextStyle(fontSize: 15),
+                      ),
+                      const Spacer(),
+                      const Icon(Icons.save)
+                    ]),
+                  ),
+                ),
+              ],
+            ),
           )),
     );
   }

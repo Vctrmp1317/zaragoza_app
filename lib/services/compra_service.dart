@@ -9,19 +9,20 @@ import '../models/models.dart';
 import 'services.dart';
 
 class CompraServices extends ChangeNotifier {
-  final String _baseUrl = '127.0.0.1:8000';
+  final String _baseUrl = 'dressup.allsites.es';
 
   bool isLoading = true;
   final storage = const FlutterSecureStorage();
   CompraServices() {}
 
-  addCompra(int clienteId, int articuloId, int cantidad) async {
+  addCompra(int clienteId, String modelo, int cantidad, String talla) async {
     String? token = await LoginServices().readToken();
     isLoading = true;
 
-    final url = Uri.http(_baseUrl, '/api/compra', {
+    final url = Uri.http(_baseUrl, '/public/api/compra', {
       'cliente_id': '$clienteId',
-      'articulo_id': '$articuloId',
+      'modelo': modelo,
+      'talla': talla,
       'cantidad': '$cantidad',
     });
     final response = await http.post(url, headers: {
@@ -51,7 +52,7 @@ class CompraServices extends ChangeNotifier {
 
     final url = Uri.http(
       _baseUrl,
-      '/api/compras/confirmar/$idCliente',
+      '/public/api/compras/confirmar/$idCliente',
     );
     final response = await http.patch(url, headers: {
       HttpHeaders.acceptHeader: 'application/json',
@@ -59,9 +60,9 @@ class CompraServices extends ChangeNotifier {
     });
 
     final Map<String, dynamic> articulossMap = json.decode(response.body);
-
+    print(response.body);
     String resp;
-    if (articulossMap.containsKey("Compra")) {
+    if (articulossMap.containsKey("Compras realizadas")) {
       resp = 'Pedido realizado correctamente';
     } else {
       String? error = '';

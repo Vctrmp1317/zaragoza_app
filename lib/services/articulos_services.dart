@@ -9,7 +9,7 @@ import '../models/models.dart';
 import 'services.dart';
 
 class ArticulosServices extends ChangeNotifier {
-  final String _baseUrl = '127.0.0.1:8000';
+  final String _baseUrl = 'dressup.allsites.es';
 
   final List<Articulos> articulos = [];
   Articulo selectedArticulo = Articulo();
@@ -24,7 +24,7 @@ class ArticulosServices extends ChangeNotifier {
     isLoading = true;
 
     notifyListeners();
-    final url = Uri.http(_baseUrl, '/api/articulos');
+    final url = Uri.http(_baseUrl, '/public/api/articulos');
     final response = await http.get(url, headers: {
       HttpHeaders.acceptHeader: 'application/json',
       HttpHeaders.authorizationHeader: 'Bearer $token'
@@ -52,7 +52,7 @@ class ArticulosServices extends ChangeNotifier {
     isLoading = true;
 
     notifyListeners();
-    final url = Uri.http(_baseUrl, '/api/articulos/genero/$genero');
+    final url = Uri.http(_baseUrl, '/public/api/articulos/genero/$genero');
     final response = await http.get(url, headers: {
       HttpHeaders.acceptHeader: 'application/json',
       HttpHeaders.authorizationHeader: 'Bearer $token'
@@ -80,7 +80,7 @@ class ArticulosServices extends ChangeNotifier {
     isLoading = true;
 
     notifyListeners();
-    final url = Uri.http(_baseUrl, '/api/articulos/edad/$edad');
+    final url = Uri.http(_baseUrl, '/public/api/articulos/edad/$edad');
     final response = await http.get(url, headers: {
       HttpHeaders.acceptHeader: 'application/json',
       HttpHeaders.authorizationHeader: 'Bearer $token'
@@ -105,10 +105,10 @@ class ArticulosServices extends ChangeNotifier {
 
   Future loadArticulo(int id) async {
     String? token = await LoginServices().readToken();
-    storage.write(key: 'id', value: id.toString());
+    storage.write(key: 'idArticulo', value: id.toString());
     isLoading = true;
     notifyListeners();
-    final url = Uri.http(_baseUrl, '/api/articulos/$id');
+    final url = Uri.http(_baseUrl, '/public/api/articulos/$id');
     final resp = await http.get(url, headers: {
       HttpHeaders.acceptHeader: 'application/json',
       HttpHeaders.authorizationHeader: 'Bearer $token'
@@ -130,7 +130,7 @@ class ArticulosServices extends ChangeNotifier {
   }
 
   Future<String> readId() async {
-    String? i = await storage.read(key: 'id') ?? '';
+    String? i = await storage.read(key: 'idArticulo') ?? '';
     print(i);
     return i;
   }

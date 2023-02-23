@@ -9,7 +9,7 @@ import '../models/models.dart';
 import 'services.dart';
 
 class ArticuloService extends ChangeNotifier {
-  final String _baseUrl = '127.0.0.1:8000';
+  final String _baseUrl = 'dressup.allsites.es';
 
   Articulo selectedArticulo = Articulo();
   bool isLoading = true;
@@ -24,7 +24,7 @@ class ArticuloService extends ChangeNotifier {
     String? id = await ArticulosServices().readId();
     isLoading = true;
     notifyListeners();
-    final url = Uri.http(_baseUrl, '/api/articulo/$id');
+    final url = Uri.http(_baseUrl, '/public/api/articulo/$id');
     final resp = await http.get(url, headers: {
       HttpHeaders.acceptHeader: 'application/json',
       HttpHeaders.authorizationHeader: 'Bearer $token'
@@ -53,7 +53,7 @@ class ArticuloService extends ChangeNotifier {
 
     final url = Uri.http(
       _baseUrl,
-      '/api/articulo/vistas/$id',
+      '/public/api/articulo/vistas/$id',
     );
     final response = await http.patch(url, headers: {
       HttpHeaders.acceptHeader: 'application/json',

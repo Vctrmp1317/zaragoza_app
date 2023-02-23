@@ -6,7 +6,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 
 class RegisterServices extends ChangeNotifier {
-  final String _baseUrl = '127.0.0.1:8000';
+  final String _baseUrl = 'dressup.allsites.es';
 
   final storage = const FlutterSecureStorage();
 
@@ -15,7 +15,7 @@ class RegisterServices extends ChangeNotifier {
   postRegister(String name, String surname, String email, String password,
       String cPassword, String direccion) async {
     print(cPassword);
-    final url = Uri.http(_baseUrl, '/api/register', {
+    final url = Uri.http(_baseUrl, '/public/api/register', {
       'nombre': name,
       'apellidos': surname,
       'direccion': direccion,

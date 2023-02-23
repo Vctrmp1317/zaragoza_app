@@ -25,6 +25,7 @@ class _OrderScreenState extends State<OrderScreen> {
 
     setState(() {
       user = userService.selectedUser;
+      print(user.direccion);
     });
   }
 

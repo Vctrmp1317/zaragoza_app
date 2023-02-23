@@ -8,7 +8,7 @@ import '../models/models.dart';
 import 'services.dart';
 
 class AddArticulosServices extends ChangeNotifier {
-  final String _baseUrl = '127.0.0.1:8000';
+  final String _baseUrl = 'dressup.allsites.es';
 
   final List<Articulos> articulos = [];
   bool isLoading = true;
@@ -20,7 +20,7 @@ class AddArticulosServices extends ChangeNotifier {
     String? token = await LoginServices().readToken();
     isLoading = true;
 
-    final url = Uri.http(_baseUrl, '/api/articulo', {
+    final url = Uri.http(_baseUrl, '/public/api/articulo', {
       'modelo': modelo,
       'marca': marca,
       'tipo': tipo,
@@ -51,17 +51,18 @@ class AddArticulosServices extends ChangeNotifier {
     return resp;
   }
 
-  updateArticulo(String modelo, int stock, int precio, int id) async {
+  updateArticulo(String modelo, int stock, int precio, String tipo,
+      String marca, String talla, int id) async {
     String? token = await LoginServices().readToken();
     isLoading = true;
 
-    final url = Uri.http(_baseUrl, '/api/articulo/$id', {
+    final url = Uri.http(_baseUrl, '/public/api/articulo/$id', {
       'modelo': modelo,
       'stock': '$stock',
       'precio': '$precio',
-      'marca': 'marca',
-      'tipo': 'tipo',
-      'talla': 'talla',
+      'marca': marca,
+      'tipo': tipo,
+      'talla': talla,
     });
     final response = await http.put(url, headers: {
       HttpHeaders.acceptHeader: 'application/json',

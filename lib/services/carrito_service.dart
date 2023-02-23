@@ -9,7 +9,7 @@ import '../models/models.dart';
 import 'services.dart';
 
 class CarritoServices extends ChangeNotifier {
-  final String _baseUrl = '127.0.0.1:8000';
+  final String _baseUrl = 'dressup.allsites.es';
   final List<Articulos> articulos = [];
 
   bool isLoading = true;
@@ -24,7 +24,7 @@ class CarritoServices extends ChangeNotifier {
     isLoading = true;
 
     notifyListeners();
-    final url = Uri.http(_baseUrl, '/api/carrito/$idCliente');
+    final url = Uri.http(_baseUrl, '/public/api/carrito/$idCliente');
     final response = await http.get(url, headers: {
       HttpHeaders.acceptHeader: 'application/json',
       HttpHeaders.authorizationHeader: 'Bearer $token'

@@ -295,7 +295,10 @@ class _listProductsState extends State<manProducts1> {
                                         int.parse(await userService.readId());
 
                                     String? msg = await compraService.addCompra(
-                                        userId, articulos[index].id!, 1);
+                                        userId,
+                                        articulos[index].modelo!,
+                                        1,
+                                        articulos[index].talla!);
                                     CoolAlert.show(
                                       context: context,
                                       type: CoolAlertType.warning,
@@ -334,7 +337,10 @@ class _listProductsState extends State<manProducts1> {
 
                                       String? msg =
                                           await compraService.addCompra(
-                                              userId, articulos[index].id!, 1);
+                                              userId,
+                                              articulos[index].modelo!,
+                                              1,
+                                              articulos[index].talla!);
                                       CoolAlert.show(
                                         context: context,
                                         type: CoolAlertType.warning,
