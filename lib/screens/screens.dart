@@ -11,3 +11,4 @@ export '../screens/mancloth_screen.dart';
 export '../screens/womancloth_screen.dart';
 export '../screens/kidcloth_screen.dart';
 export '../screens/buy_screen.dart';
+export '../screens/outfit_screen.dart';

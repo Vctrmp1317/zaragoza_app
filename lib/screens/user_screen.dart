@@ -6,35 +6,61 @@ import 'package:flutter/services.dart';
 
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
+import 'package:zaragoza_app/api/speech_api.dart';
 import 'package:zaragoza_app/providers/add_form_provider.dart';
+import 'package:zaragoza_app/utils.dart';
 
 import '../services/services.dart';
 
 final _counter = 0;
 
-class UserScreen extends StatelessWidget {
+class UserScreen extends StatefulWidget {
   const UserScreen({Key? key}) : super(key: key);
+
+  @override
+  State<UserScreen> createState() => _UserScreenState();
+}
+
+class _UserScreenState extends State<UserScreen> {
+  String text = 'Press the button and start speaking';
+
+  bool isListening = false;
+  Future _toggleRecording() async {
+    SpeechApi.toggleRecording(onResult: (text) {
+      setState(() => this.text = text);
+      print('ENTRA 2');
+    }, onListening: (isListening) {
+      setState(() => this.isListening = isListening = isListening);
+      print('ENTRA');
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: _appbar(context),
-        body: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Column(
-                // ignore: prefer_const_literals_to_create_immutables
-                children: [
-                  const _searchBar(),
-                  const SizedBox(height: 5),
-                  Container(
-                      margin: const EdgeInsets.only(left: 20, right: 20),
-                      child: const _fondoImagen()),
-                  const ProductsCategoriesUser(),
-                ],
-              )
-            ],
+        body: GestureDetector(
+          onLongPress: _toggleRecording,
+          onLongPressEnd: (details) {
+            Utils.scanText(text, context);
+          },
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Column(
+                  // ignore: prefer_const_literals_to_create_immutables
+                  children: [
+                    const _searchBar(),
+                    const SizedBox(height: 5),
+                    Container(
+                        margin: const EdgeInsets.only(left: 20, right: 20),
+                        child: const _fondoImagen()),
+                    const ProductsCategoriesUser(),
+                  ],
+                )
+              ],
+            ),
           ),
         ));
   }

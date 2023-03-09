@@ -6,84 +6,153 @@ import 'package:cool_alert/cool_alert.dart';
 import 'package:flutter/material.dart';
 
 import 'package:provider/provider.dart';
+import 'package:zaragoza_app/api/speech_api.dart';
 
 import 'package:zaragoza_app/providers/login_form_provider.dart';
 
 import '../services/services.dart';
 
-class Login2Screen extends StatelessWidget {
+class Login2Screen extends StatefulWidget {
   const Login2Screen({Key? key}) : super(key: key);
+
+  @override
+  State<Login2Screen> createState() => _Login2ScreenState();
+}
+
+class _Login2ScreenState extends State<Login2Screen> {
+  String text = 'Press the button and start speaking';
+  bool isListening = false;
+  Future _toggleRecording() async {
+    SpeechApi.toggleRecording(
+        onResult: (text) => setState(() => this.text = text),
+        onListening: (isListening) {
+          setState(() => this.isListening = isListening = isListening);
+        });
+  }
 
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     return Scaffold(
         appBar: _appbar(context),
-        body: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            // ignore: prefer_const_literals_to_create_immutables
-            children: [
-              const SizedBox(height: 5),
-              Container(
-                margin: const EdgeInsets.only(top: 20),
-                height: size.height * 0.855,
-                decoration: const BoxDecoration(
-                    boxShadow: [BoxShadow(color: Colors.black, blurRadius: 5)],
-                    color: Colors.white,
-                    borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(30),
-                        topRight: Radius.circular(30))),
-                width: double.infinity,
-                child: Stack(
-                  children: [
-                    Positioned(
+        body: GestureDetector(
+          onLongPress: _toggleRecording,
+          onLongPressEnd: (details) async {
+            setState(() {
+              text = text.replaceAll('arroba', '@');
+              text = text.replaceAll('punto', '.');
+              text = text.replaceAll('uno', '1');
+              text = text.replaceAll('dos', '2');
+              text = text.replaceAll('tres', '3');
+              text = text.replaceAll('cuatro', '4');
+              text = text.replaceAll('cinco', '5');
+              text = text.replaceAll('seis', '6');
+              text = text.replaceAll('siete', '7');
+              text = text.replaceAll('cuatro', '4');
+            });
+            if (text == 'ir a registro') {
+              Navigator.pushReplacementNamed(context, 'registro');
+            } else if (text.contains('iniciar sesión')) {
+              String email = '';
+              String password = '';
+              print(text);
+              var cadena = [];
+              cadena = text.split(' ');
+              email = cadena[0];
+              password = cadena[1];
+
+              final loginService =
+                  Provider.of<LoginServices>(context, listen: false);
+              final userServices =
+                  Provider.of<UserServices>(context, listen: false);
+
+              final String? errorMessage =
+                  await loginService.postLogin(email, password);
+              print(errorMessage);
+              if (errorMessage == 'A') {
+                Navigator.pushNamed(context, 'tienda');
+              } else if (errorMessage == 'U') {
+                Navigator.pushNamed(context, 'userscreen');
+                userServices.loadUser;
+
+                Navigator.pushNamed(context, 'userscreen');
+              } else {
+                CoolAlert.show(
+                    context: context,
+                    type: CoolAlertType.error,
+                    title: 'Datos incorrectos',
+                    text: 'Email o Password incorrecto');
+              }
+            }
+          },
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              // ignore: prefer_const_literals_to_create_immutables
+              children: [
+                const SizedBox(height: 5),
+                Container(
+                  margin: const EdgeInsets.only(top: 20),
+                  height: size.height * 0.855,
+                  decoration: const BoxDecoration(
+                      boxShadow: [
+                        BoxShadow(color: Colors.black, blurRadius: 5)
+                      ],
+                      color: Colors.white,
+                      borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(30),
+                          topRight: Radius.circular(30))),
+                  width: double.infinity,
+                  child: Stack(
+                    children: [
+                      Positioned(
+                          top: 100,
+                          child: Container(
+                            decoration: const BoxDecoration(
+                                boxShadow: [
+                                  BoxShadow(color: Colors.black, blurRadius: 20)
+                                ],
+                                color: Colors.white,
+                                borderRadius: BorderRadius.only(
+                                    topLeft: Radius.circular(30),
+                                    topRight: Radius.circular(30))),
+                          )),
+                      Positioned(
                         top: 100,
                         child: Container(
-                          decoration: const BoxDecoration(
-                              boxShadow: [
-                                BoxShadow(color: Colors.black, blurRadius: 20)
-                              ],
-                              color: Colors.white,
-                              borderRadius: BorderRadius.only(
-                                  topLeft: Radius.circular(30),
-                                  topRight: Radius.circular(30))),
-                        )),
-                    Positioned(
-                      top: 100,
-                      child: Container(
-                        width: 300,
-                        margin: const EdgeInsets.only(top: 10, left: 30),
-                        child: ChangeNotifierProvider(
-                            create: (context) => LoginFormProvider(),
-                            child: _loginForm()),
+                          width: 300,
+                          margin: const EdgeInsets.only(top: 10, left: 30),
+                          child: ChangeNotifierProvider(
+                              create: (context) => LoginFormProvider(),
+                              child: _loginForm()),
+                        ),
                       ),
-                    ),
-                    const Positioned(
+                      const Positioned(
+                          left: 50,
+                          top: 50,
+                          child: Text(
+                            'Login',
+                            style: TextStyle(
+                              fontSize: 28,
+                            ),
+                          )),
+                      Positioned(
                         left: 50,
-                        top: 50,
-                        child: Text(
-                          'Login',
-                          style: TextStyle(
-                            fontSize: 28,
-                          ),
-                        )),
-                    Positioned(
-                      left: 50,
-                      bottom: 200,
-                      child: TextButton(
-                          onPressed: () {
-                            Navigator.popAndPushNamed(context, 'registro');
-                          },
-                          child: const Text('Registrate',
-                              style: TextStyle(
-                                fontSize: 24,
-                              ))),
-                    )
-                  ],
+                        bottom: 200,
+                        child: TextButton(
+                            onPressed: () {
+                              Navigator.popAndPushNamed(context, 'registro');
+                            },
+                            child: const Text('Registrate',
+                                style: TextStyle(
+                                  fontSize: 24,
+                                ))),
+                      )
+                    ],
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ));
   }

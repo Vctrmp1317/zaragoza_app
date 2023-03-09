@@ -7,12 +7,14 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
+import 'package:zaragoza_app/api/speech_api.dart';
 import 'package:zaragoza_app/providers/add_form_provider.dart';
 import 'package:zaragoza_app/screens/screens.dart';
 import 'package:zaragoza_app/services/carrito_service.dart';
 
 import '../models/models.dart';
 import '../services/services.dart';
+import '../utils.dart';
 
 class BuyScreen extends StatefulWidget {
   const BuyScreen({Key? key}) : super(key: key);
@@ -68,906 +70,601 @@ class _SearchScreenState extends State<BuyScreen> {
     refresh();
   }
 
+  String text = 'Press the button and start speaking';
+
+  bool isListening = false;
+
+  Future toggleRecording() => SpeechApi.toggleRecording(
+      onResult: (text) => setState(() => this.text = text),
+      onListening: (isListening) {
+        setState(() => this.isListening = isListening = isListening);
+      });
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: _appbar(context),
-        body: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Column(
-                // ignore: prefer_const_literals_to_create_immutables
-                children: [
-                  const SizedBox(height: 5),
-                  Container(
-                      margin: const EdgeInsets.only(left: 10),
-                      height: 140,
-                      width: 400,
-                      child: Stack(children: [
-                        gorros.isEmpty
-                            ? Container()
-                            : Visibility(
-                                visible: gorroSelected,
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Container(
-                                    padding: const EdgeInsets.all(8.0),
-                                    width: 330,
-                                    height: 150,
-                                    decoration: BoxDecoration(
-                                        border:
-                                            Border.all(color: Colors.black54),
-                                        color: Colors.white,
-                                        borderRadius: BorderRadius.circular(2),
-                                        // ignore: prefer_const_literals_to_create_immutables
-                                        boxShadow: [
-                                          const BoxShadow(
-                                            color: Colors.black38,
-                                            blurRadius: 5,
-                                            offset: Offset(0, 0),
-                                          )
-                                        ]),
-                                    child: Column(
-                                      children: [
-                                        Row(
-                                          children: [
-                                            Positioned(
-                                              left: 2,
-                                              child: Container(
-                                                decoration: const BoxDecoration(
-                                                  color: Colors.yellow,
-                                                ),
-                                                width: 100,
-                                                height: 100,
-                                                // ignore: prefer_const_literals_to_create_immutables
-                                                child: const ClipRRect(
-                                                  child: FadeInImage(
-                                                    placeholder: AssetImage(
-                                                        'assets/no-image.jpg'),
-                                                    image: AssetImage(
-                                                        'assets/no-image.jpg'),
-                                                    width: 100,
-                                                    height: 100,
-                                                    fit: BoxFit.cover,
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                            Container(
-                                                margin: const EdgeInsets.only(
-                                                    left: 5, right: 5),
-                                                width: 1,
-                                                height: 100,
-                                                color: Colors.black),
-                                            Container(
-                                              margin:
-                                                  const EdgeInsets.only(top: 0),
-                                              height: 100,
-                                              width: 100,
-                                              child: Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                // ignore: prefer_const_literals_to_create_immutables
-                                                children: [
-                                                  SizedBox(
-                                                    height: 20,
-                                                    child: Text(
-                                                      gorros[idGorro].modelo!,
-                                                      style: const TextStyle(
-                                                          fontSize: 18),
-                                                    ),
-                                                  ),
-                                                  const SizedBox(
-                                                    height: 5,
-                                                  ),
-                                                  Text(
-                                                    gorros[idGorro]
-                                                            .precio
-                                                            .toString() +
-                                                        '€',
-                                                    style: const TextStyle(
-                                                        fontSize: 18),
-                                                  ),
-                                                  Text(
-                                                    gorros[idGorro].talla!,
-                                                    style:
-                                                        TextStyle(fontSize: 18),
-                                                  )
-                                                ],
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ],
+        body: GestureDetector(
+          onLongPress: toggleRecording,
+          onLongPressEnd: (details) {
+            isListening = false;
+            if (text.contains('ir a') || text.contains('buscar')) {
+              print(text);
+              Utils.scanText(text, context);
+            }
+          },
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Column(
+                  // ignore: prefer_const_literals_to_create_immutables
+                  children: [
+                    const SizedBox(height: 5),
+                    Container(
+                        margin: const EdgeInsets.only(left: 10),
+                        height: 140,
+                        width: 400,
+                        child: Stack(children: [
+                          gorros.isEmpty
+                              ? Container(
+                                  child: Center(
+                                    child: const Text(
+                                      'NO HAY GORROS EN TU INVENTARIO',
+                                      style: TextStyle(
+                                        fontSize: 18,
+                                      ),
                                     ),
                                   ),
-                                ),
-                              ),
-                        Visibility(
-                          visible: !gorroSelected,
-                          child: ListView.builder(
-                            scrollDirection: Axis.horizontal,
-                            itemBuilder: ((context, index) {
-                              TextEditingController customController =
-                                  TextEditingController();
+                                )
+                              : ListView.builder(
+                                  scrollDirection: Axis.horizontal,
+                                  itemBuilder: ((context, index) {
+                                    TextEditingController customController =
+                                        TextEditingController();
 
-                              return GestureDetector(
-                                onTap: (() {
-                                  setState(() {
-                                    idGorro = index;
-                                    gorroSelected = true;
-                                  });
-                                }),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Container(
-                                    padding: const EdgeInsets.all(8.0),
-                                    width: 330,
-                                    height: 50,
-                                    decoration: BoxDecoration(
-                                        border:
-                                            Border.all(color: Colors.black54),
-                                        color: Colors.white,
-                                        borderRadius: BorderRadius.circular(2),
-                                        // ignore: prefer_const_literals_to_create_immutables
-                                        boxShadow: [
-                                          const BoxShadow(
-                                            color: Colors.black38,
-                                            blurRadius: 5,
-                                            offset: Offset(0, 0),
-                                          )
-                                        ]),
-                                    child: Column(
-                                      children: [
-                                        Row(
-                                          children: [
-                                            Positioned(
-                                              left: 2,
-                                              child: Container(
-                                                decoration: const BoxDecoration(
-                                                  color: Colors.yellow,
-                                                ),
-                                                width: 100,
-                                                height: 100,
-                                                // ignore: prefer_const_literals_to_create_immutables
-                                                child: const ClipRRect(
-                                                  child: FadeInImage(
-                                                    placeholder: AssetImage(
-                                                        'assets/no-image.jpg'),
-                                                    image: AssetImage(
-                                                        'assets/no-image.jpg'),
-                                                    width: 100,
-                                                    height: 100,
-                                                    fit: BoxFit.cover,
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                            Container(
-                                                margin: const EdgeInsets.only(
-                                                    left: 5, right: 5),
-                                                width: 1,
-                                                height: 100,
-                                                color: Colors.black),
-                                            Container(
-                                              margin:
-                                                  const EdgeInsets.only(top: 0),
-                                              height: 100,
-                                              width: 100,
-                                              child: Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                // ignore: prefer_const_literals_to_create_immutables
+                                    return GestureDetector(
+                                      onTap: (() {
+                                        setState(() {
+                                          idGorro = index;
+                                          gorroSelected = true;
+                                        });
+                                      }),
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Container(
+                                          padding: const EdgeInsets.all(8.0),
+                                          width: 330,
+                                          height: 50,
+                                          decoration: BoxDecoration(
+                                              border: Border.all(
+                                                  color: Colors.black54),
+                                              color: Colors.white,
+                                              borderRadius:
+                                                  BorderRadius.circular(2),
+                                              // ignore: prefer_const_literals_to_create_immutables
+                                              boxShadow: [
+                                                const BoxShadow(
+                                                  color: Colors.black38,
+                                                  blurRadius: 5,
+                                                  offset: Offset(0, 0),
+                                                )
+                                              ]),
+                                          child: Column(
+                                            children: [
+                                              Row(
                                                 children: [
-                                                  SizedBox(
-                                                    height: 20,
-                                                    child: Text(
-                                                      gorros[index].modelo!,
-                                                      style: const TextStyle(
-                                                          fontSize: 18),
+                                                  Positioned(
+                                                    left: 2,
+                                                    child: Container(
+                                                      decoration:
+                                                          const BoxDecoration(
+                                                        color: Colors.yellow,
+                                                      ),
+                                                      width: 100,
+                                                      height: 100,
+                                                      // ignore: prefer_const_literals_to_create_immutables
+                                                      child: const ClipRRect(
+                                                        child: FadeInImage(
+                                                          placeholder: AssetImage(
+                                                              'assets/no-image.jpg'),
+                                                          image: AssetImage(
+                                                              'assets/no-image.jpg'),
+                                                          width: 100,
+                                                          height: 100,
+                                                          fit: BoxFit.cover,
+                                                        ),
+                                                      ),
                                                     ),
                                                   ),
-                                                  const SizedBox(
-                                                    height: 5,
-                                                  ),
-                                                  Text(
-                                                    gorros[index]
-                                                            .precio
-                                                            .toString() +
-                                                        '€',
-                                                    style: const TextStyle(
-                                                        fontSize: 18),
-                                                  ),
-                                                  Text(
-                                                    gorros[index].talla!,
-                                                    style:
-                                                        TextStyle(fontSize: 18),
-                                                  )
-                                                ],
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              );
-                            }),
-                            itemCount: gorros.length,
-                          ),
-                        ),
-                      ])),
-                  Container(
-                      margin: const EdgeInsets.only(left: 10),
-                      height: 140,
-                      width: 400,
-                      child: Stack(children: [
-                        camisetas.isEmpty
-                            ? Container()
-                            : Visibility(
-                                visible: camisetaSelected,
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Container(
-                                    padding: const EdgeInsets.all(8.0),
-                                    width: 330,
-                                    height: 150,
-                                    decoration: BoxDecoration(
-                                        border:
-                                            Border.all(color: Colors.black54),
-                                        color: Colors.white,
-                                        borderRadius: BorderRadius.circular(2),
-                                        // ignore: prefer_const_literals_to_create_immutables
-                                        boxShadow: [
-                                          const BoxShadow(
-                                            color: Colors.black38,
-                                            blurRadius: 5,
-                                            offset: Offset(0, 0),
-                                          )
-                                        ]),
-                                    child: Column(
-                                      children: [
-                                        Row(
-                                          children: [
-                                            Positioned(
-                                              left: 2,
-                                              child: Container(
-                                                decoration: const BoxDecoration(
-                                                  color: Colors.yellow,
-                                                ),
-                                                width: 100,
-                                                height: 100,
-                                                // ignore: prefer_const_literals_to_create_immutables
-                                                child: const ClipRRect(
-                                                  child: FadeInImage(
-                                                    placeholder: AssetImage(
-                                                        'assets/no-image.jpg'),
-                                                    image: AssetImage(
-                                                        'assets/no-image.jpg'),
-                                                    width: 100,
+                                                  Container(
+                                                      margin:
+                                                          const EdgeInsets.only(
+                                                              left: 5,
+                                                              right: 5),
+                                                      width: 1,
+                                                      height: 100,
+                                                      color: Colors.black),
+                                                  Container(
+                                                    margin:
+                                                        const EdgeInsets.only(
+                                                            top: 0),
                                                     height: 100,
-                                                    fit: BoxFit.cover,
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                            Container(
-                                                margin: const EdgeInsets.only(
-                                                    left: 5, right: 5),
-                                                width: 1,
-                                                height: 100,
-                                                color: Colors.black),
-                                            Container(
-                                              margin:
-                                                  const EdgeInsets.only(top: 0),
-                                              height: 100,
-                                              width: 100,
-                                              child: Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                // ignore: prefer_const_literals_to_create_immutables
-                                                children: [
-                                                  SizedBox(
-                                                    height: 20,
-                                                    child: Text(
-                                                      camisetas[idCamiseta]
-                                                          .modelo!,
-                                                      style: const TextStyle(
-                                                          fontSize: 18),
+                                                    width: 100,
+                                                    child: Column(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                      // ignore: prefer_const_literals_to_create_immutables
+                                                      children: [
+                                                        SizedBox(
+                                                          height: 20,
+                                                          child: Text(
+                                                            gorros[index]
+                                                                .modelo!,
+                                                            style:
+                                                                const TextStyle(
+                                                                    fontSize:
+                                                                        18),
+                                                          ),
+                                                        ),
+                                                        const SizedBox(
+                                                          height: 5,
+                                                        ),
+                                                        Text(
+                                                          gorros[index]
+                                                                  .precio
+                                                                  .toString() +
+                                                              '€',
+                                                          style:
+                                                              const TextStyle(
+                                                                  fontSize: 18),
+                                                        ),
+                                                        Text(
+                                                          gorros[index].talla!,
+                                                          style:
+                                                              const TextStyle(
+                                                                  fontSize: 18),
+                                                        )
+                                                      ],
                                                     ),
                                                   ),
-                                                  const SizedBox(
-                                                    height: 5,
-                                                  ),
-                                                  Text(
-                                                    camisetas[idCamiseta]
-                                                            .precio
-                                                            .toString() +
-                                                        '€',
-                                                    style: const TextStyle(
-                                                        fontSize: 18),
-                                                  ),
-                                                  Text(
-                                                    camisetas[idCamiseta]
-                                                        .talla!,
-                                                    style:
-                                                        TextStyle(fontSize: 18),
-                                                  )
                                                 ],
                                               ),
-                                            ),
-                                          ],
+                                            ],
+                                          ),
                                         ),
-                                      ],
+                                      ),
+                                    );
+                                  }),
+                                  itemCount: gorros.length,
+                                ),
+                        ])),
+                    Container(
+                        margin: const EdgeInsets.only(left: 10),
+                        height: 140,
+                        width: 400,
+                        child: Stack(children: [
+                          camisetas.isEmpty
+                              ? Container(
+                                  child: Center(
+                                    child: const Text(
+                                      'NO HAY CAMISETAS EN TU INVENTARIO',
+                                      style: TextStyle(
+                                        fontSize: 18,
+                                      ),
                                     ),
                                   ),
-                                ),
-                              ),
-                        Visibility(
-                          visible: (gorroSelected && !camisetaSelected) ||
-                              (gorros.isEmpty && !camisetaSelected),
-                          child: ListView.builder(
-                            scrollDirection: Axis.horizontal,
-                            itemBuilder: ((context, index) {
-                              TextEditingController customController =
-                                  TextEditingController();
+                                )
+                              : ListView.builder(
+                                  scrollDirection: Axis.horizontal,
+                                  itemBuilder: ((context, index) {
+                                    TextEditingController customController =
+                                        TextEditingController();
 
-                              return GestureDetector(
-                                onTap: (() {
-                                  setState(() {
-                                    idCamiseta = index;
-                                    camisetaSelected = true;
-                                  });
-                                }),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Container(
-                                    padding: const EdgeInsets.all(8.0),
-                                    width: 330,
-                                    height: 150,
-                                    decoration: BoxDecoration(
-                                        border:
-                                            Border.all(color: Colors.black54),
-                                        color: Colors.white,
-                                        borderRadius: BorderRadius.circular(2),
-                                        // ignore: prefer_const_literals_to_create_immutables
-                                        boxShadow: [
-                                          const BoxShadow(
-                                            color: Colors.black38,
-                                            blurRadius: 5,
-                                            offset: Offset(0, 0),
-                                          )
-                                        ]),
-                                    child: Column(
-                                      children: [
-                                        Row(
-                                          children: [
-                                            Positioned(
-                                              left: 2,
-                                              child: Container(
-                                                decoration: const BoxDecoration(
-                                                  color: Colors.yellow,
-                                                ),
-                                                width: 100,
-                                                height: 100,
-                                                // ignore: prefer_const_literals_to_create_immutables
-                                                child: const ClipRRect(
-                                                  child: FadeInImage(
-                                                    placeholder: AssetImage(
-                                                        'assets/no-image.jpg'),
-                                                    image: AssetImage(
-                                                        'assets/no-image.jpg'),
-                                                    width: 100,
-                                                    height: 100,
-                                                    fit: BoxFit.cover,
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                            Container(
-                                                margin: const EdgeInsets.only(
-                                                    left: 5, right: 5),
-                                                width: 1,
-                                                height: 100,
-                                                color: Colors.black),
-                                            Container(
-                                              margin:
-                                                  const EdgeInsets.only(top: 0),
-                                              height: 100,
-                                              width: 100,
-                                              child: Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                // ignore: prefer_const_literals_to_create_immutables
+                                    return GestureDetector(
+                                      onTap: (() {
+                                        setState(() {
+                                          idCamiseta = index;
+                                          camisetaSelected = true;
+                                        });
+                                      }),
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Container(
+                                          padding: const EdgeInsets.all(8.0),
+                                          width: 330,
+                                          height: 150,
+                                          decoration: BoxDecoration(
+                                              border: Border.all(
+                                                  color: Colors.black54),
+                                              color: Colors.white,
+                                              borderRadius:
+                                                  BorderRadius.circular(2),
+                                              // ignore: prefer_const_literals_to_create_immutables
+                                              boxShadow: [
+                                                const BoxShadow(
+                                                  color: Colors.black38,
+                                                  blurRadius: 5,
+                                                  offset: Offset(0, 0),
+                                                )
+                                              ]),
+                                          child: Column(
+                                            children: [
+                                              Row(
                                                 children: [
-                                                  SizedBox(
-                                                    height: 20,
-                                                    child: Text(
-                                                      camisetas[index].modelo!,
-                                                      style: const TextStyle(
-                                                          fontSize: 18),
+                                                  Positioned(
+                                                    left: 2,
+                                                    child: Container(
+                                                      decoration:
+                                                          const BoxDecoration(
+                                                        color: Colors.yellow,
+                                                      ),
+                                                      width: 100,
+                                                      height: 100,
+                                                      // ignore: prefer_const_literals_to_create_immutables
+                                                      child: const ClipRRect(
+                                                        child: FadeInImage(
+                                                          placeholder: AssetImage(
+                                                              'assets/no-image.jpg'),
+                                                          image: AssetImage(
+                                                              'assets/no-image.jpg'),
+                                                          width: 100,
+                                                          height: 100,
+                                                          fit: BoxFit.cover,
+                                                        ),
+                                                      ),
                                                     ),
                                                   ),
-                                                  const SizedBox(
-                                                    height: 5,
-                                                  ),
-                                                  Text(
-                                                    camisetas[index]
-                                                            .precio
-                                                            .toString() +
-                                                        '€',
-                                                    style: const TextStyle(
-                                                        fontSize: 18),
-                                                  ),
-                                                  Text(
-                                                    camisetas[index].talla!,
-                                                    style:
-                                                        TextStyle(fontSize: 18),
-                                                  )
-                                                ],
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              );
-                            }),
-                            itemCount: camisetas.length,
-                          ),
-                        ),
-                      ])),
-                  Container(
-                      margin: const EdgeInsets.only(left: 10),
-                      height: 140,
-                      width: 400,
-                      child: Stack(children: [
-                        pantalones.isEmpty
-                            ? Container()
-                            : Visibility(
-                                visible: pantalonSelected,
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Container(
-                                    padding: const EdgeInsets.all(8.0),
-                                    width: 330,
-                                    height: 150,
-                                    decoration: BoxDecoration(
-                                        border:
-                                            Border.all(color: Colors.black54),
-                                        color: Colors.white,
-                                        borderRadius: BorderRadius.circular(2),
-                                        // ignore: prefer_const_literals_to_create_immutables
-                                        boxShadow: [
-                                          const BoxShadow(
-                                            color: Colors.black38,
-                                            blurRadius: 5,
-                                            offset: Offset(0, 0),
-                                          )
-                                        ]),
-                                    child: Column(
-                                      children: [
-                                        Row(
-                                          children: [
-                                            Positioned(
-                                              left: 2,
-                                              child: Container(
-                                                decoration: const BoxDecoration(
-                                                  color: Colors.yellow,
-                                                ),
-                                                width: 100,
-                                                height: 100,
-                                                // ignore: prefer_const_literals_to_create_immutables
-                                                child: const ClipRRect(
-                                                  child: FadeInImage(
-                                                    placeholder: AssetImage(
-                                                        'assets/no-image.jpg'),
-                                                    image: AssetImage(
-                                                        'assets/no-image.jpg'),
-                                                    width: 100,
+                                                  Container(
+                                                      margin:
+                                                          const EdgeInsets.only(
+                                                              left: 5,
+                                                              right: 5),
+                                                      width: 1,
+                                                      height: 100,
+                                                      color: Colors.black),
+                                                  Container(
+                                                    margin:
+                                                        const EdgeInsets.only(
+                                                            top: 0),
                                                     height: 100,
-                                                    fit: BoxFit.cover,
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                            Container(
-                                                margin: const EdgeInsets.only(
-                                                    left: 5, right: 5),
-                                                width: 1,
-                                                height: 100,
-                                                color: Colors.black),
-                                            Container(
-                                              margin:
-                                                  const EdgeInsets.only(top: 0),
-                                              height: 100,
-                                              width: 100,
-                                              child: Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                // ignore: prefer_const_literals_to_create_immutables
-                                                children: [
-                                                  SizedBox(
-                                                    height: 20,
-                                                    child: Text(
-                                                      pantalones[idPantalon]
-                                                          .modelo!,
-                                                      style: const TextStyle(
-                                                          fontSize: 18),
+                                                    width: 100,
+                                                    child: Column(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                      // ignore: prefer_const_literals_to_create_immutables
+                                                      children: [
+                                                        SizedBox(
+                                                          height: 20,
+                                                          child: Text(
+                                                            camisetas[index]
+                                                                .modelo!,
+                                                            style:
+                                                                const TextStyle(
+                                                                    fontSize:
+                                                                        18),
+                                                          ),
+                                                        ),
+                                                        const SizedBox(
+                                                          height: 5,
+                                                        ),
+                                                        Text(
+                                                          camisetas[index]
+                                                                  .precio
+                                                                  .toString() +
+                                                              '€',
+                                                          style:
+                                                              const TextStyle(
+                                                                  fontSize: 18),
+                                                        ),
+                                                        Text(
+                                                          camisetas[index]
+                                                              .talla!,
+                                                          style:
+                                                              const TextStyle(
+                                                                  fontSize: 18),
+                                                        )
+                                                      ],
                                                     ),
                                                   ),
-                                                  const SizedBox(
-                                                    height: 5,
-                                                  ),
-                                                  Text(
-                                                    pantalones[idPantalon]
-                                                            .precio
-                                                            .toString() +
-                                                        '€',
-                                                    style: const TextStyle(
-                                                        fontSize: 18),
-                                                  ),
-                                                  Text(
-                                                    pantalones[idPantalon]
-                                                        .talla!,
-                                                    style:
-                                                        TextStyle(fontSize: 18),
-                                                  )
                                                 ],
                                               ),
-                                            ),
-                                          ],
+                                            ],
+                                          ),
                                         ),
-                                      ],
+                                      ),
+                                    );
+                                  }),
+                                  itemCount: camisetas.length,
+                                ),
+                        ])),
+                    Container(
+                        margin: const EdgeInsets.only(left: 10),
+                        height: 140,
+                        width: 400,
+                        child: Stack(children: [
+                          pantalones.isEmpty
+                              ? Container(
+                                  child: Center(
+                                    child: const Text(
+                                      'NO HAY PANTALONES EN TU INVENTARIO',
+                                      style: TextStyle(
+                                        fontSize: 18,
+                                      ),
                                     ),
                                   ),
-                                ),
-                              ),
-                        Visibility(
-                          visible: (!pantalonSelected && camisetaSelected) ||
-                              (camisetas.isEmpty && camisetaSelected),
-                          child: ListView.builder(
-                            scrollDirection: Axis.horizontal,
-                            itemBuilder: ((context, index) {
-                              TextEditingController customController =
-                                  TextEditingController();
+                                )
+                              : ListView.builder(
+                                  scrollDirection: Axis.horizontal,
+                                  itemBuilder: ((context, index) {
+                                    TextEditingController customController =
+                                        TextEditingController();
 
-                              return GestureDetector(
-                                onTap: (() {
-                                  setState(() {
-                                    idPantalon = index;
-                                    pantalonSelected = true;
-                                  });
-                                }),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Container(
-                                    padding: const EdgeInsets.all(8.0),
-                                    width: 330,
-                                    height: 50,
-                                    decoration: BoxDecoration(
-                                        border:
-                                            Border.all(color: Colors.black54),
-                                        color: Colors.white,
-                                        borderRadius: BorderRadius.circular(2),
-                                        // ignore: prefer_const_literals_to_create_immutables
-                                        boxShadow: [
-                                          const BoxShadow(
-                                            color: Colors.black38,
-                                            blurRadius: 5,
-                                            offset: Offset(0, 0),
-                                          )
-                                        ]),
-                                    child: Column(
-                                      children: [
-                                        Row(
-                                          children: [
-                                            Positioned(
-                                              left: 2,
-                                              child: Container(
-                                                decoration: const BoxDecoration(
-                                                  color: Colors.yellow,
-                                                ),
-                                                width: 100,
-                                                height: 100,
-                                                // ignore: prefer_const_literals_to_create_immutables
-                                                child: const ClipRRect(
-                                                  child: FadeInImage(
-                                                    placeholder: AssetImage(
-                                                        'assets/no-image.jpg'),
-                                                    image: AssetImage(
-                                                        'assets/no-image.jpg'),
-                                                    width: 100,
-                                                    height: 100,
-                                                    fit: BoxFit.cover,
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                            Container(
-                                                margin: const EdgeInsets.only(
-                                                    left: 5, right: 5),
-                                                width: 1,
-                                                height: 100,
-                                                color: Colors.black),
-                                            Container(
-                                              margin:
-                                                  const EdgeInsets.only(top: 0),
-                                              height: 100,
-                                              width: 100,
-                                              child: Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                // ignore: prefer_const_literals_to_create_immutables
+                                    return GestureDetector(
+                                      onTap: (() {
+                                        setState(() {
+                                          idPantalon = index;
+                                          pantalonSelected = true;
+                                        });
+                                      }),
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Container(
+                                          padding: const EdgeInsets.all(8.0),
+                                          width: 330,
+                                          height: 50,
+                                          decoration: BoxDecoration(
+                                              border: Border.all(
+                                                  color: Colors.black54),
+                                              color: Colors.white,
+                                              borderRadius:
+                                                  BorderRadius.circular(2),
+                                              // ignore: prefer_const_literals_to_create_immutables
+                                              boxShadow: [
+                                                const BoxShadow(
+                                                  color: Colors.black38,
+                                                  blurRadius: 5,
+                                                  offset: Offset(0, 0),
+                                                )
+                                              ]),
+                                          child: Column(
+                                            children: [
+                                              Row(
                                                 children: [
-                                                  SizedBox(
-                                                    height: 20,
-                                                    child: Text(
-                                                      pantalones[index].modelo!,
-                                                      style: const TextStyle(
-                                                          fontSize: 18),
+                                                  Positioned(
+                                                    left: 2,
+                                                    child: Container(
+                                                      decoration:
+                                                          const BoxDecoration(
+                                                        color: Colors.yellow,
+                                                      ),
+                                                      width: 100,
+                                                      height: 100,
+                                                      // ignore: prefer_const_literals_to_create_immutables
+                                                      child: const ClipRRect(
+                                                        child: FadeInImage(
+                                                          placeholder: AssetImage(
+                                                              'assets/no-image.jpg'),
+                                                          image: AssetImage(
+                                                              'assets/no-image.jpg'),
+                                                          width: 100,
+                                                          height: 100,
+                                                          fit: BoxFit.cover,
+                                                        ),
+                                                      ),
                                                     ),
                                                   ),
-                                                  const SizedBox(
-                                                    height: 5,
-                                                  ),
-                                                  Text(
-                                                    pantalones[index]
-                                                            .precio
-                                                            .toString() +
-                                                        '€',
-                                                    style: const TextStyle(
-                                                        fontSize: 18),
-                                                  ),
-                                                  Text(
-                                                    pantalones[index].talla!,
-                                                    style:
-                                                        TextStyle(fontSize: 18),
-                                                  )
-                                                ],
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              );
-                            }),
-                            itemCount: pantalones.length,
-                          ),
-                        ),
-                      ])),
-                  const SizedBox(height: 5),
-                  Container(
-                      margin: const EdgeInsets.only(left: 10),
-                      height: 140,
-                      width: 400,
-                      child: Stack(children: [
-                        zapatos.isEmpty
-                            ? Container()
-                            : Visibility(
-                                visible: zapatosSelected,
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Container(
-                                    padding: const EdgeInsets.all(8.0),
-                                    width: 330,
-                                    height: 150,
-                                    decoration: BoxDecoration(
-                                        border:
-                                            Border.all(color: Colors.black54),
-                                        color: Colors.white,
-                                        borderRadius: BorderRadius.circular(2),
-                                        // ignore: prefer_const_literals_to_create_immutables
-                                        boxShadow: [
-                                          const BoxShadow(
-                                            color: Colors.black38,
-                                            blurRadius: 5,
-                                            offset: Offset(0, 0),
-                                          )
-                                        ]),
-                                    child: Column(
-                                      children: [
-                                        Row(
-                                          children: [
-                                            Positioned(
-                                              left: 2,
-                                              child: Container(
-                                                decoration: const BoxDecoration(
-                                                  color: Colors.yellow,
-                                                ),
-                                                width: 100,
-                                                height: 100,
-                                                // ignore: prefer_const_literals_to_create_immutables
-                                                child: const ClipRRect(
-                                                  child: FadeInImage(
-                                                    placeholder: AssetImage(
-                                                        'assets/no-image.jpg'),
-                                                    image: AssetImage(
-                                                        'assets/no-image.jpg'),
-                                                    width: 100,
+                                                  Container(
+                                                      margin:
+                                                          const EdgeInsets.only(
+                                                              left: 5,
+                                                              right: 5),
+                                                      width: 1,
+                                                      height: 100,
+                                                      color: Colors.black),
+                                                  Container(
+                                                    margin:
+                                                        const EdgeInsets.only(
+                                                            top: 0),
                                                     height: 100,
-                                                    fit: BoxFit.cover,
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                            Container(
-                                                margin: const EdgeInsets.only(
-                                                    left: 5, right: 5),
-                                                width: 1,
-                                                height: 100,
-                                                color: Colors.black),
-                                            Container(
-                                              margin:
-                                                  const EdgeInsets.only(top: 0),
-                                              height: 100,
-                                              width: 100,
-                                              child: Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                // ignore: prefer_const_literals_to_create_immutables
-                                                children: [
-                                                  SizedBox(
-                                                    height: 20,
-                                                    child: Text(
-                                                      zapatos[idZapatos]
-                                                          .modelo!,
-                                                      style: const TextStyle(
-                                                          fontSize: 18),
+                                                    width: 100,
+                                                    child: Column(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                      // ignore: prefer_const_literals_to_create_immutables
+                                                      children: [
+                                                        SizedBox(
+                                                          height: 20,
+                                                          child: Text(
+                                                            pantalones[index]
+                                                                .modelo!,
+                                                            style:
+                                                                const TextStyle(
+                                                                    fontSize:
+                                                                        18),
+                                                          ),
+                                                        ),
+                                                        const SizedBox(
+                                                          height: 5,
+                                                        ),
+                                                        Text(
+                                                          pantalones[index]
+                                                                  .precio
+                                                                  .toString() +
+                                                              '€',
+                                                          style:
+                                                              const TextStyle(
+                                                                  fontSize: 18),
+                                                        ),
+                                                        Text(
+                                                          pantalones[index]
+                                                              .talla!,
+                                                          style:
+                                                              const TextStyle(
+                                                                  fontSize: 18),
+                                                        )
+                                                      ],
                                                     ),
                                                   ),
-                                                  const SizedBox(
-                                                    height: 5,
-                                                  ),
-                                                  Text(
-                                                    zapatos[idZapatos]
-                                                            .precio
-                                                            .toString() +
-                                                        '€',
-                                                    style: const TextStyle(
-                                                        fontSize: 18),
-                                                  ),
-                                                  Text(
-                                                    zapatos[idZapatos].talla!,
-                                                    style:
-                                                        TextStyle(fontSize: 18),
-                                                  )
                                                 ],
                                               ),
-                                            ),
-                                          ],
+                                            ],
+                                          ),
                                         ),
-                                      ],
+                                      ),
+                                    );
+                                  }),
+                                  itemCount: pantalones.length,
+                                ),
+                        ])),
+                    const SizedBox(height: 5),
+                    Container(
+                        margin: const EdgeInsets.only(left: 10),
+                        height: 140,
+                        width: 400,
+                        child: Stack(children: [
+                          zapatos.isEmpty
+                              ? Container(
+                                  // ignore: prefer_const_constructors
+                                  child: Center(
+                                    child: const Text(
+                                      'NO HAY ZAPATOS EN TU INVENTARIO',
+                                      style: TextStyle(
+                                        fontSize: 18,
+                                      ),
                                     ),
                                   ),
-                                ),
-                              ),
-                        Visibility(
-                          visible: (!zapatosSelected && pantalonSelected) ||
-                              (pantalones.isEmpty && pantalonSelected),
-                          child: ListView.builder(
-                            scrollDirection: Axis.horizontal,
-                            itemBuilder: ((context, index) {
-                              TextEditingController customController =
-                                  TextEditingController();
+                                )
+                              : ListView.builder(
+                                  scrollDirection: Axis.horizontal,
+                                  itemBuilder: ((context, index) {
+                                    TextEditingController customController =
+                                        TextEditingController();
 
-                              return GestureDetector(
-                                onTap: (() {
-                                  setState(() {
-                                    idZapatos = index;
-                                    zapatosSelected = true;
-                                  });
-                                }),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Container(
-                                    padding: const EdgeInsets.all(8.0),
-                                    width: 330,
-                                    height: 50,
-                                    decoration: BoxDecoration(
-                                        border:
-                                            Border.all(color: Colors.black54),
-                                        color: Colors.white,
-                                        borderRadius: BorderRadius.circular(2),
-                                        // ignore: prefer_const_literals_to_create_immutables
-                                        boxShadow: [
-                                          const BoxShadow(
-                                            color: Colors.black38,
-                                            blurRadius: 5,
-                                            offset: Offset(0, 0),
-                                          )
-                                        ]),
-                                    child: Column(
-                                      children: [
-                                        Row(
-                                          children: [
-                                            Positioned(
-                                              left: 2,
-                                              child: Container(
-                                                decoration: const BoxDecoration(
-                                                  color: Colors.yellow,
-                                                ),
-                                                width: 100,
-                                                height: 100,
-                                                // ignore: prefer_const_literals_to_create_immutables
-                                                child: const ClipRRect(
-                                                  child: FadeInImage(
-                                                    placeholder: AssetImage(
-                                                        'assets/no-image.jpg'),
-                                                    image: AssetImage(
-                                                        'assets/no-image.jpg'),
-                                                    width: 100,
-                                                    height: 100,
-                                                    fit: BoxFit.cover,
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                            Container(
-                                                margin: const EdgeInsets.only(
-                                                    left: 5, right: 5),
-                                                width: 1,
-                                                height: 100,
-                                                color: Colors.black),
-                                            Container(
-                                              margin:
-                                                  const EdgeInsets.only(top: 0),
-                                              height: 100,
-                                              width: 100,
-                                              child: Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                // ignore: prefer_const_literals_to_create_immutables
+                                    return GestureDetector(
+                                      onTap: (() {
+                                        setState(() {
+                                          idZapatos = index;
+                                          zapatosSelected = true;
+                                        });
+                                      }),
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Container(
+                                          padding: const EdgeInsets.all(8.0),
+                                          width: 330,
+                                          height: 50,
+                                          decoration: BoxDecoration(
+                                              border: Border.all(
+                                                  color: Colors.black54),
+                                              color: Colors.white,
+                                              borderRadius:
+                                                  BorderRadius.circular(2),
+                                              // ignore: prefer_const_literals_to_create_immutables
+                                              boxShadow: [
+                                                const BoxShadow(
+                                                  color: Colors.black38,
+                                                  blurRadius: 5,
+                                                  offset: Offset(0, 0),
+                                                )
+                                              ]),
+                                          child: Column(
+                                            children: [
+                                              Row(
                                                 children: [
-                                                  SizedBox(
-                                                    height: 20,
-                                                    child: Text(
-                                                      pantalones[index].modelo!,
-                                                      style: const TextStyle(
-                                                          fontSize: 18),
+                                                  Positioned(
+                                                    left: 2,
+                                                    child: Container(
+                                                      decoration:
+                                                          const BoxDecoration(
+                                                        color: Colors.yellow,
+                                                      ),
+                                                      width: 100,
+                                                      height: 100,
+                                                      // ignore: prefer_const_literals_to_create_immutables
+                                                      child: const ClipRRect(
+                                                        child: FadeInImage(
+                                                          placeholder: AssetImage(
+                                                              'assets/no-image.jpg'),
+                                                          image: AssetImage(
+                                                              'assets/no-image.jpg'),
+                                                          width: 100,
+                                                          height: 100,
+                                                          fit: BoxFit.cover,
+                                                        ),
+                                                      ),
                                                     ),
                                                   ),
-                                                  const SizedBox(
-                                                    height: 5,
+                                                  Container(
+                                                      margin:
+                                                          const EdgeInsets.only(
+                                                              left: 5,
+                                                              right: 5),
+                                                      width: 1,
+                                                      height: 100,
+                                                      color: Colors.black),
+                                                  Container(
+                                                    margin:
+                                                        const EdgeInsets.only(
+                                                            top: 0),
+                                                    height: 100,
+                                                    width: 100,
+                                                    child: Column(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                      // ignore: prefer_const_literals_to_create_immutables
+                                                      children: [
+                                                        SizedBox(
+                                                          height: 20,
+                                                          child: Text(
+                                                            pantalones[index]
+                                                                .modelo!,
+                                                            style:
+                                                                const TextStyle(
+                                                                    fontSize:
+                                                                        18),
+                                                          ),
+                                                        ),
+                                                        const SizedBox(
+                                                          height: 5,
+                                                        ),
+                                                        Text(
+                                                          zapatos[index]
+                                                                  .precio
+                                                                  .toString() +
+                                                              '€',
+                                                          style:
+                                                              const TextStyle(
+                                                                  fontSize: 18),
+                                                        ),
+                                                        Text(
+                                                          zapatos[index].talla!,
+                                                          style:
+                                                              const TextStyle(
+                                                                  fontSize: 18),
+                                                        )
+                                                      ],
+                                                    ),
                                                   ),
-                                                  Text(
-                                                    zapatos[index]
-                                                            .precio
-                                                            .toString() +
-                                                        '€',
-                                                    style: const TextStyle(
-                                                        fontSize: 18),
-                                                  ),
-                                                  Text(
-                                                    zapatos[index].talla!,
-                                                    style:
-                                                        TextStyle(fontSize: 18),
-                                                  )
                                                 ],
                                               ),
-                                            ),
-                                          ],
+                                            ],
+                                          ),
                                         ),
-                                      ],
-                                    ),
-                                  ),
+                                      ),
+                                    );
+                                  }),
+                                  itemCount: zapatos.length,
                                 ),
-                              );
-                            }),
-                            itemCount: zapatos.length,
-                          ),
-                        ),
-                      ])),
-                ],
-              )
-            ],
+                        ])),
+                  ],
+                )
+              ],
+            ),
           ),
         ));
   }
@@ -986,9 +683,15 @@ class _SearchScreenState extends State<BuyScreen> {
       elevation: 0,
       title: Row(
         children: [
-          const Text('Articulos Comprados',
+          const Text('Inventario',
               style: TextStyle(color: Colors.white, fontSize: 25)),
           const Spacer(),
+          IconButton(
+              color: Colors.white,
+              onPressed: () {
+                Navigator.pushReplacementNamed(context, 'outfitscreen');
+              },
+              icon: const Icon(Icons.swap_horizontal_circle)),
         ],
       ),
     );

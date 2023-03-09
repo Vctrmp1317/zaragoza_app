@@ -9,18 +9,30 @@ class SpeechApi {
       required ValueChanged<bool> onListening}) async {
     if (_speech.isListening) {
       _speech.stop();
+      print('Para');
       return true;
     }
+
     final isAvaible = await _speech.initialize(
-        onStatus: (status) => onListening(_speech.isListening),
+        onStatus: (status) {
+          print('ADIOS');
+          print(status);
+          print('HOLA' + _speech.isListening.toString());
+          onListening(_speech.isListening);
+        },
+        // ignore: avoid_print
         onError: (e) => print('Error: $e'));
 
     if (isAvaible) {
-      _speech.listen(onResult: (value) => onResult(value.recognizedWords));
-
+      print('entra');
+      await _speech.listen(onResult: (value) {
+        print(value.recognizedWords + ' escucha');
+        onResult(value.recognizedWords);
+      });
+      print('sale');
       return isAvaible;
     }
-
+    print('sale2');
     return isAvaible;
   }
 }
