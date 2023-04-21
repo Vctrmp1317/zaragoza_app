@@ -108,8 +108,8 @@ class _SearchScreenState extends State<BuyScreen> {
                         child: Stack(children: [
                           gorros.isEmpty
                               ? Container(
-                                  child: Center(
-                                    child: const Text(
+                                  child: const Center(
+                                    child: Text(
                                       'NO HAY GORROS EN TU INVENTARIO',
                                       style: TextStyle(
                                         fontSize: 18,
@@ -164,17 +164,39 @@ class _SearchScreenState extends State<BuyScreen> {
                                                       width: 100,
                                                       height: 100,
                                                       // ignore: prefer_const_literals_to_create_immutables
-                                                      child: const ClipRRect(
-                                                        child: FadeInImage(
-                                                          placeholder: AssetImage(
-                                                              'assets/no-image.jpg'),
-                                                          image: AssetImage(
-                                                              'assets/no-image.jpg'),
-                                                          width: 100,
-                                                          height: 100,
-                                                          fit: BoxFit.cover,
-                                                        ),
-                                                      ),
+                                                      child:
+                                                          articulos[index]
+                                                                      .foto ==
+                                                                  null
+                                                              ? const ClipRRect(
+                                                                  child:
+                                                                      FadeInImage(
+                                                                    placeholder:
+                                                                        AssetImage(
+                                                                            'assets/no-image.jpg'),
+                                                                    image: AssetImage(
+                                                                        'assets/no-image.jpg'),
+                                                                    width: 300,
+                                                                    height: 200,
+                                                                    fit: BoxFit
+                                                                        .cover,
+                                                                  ),
+                                                                )
+                                                              : ClipRRect(
+                                                                  child:
+                                                                      FadeInImage(
+                                                                    placeholder:
+                                                                        const AssetImage(
+                                                                            'assets/no-image.jpg'),
+                                                                    image: NetworkImage(
+                                                                        'http://dressup.allsites.es/public/imagenes/' +
+                                                                            articulos[index].foto!),
+                                                                    width: 300,
+                                                                    height: 200,
+                                                                    fit: BoxFit
+                                                                        .cover,
+                                                                  ),
+                                                                ),
                                                     ),
                                                   ),
                                                   Container(
@@ -247,8 +269,8 @@ class _SearchScreenState extends State<BuyScreen> {
                         child: Stack(children: [
                           camisetas.isEmpty
                               ? Container(
-                                  child: Center(
-                                    child: const Text(
+                                  child: const Center(
+                                    child: Text(
                                       'NO HAY CAMISETAS EN TU INVENTARIO',
                                       style: TextStyle(
                                         fontSize: 18,
@@ -387,8 +409,8 @@ class _SearchScreenState extends State<BuyScreen> {
                         child: Stack(children: [
                           pantalones.isEmpty
                               ? Container(
-                                  child: Center(
-                                    child: const Text(
+                                  child: const Center(
+                                    child: Text(
                                       'NO HAY PANTALONES EN TU INVENTARIO',
                                       style: TextStyle(
                                         fontSize: 18,

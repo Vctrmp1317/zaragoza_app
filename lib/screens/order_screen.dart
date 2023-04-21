@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:cool_alert/cool_alert.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:flutter_tts/flutter_tts.dart';
 
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
@@ -11,6 +12,8 @@ import 'package:zaragoza_app/services/services.dart';
 import 'package:zaragoza_app/utils.dart';
 
 import '../models/models.dart';
+
+final ttsCompra = FlutterTts();
 
 class OrderScreen extends StatefulWidget {
   const OrderScreen({Key? key}) : super(key: key);
@@ -24,7 +27,8 @@ class _OrderScreenState extends State<OrderScreen> {
   DataUser user = UserServices().selectedUser;
   Future refresh() async {
     await userService.loadUser();
-
+    ttsCompra.setSpeechRate(0.5);
+    ttsCompra.speak('Estás en el trámite de compra.');
     setState(() {
       user = userService.selectedUser;
       print(user.direccion);
@@ -72,6 +76,7 @@ class _OrderScreenState extends State<OrderScreen> {
                         backgroundColor: Colors.green,
                         textColor: Colors.black,
                         fontSize: 16.0);
+                    ttsCompra.speak('Pedido efectuado con éxito.');
                     Timer(const Duration(seconds: 1), () {
                       Navigator.pushReplacementNamed(context, 'userscreen');
                     });

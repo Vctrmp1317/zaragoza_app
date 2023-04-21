@@ -26,7 +26,7 @@ class Articulo {
   String? tipo;
   String? genero;
   String? edad;
-  Null? foto;
+  String? foto;
   String? material;
   String? color;
   int? stock;

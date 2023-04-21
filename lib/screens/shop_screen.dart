@@ -236,15 +236,29 @@ class _listProductsState extends State<listProducts> {
                         ),
                         width: 300,
                         height: 200,
-                        child: const ClipRRect(
-                          child: FadeInImage(
-                            placeholder: AssetImage('assets/no-image.jpg'),
-                            image: AssetImage('assets/no-image.jpg'),
-                            width: 300,
-                            height: 200,
-                            fit: BoxFit.cover,
-                          ),
-                        ),
+                        child: articulos[index].foto == null
+                            ? const ClipRRect(
+                                child: FadeInImage(
+                                  placeholder:
+                                      AssetImage('assets/no-image.jpg'),
+                                  image: AssetImage('assets/no-image.jpg'),
+                                  width: 300,
+                                  height: 200,
+                                  fit: BoxFit.cover,
+                                ),
+                              )
+                            : ClipRRect(
+                                child: FadeInImage(
+                                  placeholder:
+                                      const AssetImage('assets/no-image.jpg'),
+                                  image: NetworkImage(
+                                      'http://dressup.allsites.es/public/imagenes/' +
+                                          articulos[index].foto!),
+                                  width: 300,
+                                  height: 200,
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
                       ),
                       Positioned(
                           right: 0,
@@ -265,13 +279,16 @@ class _listProductsState extends State<listProducts> {
                     const SizedBox(
                       height: 5,
                     ),
-                    Row(
-                      // ignore: prefer_const_literals_to_create_immutables
-                      children: [
-                        Text(articulos[index].modelo!,
-                            style: const TextStyle(
-                                fontSize: 18, fontWeight: FontWeight.bold))
-                      ],
+                    SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Row(
+                        // ignore: prefer_const_literals_to_create_immutables
+                        children: [
+                          Text(articulos[index].modelo!,
+                              style: const TextStyle(
+                                  fontSize: 18, fontWeight: FontWeight.bold))
+                        ],
+                      ),
                     ),
                     Row(
                       // ignore: prefer_const_literals_to_create_immutables
@@ -324,8 +341,24 @@ class _listProductsState extends State<listProducts> {
                                 },
                               );
                             },
-                            icon:
-                                const Icon(Icons.remove_shopping_cart_outlined))
+                            icon: const Icon(
+                                Icons.remove_shopping_cart_outlined)),
+                        Spacer(),
+                        IconButton(
+                            onPressed: () {
+                              final articuloService =
+                                  Provider.of<ArticuloService>(context,
+                                      listen: false);
+                              setState(() {
+                                final idArticulo;
+                                idArticulo = articulos[ind].id!;
+
+                                articulosService.loadArticulo(idArticulo);
+                              });
+                              Navigator.pushReplacementNamed(
+                                  context, 'writescreen');
+                            },
+                            icon: Icon(Icons.nfc))
                       ],
                     )
                   ],

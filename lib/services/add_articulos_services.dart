@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:image_picker/image_picker.dart';
 
 import '../models/models.dart';
 import 'services.dart';
@@ -15,11 +16,33 @@ class AddArticulosServices extends ChangeNotifier {
 
   AddArticulosServices() {}
 
-  addArticulo(String modelo, String marca, String tipo, String genero,
-      String edad, String material, String color, int stock, int precio) async {
+  addArticulo(
+      String modelo,
+      String marca,
+      String tipo,
+      String genero,
+      String edad,
+      String material,
+      String color,
+      String talla,
+      int stock,
+      int precio,
+      XFile image) async {
     String? token = await LoginServices().readToken();
     isLoading = true;
-
+    print(modelo);
+    final Map<String, String> art = {
+      'modelo': modelo,
+      'marca': marca,
+      'tipo': tipo,
+      'genero': genero,
+      'edad': genero,
+      'material': material,
+      'color': color,
+      'talla': talla,
+      'stock': '$stock',
+      'precio': '$precio',
+    };
     final url = Uri.http(_baseUrl, '/public/api/articulo', {
       'modelo': modelo,
       'marca': marca,
@@ -28,16 +51,29 @@ class AddArticulosServices extends ChangeNotifier {
       'edad': genero,
       'material': material,
       'color': color,
+      'talla': talla,
       'stock': '$stock',
       'precio': '$precio',
     });
-    final response = await http.post(url, headers: {
-      HttpHeaders.acceptHeader: 'application/json',
-      HttpHeaders.authorizationHeader: 'Bearer $token'
-    });
+
+    final request = http.MultipartRequest('POST', url)
+      ..headers['Authorization'] = 'Bearer $token'
+      ..headers['Accept'] = 'application/json'
+      ..fields.addAll(art)
+      ..files.add(await http.MultipartFile.fromPath('foto', image.path));
+    // final response = await http.post(url, headers: {
+    //   HttpHeaders.acceptHeader: 'application/json',
+    //   HttpHeaders.fauthorizationHeader: 'Bearer $token'
+    // });
+
+    print(request.fields);
+    print('añade');
+
+    final response = await http.Response.fromStream(await request.send());
 
     final Map<String, dynamic> articulossMap = json.decode(response.body);
-
+    print('envia');
+    print(response.body);
     String resp;
     if (articulossMap.containsValue(true)) {
       resp = 'articulo añadido correctamente';

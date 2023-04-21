@@ -1,5 +1,6 @@
 import 'package:cool_alert/cool_alert.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_tts/flutter_tts.dart';
 
 import 'package:provider/provider.dart';
 
@@ -7,6 +8,8 @@ import 'package:zaragoza_app/providers/register_form_provider.dart';
 import 'package:zaragoza_app/screens/screens.dart';
 
 import '../services/services.dart';
+
+final ttsRegistro = FlutterTts();
 
 class RegisterScreen extends StatelessWidget {
   const RegisterScreen({Key? key}) : super(key: key);
@@ -153,6 +156,13 @@ class _registerForm extends StatefulWidget {
 
 class _registerFormState extends State<_registerForm> {
   String confirmarPassword = '';
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    ttsRegistro.setSpeechRate(0.5);
+    ttsRegistro.speak('Bienvenido al inicio de sesión.');
+  }
 
   @override
   Widget build(BuildContext context) {

@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:cool_alert/cool_alert.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_tts/flutter_tts.dart';
 
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
@@ -13,6 +14,7 @@ import 'package:zaragoza_app/utils.dart';
 import '../services/services.dart';
 
 final _counter = 0;
+final ttsUser = FlutterTts();
 
 class UserScreen extends StatefulWidget {
   const UserScreen({Key? key}) : super(key: key);
@@ -202,6 +204,12 @@ class ProductsCategoriesUser extends StatefulWidget {
 
 class _ProductsCategoriesUserState extends State<ProductsCategoriesUser> {
   @override
+  void initState() {
+    super.initState();
+    ttsUser.speak('Bienvenido a la pantalla de inicio.');
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Container(
         margin: const EdgeInsets.only(left: 10),
@@ -298,7 +306,7 @@ class Card extends StatelessWidget {
         decoration: BoxDecoration(
             border: Border.all(color: Colors.black54),
             color: Colors.white,
-            borderRadius: BorderRadius.circular(2),
+            borderRadius: BorderRadius.circular(10),
             // ignore: prefer_const_literals_to_create_immutables
             boxShadow: [
               const BoxShadow(
@@ -364,7 +372,7 @@ class Card4 extends StatelessWidget {
         decoration: BoxDecoration(
             border: Border.all(color: Colors.black54),
             color: Colors.white,
-            borderRadius: BorderRadius.circular(2),
+            borderRadius: BorderRadius.circular(10),
             // ignore: prefer_const_literals_to_create_immutables
             boxShadow: [
               const BoxShadow(
@@ -393,12 +401,6 @@ class Card4 extends StatelessWidget {
                       fit: BoxFit.cover,
                     ),
                   ),
-                  const Positioned(
-                      top: 2,
-                      left: 5,
-                      child: Text('Destacado',
-                          style: TextStyle(
-                              fontSize: 18, backgroundColor: Colors.white38))),
                 ]),
               ),
             ]),
@@ -436,7 +438,7 @@ class Card3 extends StatelessWidget {
         decoration: BoxDecoration(
             border: Border.all(color: Colors.black54),
             color: Colors.white,
-            borderRadius: BorderRadius.circular(2),
+            borderRadius: BorderRadius.circular(10),
             // ignore: prefer_const_literals_to_create_immutables
             boxShadow: [
               const BoxShadow(
@@ -501,7 +503,7 @@ class Card2 extends StatelessWidget {
         decoration: BoxDecoration(
             border: Border.all(color: Colors.black54),
             color: Colors.white,
-            borderRadius: BorderRadius.circular(2),
+            borderRadius: BorderRadius.circular(10),
             // ignore: prefer_const_literals_to_create_immutables
             boxShadow: [
               const BoxShadow(
@@ -551,13 +553,22 @@ class _fondoImagen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const ClipRRect(
-      child: FadeInImage(
-        placeholder: AssetImage('assets/no-image.jpg'),
-        image: AssetImage('assets/image.jpg'),
-        width: 350,
-        height: 200,
-        fit: BoxFit.cover,
+    return Container(
+      decoration: BoxDecoration(
+          color: Colors.yellow,
+          borderRadius: BorderRadius.circular(10),
+          boxShadow: [BoxShadow(color: Colors.black, blurRadius: 5)]),
+      width: 351,
+      height: 201,
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(10),
+        child: FadeInImage(
+          placeholder: AssetImage('assets/no-image.jpg'),
+          image: AssetImage('assets/cartel.jpg'),
+          width: 350,
+          height: 200,
+          fit: BoxFit.cover,
+        ),
       ),
     );
   }

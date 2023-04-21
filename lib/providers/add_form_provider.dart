@@ -6,12 +6,13 @@ class AddFormProvider extends ChangeNotifier {
   String modelo = '';
   String marca = '';
   String genero = '';
-  int stock = 0;
+  String stock = '';
   String edad = '';
   String color = '';
   String tipo = '';
   String material = '';
-  int precio = 0;
+  String precio = '';
+  String talla = '';
 
   bool isValidForm() {
     return formKey.currentState?.validate() ?? false;

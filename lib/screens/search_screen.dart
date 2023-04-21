@@ -154,9 +154,11 @@ class _listProductsState extends State<listProducts1> {
   final articulosService = ArticulosServices();
   String text = 'Press the button and start speaking';
   bool isListening = false;
+
   int ind = -1;
   void updateList(String value) {
     setState(() {
+      ind = -1;
       articulos = articulosService.articulos
           .where((element) =>
               element.tipo!.toLowerCase().contains(value.toLowerCase()))
@@ -195,6 +197,7 @@ class _listProductsState extends State<listProducts1> {
   }
 
   Future refresh() async {
+    ttsBuscar.speak('Estás en la pantalla de búsqueda');
     setState(() => articulos.clear());
 
     await articulosService.getArticulos();
@@ -212,13 +215,6 @@ class _listProductsState extends State<listProducts1> {
 
   @override
   Widget build(BuildContext context) {
-    List<AssetImage> imagenes = [];
-    imagenes.add(const AssetImage('assets/camiseta.jpg'));
-    imagenes.add(const AssetImage('assets/camiseta2.jpg'));
-    imagenes.add(const AssetImage('assets/camiseta3.jpg'));
-    imagenes.add(const AssetImage('assets/pantalon.jpg'));
-    imagenes.add(const AssetImage('assets/pantalon2.jpg'));
-    imagenes.add(const AssetImage('assets/pantalon3.jpg'));
     return Column(
       children: [
         Row(
@@ -268,11 +264,13 @@ class _listProductsState extends State<listProducts1> {
                 if (ind > articulos.length) {
                   ttsBuscar.speak('No hay mas productos');
                 } else {
-                  ttsBuscar.speak(articulos[ind].tipo! +
+                  ttsBuscar.speak(articulos[ind].modelo! +
                       '. color:' +
                       articulos[ind].color! +
                       ', marca:' +
                       articulos[ind].marca! +
+                      ', talla:' +
+                      articulos[ind].talla! +
                       '. ');
                 }
               });
@@ -339,36 +337,46 @@ class _listProductsState extends State<listProducts1> {
                                 ),
                                 width: 300,
                                 height: 200,
-                                child: ClipRRect(
-                                  child: FadeInImage(
-                                    placeholder:
-                                        AssetImage('assets/no-image.jpg'),
-                                    image: articulos[index].modelo == 'modelo 7'
-                                        ? AssetImage('assets/pantalonVerde.jpg')
-                                        : articulos[index].tipo == 'Pantalon'
-                                            ? AssetImage('assets/pantalon.jpg')
-                                            : index > imagenes.length
-                                                ? AssetImage(
-                                                    'assets/no-image.jpg')
-                                                : imagenes[index],
-                                    width: 300,
-                                    height: 200,
-                                    fit: BoxFit.cover,
-                                  ),
-                                ),
+                                child: articulos[index].foto == null
+                                    ? ClipRRect(
+                                        child: FadeInImage(
+                                          placeholder:
+                                              AssetImage('assets/no-image.jpg'),
+                                          image:
+                                              AssetImage('assets/no-image.jpg'),
+                                          width: 300,
+                                          height: 200,
+                                          fit: BoxFit.cover,
+                                        ),
+                                      )
+                                    : ClipRRect(
+                                        child: FadeInImage(
+                                          placeholder:
+                                              AssetImage('assets/no-image.jpg'),
+                                          image: NetworkImage(
+                                              'http://dressup.allsites.es/public/imagenes/' +
+                                                  articulos[index].foto!),
+                                          width: 300,
+                                          height: 200,
+                                          fit: BoxFit.cover,
+                                        ),
+                                      ),
                               ),
                             ]),
                             const SizedBox(
                               height: 5,
                             ),
-                            Row(
-                              // ignore: prefer_const_literals_to_create_immutables
-                              children: [
-                                Text(articulos[index].modelo!,
-                                    style: const TextStyle(
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.bold))
-                              ],
+                            SingleChildScrollView(
+                              scrollDirection: Axis.horizontal,
+                              child: Row(
+                                // ignore: prefer_const_literals_to_create_immutables
+                                children: [
+                                  Text(articulos[index].modelo!,
+                                      style: const TextStyle(
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.bold))
+                                ],
+                              ),
                             ),
                             Row(
                               // ignore: prefer_const_literals_to_create_immutables

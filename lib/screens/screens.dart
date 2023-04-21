@@ -12,3 +12,5 @@ export '../screens/womancloth_screen.dart';
 export '../screens/kidcloth_screen.dart';
 export '../screens/buy_screen.dart';
 export '../screens/outfit_screen.dart';
+export '../screens/scanner_screen.dart';
+export '../screens/write_screen.dart';

@@ -36,6 +36,12 @@ class Utils {
 
         goInventario(body: body, context: context);
       }
+      if (text.contains('escaner')) {
+        final body =
+            _getTextAfterCommand(text: text, command: Command.browser1);
+
+        goScanner(body: body, context: context);
+      }
       if (text.contains('generador')) {
         final body =
             _getTextAfterCommand(text: text, command: Command.browser1);
@@ -110,6 +116,10 @@ class Utils {
 
   static Future goInventario({required String body, required context}) async {
     return Navigator.pushReplacementNamed(context, 'buyscreen');
+  }
+
+  static Future goScanner({required String body, required context}) async {
+    return Navigator.pushReplacementNamed(context, 'scannerscreen');
   }
 
   static Future goGenerador({required String body, required context}) async {

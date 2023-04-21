@@ -177,6 +177,8 @@ class _listProductsState extends State<kidProducts1> {
   List<Articulos> articulos = [];
 
   Future refresh() async {
+    ttsNinio.setSpeechRate(0.5);
+    ttsNinio.speak('Estás en la sección de niños.');
     setState(() => articulos.clear());
   }
 
@@ -206,6 +208,7 @@ class _listProductsState extends State<kidProducts1> {
   Widget build(BuildContext context) {
     final articulosService = Provider.of<ArticulosGeneroServices>(context);
     articulos = articulosService.articulos;
+
     return GestureDetector(
       onLongPress: toggleRecording,
       onLongPressEnd: (details) {
@@ -218,8 +221,14 @@ class _listProductsState extends State<kidProducts1> {
           if (ind > articulos.length) {
             ttsNinio.speak('No hay mas articulos');
           } else
-            ttsNinio.speak(
-                '${articulos[ind].tipo!}. color: ${articulos[ind].color!}, marca:${articulos[ind].marca!}. ');
+            ttsNinio.speak(articulos[ind].modelo! +
+                '. color:' +
+                articulos[ind].color! +
+                ', marca:' +
+                articulos[ind].marca! +
+                ', talla:' +
+                articulos[ind].talla! +
+                '. ');
         } else if (text.contains('seleccionar artículo')) {
           final articuloService =
               Provider.of<ArticuloService>(context, listen: false);
@@ -278,27 +287,45 @@ class _listProductsState extends State<kidProducts1> {
                             ),
                             width: 300,
                             height: 200,
-                            child: const ClipRRect(
-                              child: FadeInImage(
-                                placeholder: AssetImage('assets/no-image.jpg'),
-                                image: AssetImage('assets/no-image.jpg'),
-                                width: 300,
-                                height: 200,
-                                fit: BoxFit.cover,
-                              ),
-                            ),
+                            child: articulos[index].foto == null
+                                ? ClipRRect(
+                                    child: FadeInImage(
+                                      placeholder:
+                                          AssetImage('assets/no-image.jpg'),
+                                      image: AssetImage('assets/no-image.jpg'),
+                                      width: 300,
+                                      height: 200,
+                                      fit: BoxFit.cover,
+                                    ),
+                                  )
+                                : ClipRRect(
+                                    child: FadeInImage(
+                                      placeholder:
+                                          AssetImage('assets/no-image.jpg'),
+                                      image: NetworkImage(
+                                          'http://dressup.allsites.es/public/imagenes/' +
+                                              articulos[index].foto!),
+                                      width: 300,
+                                      height: 200,
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
                           ),
                         ]),
                         const SizedBox(
                           height: 5,
                         ),
-                        Row(
-                          // ignore: prefer_const_literals_to_create_immutables
-                          children: [
-                            Text(articulos[index].modelo!,
-                                style: const TextStyle(
-                                    fontSize: 18, fontWeight: FontWeight.bold))
-                          ],
+                        SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                          child: Row(
+                            // ignore: prefer_const_literals_to_create_immutables
+                            children: [
+                              Text(articulos[index].modelo!,
+                                  style: const TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold))
+                            ],
+                          ),
                         ),
                         Row(
                           // ignore: prefer_const_literals_to_create_immutables

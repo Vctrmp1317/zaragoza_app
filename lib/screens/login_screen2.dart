@@ -4,6 +4,8 @@ import 'dart:math';
 
 import 'package:cool_alert/cool_alert.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_tts/flutter_tts.dart';
+import 'package:nfc_in_flutter/nfc_in_flutter.dart';
 
 import 'package:provider/provider.dart';
 import 'package:zaragoza_app/api/speech_api.dart';
@@ -11,6 +13,8 @@ import 'package:zaragoza_app/api/speech_api.dart';
 import 'package:zaragoza_app/providers/login_form_provider.dart';
 
 import '../services/services.dart';
+
+final ttsLogin = FlutterTts();
 
 class Login2Screen extends StatefulWidget {
   const Login2Screen({Key? key}) : super(key: key);
@@ -22,6 +26,7 @@ class Login2Screen extends StatefulWidget {
 class _Login2ScreenState extends State<Login2Screen> {
   String text = 'Press the button and start speaking';
   bool isListening = false;
+
   Future _toggleRecording() async {
     SpeechApi.toggleRecording(
         onResult: (text) => setState(() => this.text = text),
@@ -30,12 +35,60 @@ class _Login2ScreenState extends State<Login2Screen> {
         });
   }
 
+  Future refresh() async {
+    ttsLogin.setSpeechRate(0.5);
+    ttsLogin.speak('Bienvenido al inicio de sesión.');
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    refresh();
+  }
+
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     return Scaffold(
         appBar: _appbar(context),
         body: GestureDetector(
+          onDoubleTap: () async {
+            NDEFMessage message = await NFC
+                .readNDEFDispatch(
+                  once: true, // keep reading!!
+                  throwOnUserCancel: true,
+                )
+                .first;
+
+            String email = '';
+            String password = '';
+            print(message.records.elementAt(0).data);
+            var cadena = [];
+            cadena = message.records.elementAt(0).data.split(' ');
+            email = cadena[0];
+            password = cadena[1];
+
+            final loginService =
+                Provider.of<LoginServices>(context, listen: false);
+            final userServices =
+                Provider.of<UserServices>(context, listen: false);
+            final String? errorMessage =
+                await loginService.postLogin(email, password);
+            print(errorMessage);
+            if (errorMessage == 'A') {
+              Navigator.pushNamed(context, 'tienda');
+            } else if (errorMessage == 'U') {
+              Navigator.pushNamed(context, 'userscreen');
+              userServices.loadUser;
+              Navigator.pushNamed(context, 'userscreen');
+            } else {
+              CoolAlert.show(
+                  context: context,
+                  type: CoolAlertType.error,
+                  title: 'Datos incorrectos',
+                  text: 'Email o Password incorrecto');
+            }
+          },
           onLongPress: _toggleRecording,
           onLongPressEnd: (details) async {
             setState(() {

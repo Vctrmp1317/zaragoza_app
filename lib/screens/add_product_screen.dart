@@ -1,11 +1,15 @@
 import 'dart:io';
 
+import 'package:cool_alert/cool_alert.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 import 'package:provider/provider.dart';
 import 'package:zaragoza_app/providers/add_form_provider.dart';
 import 'package:image_picker/image_picker.dart';
+
+import '../services/services.dart';
 
 class AddProductScreen extends StatelessWidget {
   const AddProductScreen({Key? key}) : super(key: key);
@@ -43,7 +47,7 @@ class AddProductScreen extends StatelessWidget {
                     fontSize: 28,
                     fontWeight: FontWeight.bold,
                     color: Colors.white)),
-            Spacer(),
+            const Spacer(),
           ],
         ));
   }
@@ -168,7 +172,7 @@ class backGroundAuth extends StatelessWidget {
         height: double.infinity,
         color: const Color.fromARGB(255, 243, 242, 242),
       ),
-      SingleChildScrollView(
+      const SingleChildScrollView(
         child: _ColorBox(),
       )
     ]);
@@ -223,6 +227,7 @@ class _AddForm extends StatefulWidget {
 
 class _AddFormState extends State<_AddForm> {
   late String imagenPath = '';
+  late XFile? pickedFile;
   @override
   Widget build(BuildContext context) {
     final addForm = Provider.of<AddFormProvider>(context);
@@ -250,21 +255,18 @@ class _AddFormState extends State<_AddForm> {
                             color: Colors.black,
                             onPressed: () async {
                               print(imagenPath);
-                              final picker = ImagePicker();
+                              final ImagePicker picker = ImagePicker();
 
-                              final PickedFile? pickedFile =
-                                  await picker.getImage(
-                                      source: ImageSource.camera,
-                                      imageQuality: 100);
-
+                              pickedFile = await picker.pickImage(
+                                  source: ImageSource.camera);
                               if (pickedFile == null) {
                               } else {
-                                imagenPath = pickedFile.path;
+                                imagenPath = pickedFile!.path;
 
-                                pickedFile.readAsBytes().then((value) {});
+                                pickedFile!.readAsBytes().then((value) {});
                                 print(imagenPath);
 
-                                pickedFile.readAsBytes().then((value) {});
+                                pickedFile!.readAsBytes().then((value) {});
                               }
 
                               setState(() {});
@@ -277,18 +279,17 @@ class _AddFormState extends State<_AddForm> {
                             onPressed: () async {
                               final picker = ImagePicker();
 
-                              final PickedFile? pickedFile =
-                                  await picker.getImage(
-                                      source: ImageSource.gallery,
-                                      imageQuality: 100);
+                              pickedFile = await picker.pickImage(
+                                  source: ImageSource.gallery,
+                                  imageQuality: 100);
 
                               //  print('tenemos imagen ' + pickedFile!.path);
 
                               if (pickedFile == null) {
                               } else {
-                                imagenPath = pickedFile.path;
+                                imagenPath = pickedFile!.path;
 
-                                pickedFile.readAsBytes().then((value) {});
+                                pickedFile!.readAsBytes().then((value) {});
                               }
 
                               setState(() {});
@@ -366,6 +367,23 @@ class _AddFormState extends State<_AddForm> {
                   onChanged: (value) => addForm.modelo = value,
                 ),
                 const SizedBox(height: 10),
+                DropdownButtonFormField(
+                  hint: Text('Talla'),
+                  items: [
+                    DropdownMenuItem(
+                      child: Text('XS'),
+                      value: 'XS',
+                    ),
+                    DropdownMenuItem(child: Text('S'), value: 'S'),
+                    DropdownMenuItem(child: Text('M'), value: 'M'),
+                    DropdownMenuItem(child: Text('L'), value: 'L'),
+                    DropdownMenuItem(child: Text('XL'), value: 'XL')
+                  ],
+                  onChanged: (value) {
+                    addForm.talla = value!;
+                  },
+                ),
+                const SizedBox(height: 10),
                 TextFormField(
                   autocorrect: false,
                   decoration: const InputDecoration(
@@ -374,7 +392,7 @@ class _AddFormState extends State<_AddForm> {
                       labelText: 'Stock',
                       border: UnderlineInputBorder(),
                       suffixIcon: Icon(Icons.style)),
-                  onChanged: (value) => addForm.stock = value as int,
+                  onChanged: (value) => addForm.stock = value,
                 ),
                 const SizedBox(height: 10),
                 TextFormField(
@@ -398,7 +416,7 @@ class _AddFormState extends State<_AddForm> {
                       labelText: 'Precio',
                       border: UnderlineInputBorder(),
                       suffixIcon: Icon(Icons.attach_money)),
-                  onChanged: (value) => addForm.precio = value as int,
+                  onChanged: (value) => addForm.precio = value,
                 ),
                 const SizedBox(height: 10),
                 SizedBox(
@@ -415,8 +433,33 @@ class _AddFormState extends State<_AddForm> {
                     ),
                     onPressed: () async {
                       FocusScope.of(context).requestFocus(FocusNode());
+
+                      //Navigator.pushNamed(context, 'edit');
                       if (addForm.isValidForm()) {
                         //Navigator.pushNamed(context, 'edit');
+                        final addArticuloService =
+                            Provider.of<AddArticulosServices>(context,
+                                listen: false);
+                        CoolAlert.show(
+                          context: context,
+                          type: CoolAlertType.info,
+                          text: 'Subiendo imagen',
+                        );
+                        final resp = await addArticuloService.addArticulo(
+                            addForm.modelo,
+                            addForm.marca,
+                            addForm.tipo,
+                            addForm.genero,
+                            addForm.edad,
+                            addForm.material,
+                            addForm.color,
+                            addForm.talla,
+                            int.parse(addForm.stock),
+                            int.parse(addForm.precio),
+                            pickedFile!);
+
+                        Navigator.pop(context);
+                        Navigator.pushReplacementNamed(context, 'tienda');
                       }
                     },
                     // ignore: prefer_const_literals_to_create_immutables

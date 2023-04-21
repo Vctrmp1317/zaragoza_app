@@ -4,6 +4,7 @@ import 'package:cool_alert/cool_alert.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:flutter_tts/flutter_tts.dart';
 
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
@@ -15,6 +16,8 @@ import 'package:zaragoza_app/utils.dart';
 
 import '../models/models.dart';
 import '../services/services.dart';
+
+final ttsCarrito = FlutterTts();
 
 class ShoppingCartScreen extends StatefulWidget {
   const ShoppingCartScreen({Key? key}) : super(key: key);
@@ -38,6 +41,8 @@ class _SearchScreenState extends State<ShoppingCartScreen> {
   final carritoService = CarritoServices();
   Future refresh() async {
     await carritoService.getCarrito();
+    ttsCarrito.setSpeechRate(0.5);
+    ttsCarrito.speak('Estás en el carrito de compra.');
     setState(() {
       articulos = carritoService.articulos;
     });
@@ -61,6 +66,13 @@ class _SearchScreenState extends State<ShoppingCartScreen> {
               Utils.scanText(text, context);
             } else if (text == 'realizar pedido') {
               Navigator.pushReplacementNamed(context, 'orderscreen');
+            } else if (text == 'productos') {
+              if (articulos.length <= 0)
+                ttsCarrito.speak('No hay artículos en el carrito.');
+              else
+                for (int i = 0; i < articulos.length; i++) {
+                  ttsCarrito.speak(articulos[i].modelo! + '.');
+                }
             }
           },
           child: SingleChildScrollView(
@@ -111,17 +123,31 @@ class _SearchScreenState extends State<ShoppingCartScreen> {
                                             width: 100,
                                             height: 100,
                                             // ignore: prefer_const_literals_to_create_immutables
-                                            child: const ClipRRect(
-                                              child: FadeInImage(
-                                                placeholder: AssetImage(
-                                                    'assets/no-image.jpg'),
-                                                image: AssetImage(
-                                                    'assets/no-image.jpg'),
-                                                width: 100,
-                                                height: 100,
-                                                fit: BoxFit.cover,
-                                              ),
-                                            ),
+                                            child: articulos[index].foto == null
+                                                ? ClipRRect(
+                                                    child: FadeInImage(
+                                                      placeholder: AssetImage(
+                                                          'assets/no-image.jpg'),
+                                                      image: AssetImage(
+                                                          'assets/no-image.jpg'),
+                                                      width: 300,
+                                                      height: 200,
+                                                      fit: BoxFit.cover,
+                                                    ),
+                                                  )
+                                                : ClipRRect(
+                                                    child: FadeInImage(
+                                                      placeholder: AssetImage(
+                                                          'assets/no-image.jpg'),
+                                                      image: NetworkImage(
+                                                          'http://dressup.allsites.es/public/imagenes/' +
+                                                              articulos[index]
+                                                                  .foto!),
+                                                      width: 300,
+                                                      height: 200,
+                                                      fit: BoxFit.cover,
+                                                    ),
+                                                  ),
                                           ),
                                         ),
                                         Container(
@@ -422,11 +448,13 @@ class _ProductsShoppingCartUserState extends State<ProductsShoppingCartUser> {
                                 width: 100,
                                 height: 100,
                                 // ignore: prefer_const_literals_to_create_immutables
-                                child: const ClipRRect(
+                                child: ClipRRect(
                                   child: FadeInImage(
                                     placeholder:
                                         AssetImage('assets/no-image.jpg'),
-                                    image: AssetImage('assets/no-image.jpg'),
+                                    image: NetworkImage(
+                                        'http://dressup.allsites.es/public/imagenes/' +
+                                            articulos[index].foto!),
                                     width: 100,
                                     height: 100,
                                     fit: BoxFit.cover,

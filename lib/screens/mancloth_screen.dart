@@ -53,17 +53,25 @@ class ManClothScreen extends StatelessWidget {
     return AppBar(
       backgroundColor: Colors.transparent,
       elevation: 0,
+      leading: IconButton(
+        color: Colors.black,
+        onPressed: () {
+          Navigator.pushNamedAndRemoveUntil(
+              context, 'userscreen', (route) => false);
+        },
+        icon: const Icon(Icons.logout),
+      ),
       title: Row(
         children: [
           Container(
-              margin: const EdgeInsets.only(top: 20),
+              margin: const EdgeInsets.only(top: 0),
               child: const Text(
                 'Ropa de Hombre',
                 style: TextStyle(fontSize: 26, color: Colors.black),
               )),
           Spacer(),
           Container(
-            margin: const EdgeInsets.only(top: 20),
+            margin: const EdgeInsets.only(top: 0),
             child: IconButton(
               color: Colors.black,
               icon: const Icon(Icons.shopping_bag),
@@ -72,18 +80,6 @@ class ManClothScreen extends StatelessWidget {
               },
             ),
           ),
-          const SizedBox(width: 8),
-          Container(
-            margin: const EdgeInsets.only(top: 20),
-            child: IconButton(
-              color: Colors.black,
-              onPressed: () {
-                Navigator.pushNamedAndRemoveUntil(
-                    context, 'userscreen', (route) => false);
-              },
-              icon: const Icon(Icons.logout),
-            ),
-          )
         ],
       ),
     );
@@ -176,6 +172,8 @@ class _listProductsState extends State<manProducts1> {
   List<Articulos> articulos = [];
 
   Future refresh() async {
+    ttsHombre.setSpeechRate(0.5);
+    ttsHombre.speak('Estás en la sección de hombres');
     setState(() => articulos.clear());
   }
 
@@ -206,6 +204,7 @@ class _listProductsState extends State<manProducts1> {
     final articulosService = Provider.of<ArticulosGeneroServices>(context);
 
     articulos = articulosService.articulosHombre;
+
     return articulosService.isLoading
         ? const Center(
             child: SpinKitWave(color: Color.fromRGBO(0, 153, 153, 1), size: 50))
@@ -219,10 +218,16 @@ class _listProductsState extends State<manProducts1> {
               } else if (text.contains('siguiente')) {
                 commandSiguiente();
                 if (ind > articulos.length) {
-                  ttsHombre.speak('No hay mas articulos');
+                  ttsHombre.speak('No hay mas articulos.');
                 } else
-                  ttsHombre.speak(
-                      '${articulos[ind].tipo!}. color: ${articulos[ind].color!}, marca:${articulos[ind].marca!}. ');
+                  ttsHombre.speak(articulos[ind].modelo! +
+                      '. color:' +
+                      articulos[ind].color! +
+                      ', marca:' +
+                      articulos[ind].marca! +
+                      ', talla:' +
+                      articulos[ind].talla! +
+                      '. ');
               } else if (text.contains('seleccionar artículo')) {
                 final articuloService =
                     Provider.of<ArticuloService>(context, listen: false);
@@ -283,29 +288,46 @@ class _listProductsState extends State<manProducts1> {
                                   ),
                                   width: 300,
                                   height: 200,
-                                  child: const ClipRRect(
-                                    child: FadeInImage(
-                                      placeholder:
-                                          AssetImage('assets/no-image.jpg'),
-                                      image: AssetImage('assets/no-image.jpg'),
-                                      width: 300,
-                                      height: 200,
-                                      fit: BoxFit.cover,
-                                    ),
-                                  ),
+                                  child: articulos[index].foto == null
+                                      ? ClipRRect(
+                                          child: FadeInImage(
+                                            placeholder: AssetImage(
+                                                'assets/no-image.jpg'),
+                                            image: AssetImage(
+                                                'assets/no-image.jpg'),
+                                            width: 300,
+                                            height: 200,
+                                            fit: BoxFit.cover,
+                                          ),
+                                        )
+                                      : ClipRRect(
+                                          child: FadeInImage(
+                                            placeholder: AssetImage(
+                                                'assets/no-image.jpg'),
+                                            image: NetworkImage(
+                                                'http://dressup.allsites.es/public/imagenes/' +
+                                                    articulos[index].foto!),
+                                            width: 300,
+                                            height: 200,
+                                            fit: BoxFit.cover,
+                                          ),
+                                        ),
                                 ),
                               ]),
                               const SizedBox(
                                 height: 5,
                               ),
-                              Row(
-                                // ignore: prefer_const_literals_to_create_immutables
-                                children: [
-                                  Text(articulos[index].modelo!,
-                                      style: const TextStyle(
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.bold))
-                                ],
+                              SingleChildScrollView(
+                                scrollDirection: Axis.horizontal,
+                                child: Row(
+                                  // ignore: prefer_const_literals_to_create_immutables
+                                  children: [
+                                    Text(articulos[index].modelo!,
+                                        style: const TextStyle(
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.bold))
+                                  ],
+                                ),
                               ),
                               Row(
                                 // ignore: prefer_const_literals_to_create_immutables

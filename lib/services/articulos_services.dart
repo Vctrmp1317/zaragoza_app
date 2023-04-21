@@ -20,6 +20,7 @@ class ArticulosServices extends ChangeNotifier {
   }
 
   getArticulos() async {
+    articulos.clear();
     String? token = await LoginServices().readToken();
     isLoading = true;
 

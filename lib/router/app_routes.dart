@@ -78,6 +78,16 @@ class AppRoutes {
         name: 'Outfit Screen',
         screen: const OutfitScreen(),
         icon: Icons.account_balance_outlined),
+    MenuOption(
+        route: 'scannerscreen',
+        name: 'Scanner Screen',
+        screen: const ScannerScreen(),
+        icon: Icons.account_balance_outlined),
+    MenuOption(
+        route: 'writescreen',
+        name: 'Scanner Screen',
+        screen: const WriteScreen(),
+        icon: Icons.account_balance_outlined),
   ];
 
   static Map<String, Widget Function(BuildContext)> getAppRoutes() {

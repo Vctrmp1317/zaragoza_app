@@ -7,6 +7,7 @@ import 'package:flutter_bounce/flutter_bounce.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:like_button/like_button.dart';
 import 'package:provider/provider.dart';
 import 'package:speech_to_text/speech_to_text.dart';
 import 'package:zaragoza_app/api/speech_api.dart';
@@ -44,11 +45,15 @@ class _ProductScreenState extends State<ProductScreen> {
     setState(() {
       articulo = articuloService.selectedArticulo;
 
-      ttsProduct.speak(articulo.tipo!.toString() +
-          '. color: ' +
-          articulo.color!.toString() +
+      ttsProduct.speak(articulo.modelo! +
+          '. color:' +
+          articulo.color! +
           ', marca:' +
-          articulo.marca!.toString() +
+          articulo.marca! +
+          ', talla:' +
+          articulo.talla! +
+          ', precio:' +
+          articulo.precio.toString() +
           '. ');
     });
   }
@@ -69,7 +74,7 @@ class _ProductScreenState extends State<ProductScreen> {
 
   Future command() async {
     if (!isListening) {
-      Future.delayed(Duration(seconds: 1), () async {
+      Future.delayed(const Duration(seconds: 1), () async {
         print(text);
         if (text == 'añadir al carrito') {
           final compraService =
@@ -86,7 +91,7 @@ class _ProductScreenState extends State<ProductScreen> {
             context: context,
             type: CoolAlertType.warning,
             title: msg,
-            autoCloseDuration: Duration(seconds: 2),
+            autoCloseDuration: const Duration(seconds: 2),
             borderRadius: 30,
             //loopAnimation: true,
             confirmBtnColor: Colors.blueAccent,
@@ -122,11 +127,11 @@ class _ProductScreenState extends State<ProductScreen> {
             body: GestureDetector(
               onLongPress: _toggleRecordingProduct,
               onLongPressEnd: (details) {
-                if (text.contains('buscar')) {
+                if (text == 'añadir al carrito') {
+                  command();
+                } else if (text.contains('ir a') || text.contains('buscar')) {
                   print(text);
                   Utils.scanText(text, context);
-                } else {
-                  command();
                 }
               },
               child: SingleChildScrollView(
@@ -136,14 +141,22 @@ class _ProductScreenState extends State<ProductScreen> {
                     Column(
                       // ignore: prefer_const_literals_to_create_immutables
                       children: [
-                        const _fondoImagen(),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        _fondoImagen(
+                          foto: articulo.foto,
+                        ),
                         Row(
                           children: [
                             Container(
                               margin: const EdgeInsets.only(
                                   top: 30, left: 20, bottom: 10),
-                              child: Text(articulo.modelo!,
-                                  style: const TextStyle(fontSize: 18)),
+                              child: Text(
+                                articulo.modelo!,
+                                style: const TextStyle(fontSize: 18),
+                                overflow: TextOverflow.clip,
+                              ),
                             ),
                           ],
                         ),
@@ -153,16 +166,11 @@ class _ProductScreenState extends State<ProductScreen> {
                               margin:
                                   const EdgeInsets.only(left: 20, bottom: 10),
                               child: Text('${articulo.precio}€',
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                       fontSize: 16,
                                       fontWeight: FontWeight.bold)),
                             ),
                           ],
-                        ),
-                        Container(
-                          margin: const EdgeInsets.all(20),
-                          child: const Text('ENVIO TOTALMENTE GRATUITO',
-                              style: TextStyle(fontSize: 18)),
                         ),
                         Row(
                           children: [
@@ -174,6 +182,13 @@ class _ProductScreenState extends State<ProductScreen> {
                                       fontSize: 16,
                                       fontWeight: FontWeight.bold)),
                             ),
+                            Spacer(),
+                            Container(
+                                margin: const EdgeInsets.only(
+                                    bottom: 20, right: 20),
+                                child: LikeButton(
+                                  size: 25,
+                                ))
                           ],
                         ),
                         Container(
@@ -202,7 +217,7 @@ class _ProductScreenState extends State<ProductScreen> {
                                                   BorderRadius.circular(10),
                                               color: (articulo.talla != 'XL')
                                                   ? Colors.transparent
-                                                  : Colors.greenAccent[100],
+                                                  : Colors.greenAccent[200],
                                               border: Border.all(
                                                   color: Colors.black)),
                                           duration:
@@ -241,7 +256,7 @@ class _ProductScreenState extends State<ProductScreen> {
                                                   BorderRadius.circular(10),
                                               color: (articulo.talla != 'L')
                                                   ? Colors.transparent
-                                                  : Colors.greenAccent[100],
+                                                  : Colors.greenAccent[200],
                                               border: Border.all(
                                                   color: Colors.black)),
                                           duration:
@@ -280,7 +295,7 @@ class _ProductScreenState extends State<ProductScreen> {
                                                   BorderRadius.circular(10),
                                               color: (articulo.talla != 'M')
                                                   ? Colors.transparent
-                                                  : Colors.greenAccent[100],
+                                                  : Colors.greenAccent[200],
                                               border: Border.all(
                                                   color: Colors.black)),
                                           duration:
@@ -323,7 +338,7 @@ class _ProductScreenState extends State<ProductScreen> {
                                                   BorderRadius.circular(10),
                                               color: (articulo.talla != 'S')
                                                   ? Colors.transparent
-                                                  : Colors.greenAccent[100],
+                                                  : Colors.greenAccent[200],
                                               border: Border.all(
                                                   color: Colors.black)),
                                           duration:
@@ -362,7 +377,7 @@ class _ProductScreenState extends State<ProductScreen> {
                                                   BorderRadius.circular(10),
                                               color: (articulo != 'XS')
                                                   ? Colors.transparent
-                                                  : Colors.greenAccent[100],
+                                                  : Colors.greenAccent[200],
                                               border: Border.all(
                                                   color: Colors.black)),
                                           duration:
@@ -436,7 +451,7 @@ class _ProductScreenState extends State<ProductScreen> {
                         ),
                         const SizedBox(
                           height: 30,
-                        )
+                        ),
                       ],
                     )
                   ],
@@ -546,18 +561,31 @@ class __searchBarState extends State<_searchBar> {
 }
 
 class _fondoImagen extends StatelessWidget {
-  const _fondoImagen({super.key});
+  String? foto;
+  _fondoImagen({super.key, this.foto});
 
   @override
   Widget build(BuildContext context) {
-    return const ClipRRect(
-      child: FadeInImage(
-        placeholder: AssetImage('assets/no-image.jpg'),
-        image: AssetImage('assets/pantalonVerde.jpg'),
-        width: double.infinity,
-        height: 360,
-        fit: BoxFit.cover,
-      ),
-    );
+    return foto == null
+        ? const ClipRRect(
+            child: FadeInImage(
+              placeholder: AssetImage('assets/no-image.jpg'),
+              image: AssetImage('assets/no-image.jpg'),
+              width: 300,
+              height: 200,
+              fit: BoxFit.scaleDown,
+            ),
+          )
+        : ClipRRect(
+            borderRadius: BorderRadius.circular(20),
+            child: FadeInImage(
+              placeholder: const AssetImage('assets/no-image.jpg'),
+              image: NetworkImage(
+                  'http://dressup.allsites.es/public/imagenes/' + foto!),
+              width: 200,
+              height: 300,
+              fit: BoxFit.fill,
+            ),
+          );
   }
 }

@@ -330,17 +330,33 @@ class _SearchScreenState extends State<OutfitScreen> {
                                                   width: 100,
                                                   height: 100,
                                                   // ignore: prefer_const_literals_to_create_immutables
-                                                  child: const ClipRRect(
-                                                    child: FadeInImage(
-                                                      placeholder: AssetImage(
-                                                          'assets/no-image.jpg'),
-                                                      image: AssetImage(
-                                                          'assets/camiseta.jpg'),
-                                                      width: 100,
-                                                      height: 100,
-                                                      fit: BoxFit.cover,
-                                                    ),
-                                                  ),
+                                                  child: articulos[ind].foto ==
+                                                          null
+                                                      ? ClipRRect(
+                                                          child: FadeInImage(
+                                                            placeholder: AssetImage(
+                                                                'assets/no-image.jpg'),
+                                                            image: AssetImage(
+                                                                'assets/no-image.jpg'),
+                                                            width: 300,
+                                                            height: 200,
+                                                            fit: BoxFit.cover,
+                                                          ),
+                                                        )
+                                                      : ClipRRect(
+                                                          child: FadeInImage(
+                                                            placeholder: AssetImage(
+                                                                'assets/no-image.jpg'),
+                                                            image: NetworkImage(
+                                                                'http://dressup.allsites.es/public/imagenes/' +
+                                                                    articulos[
+                                                                            ind]
+                                                                        .foto!),
+                                                            width: 300,
+                                                            height: 200,
+                                                            fit: BoxFit.cover,
+                                                          ),
+                                                        ),
                                                 ),
                                               ),
                                               Container(
