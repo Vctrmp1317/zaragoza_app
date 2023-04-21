@@ -1,20 +1,20 @@
 import 'dart:io';
 
-import 'package:cool_alert/cool_alert.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:flutter_rating_stars/flutter_rating_stars.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
-import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:zaragoza_app/api/speech_api.dart';
 import 'package:zaragoza_app/providers/add_form_provider.dart';
-import 'package:zaragoza_app/screens/screens.dart';
-import 'package:zaragoza_app/services/carrito_service.dart';
+import 'package:zaragoza_app/providers/comment_form_provider.dart';
 
 import '../models/models.dart';
 import '../services/services.dart';
 import '../utils.dart';
+
+const storage = FlutterSecureStorage();
 
 class BuyScreen extends StatefulWidget {
   const BuyScreen({Key? key}) : super(key: key);
@@ -122,6 +122,28 @@ class _SearchScreenState extends State<BuyScreen> {
                                   itemBuilder: ((context, index) {
                                     TextEditingController customController =
                                         TextEditingController();
+
+                                    createAlertDialog(
+                                        context, customController) {
+                                      return showDialog(
+                                          builder: (BuildContext context) {
+                                            return AlertDialog(
+                                                title: const Text(
+                                                    'Editar prenda',
+                                                    style: TextStyle(
+                                                        fontSize: 22,
+                                                        fontWeight:
+                                                            FontWeight.bold)),
+                                                content:
+                                                    const SingleChildScrollView(
+                                                        child: _ColorBox()),
+                                                shape: RoundedRectangleBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            20)));
+                                          },
+                                          context: context);
+                                    }
 
                                     return GestureDetector(
                                       onTap: (() {
@@ -251,6 +273,20 @@ class _SearchScreenState extends State<BuyScreen> {
                                                       ],
                                                     ),
                                                   ),
+                                                  IconButton(
+                                                      onPressed: () {
+                                                        storage.write(
+                                                            key: 'idArt',
+                                                            value: gorros[index]
+                                                                .id
+                                                                .toString());
+
+                                                        createAlertDialog(
+                                                            context,
+                                                            customController);
+                                                      },
+                                                      icon: Icon(Icons
+                                                          .post_add_outlined))
                                                 ],
                                               ),
                                             ],
@@ -791,6 +827,165 @@ class __searchBarState extends State<_searchBar> {
           hintText: "Buscar",
         ),
       ),
+    );
+  }
+}
+
+class _ColorBox extends StatelessWidget {
+  const _ColorBox({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+    return Container(
+      margin: const EdgeInsets.only(top: 10),
+      height: size.height * 0.8,
+      width: double.infinity,
+      child: Stack(
+        children: [
+          Positioned(top: 100, child: Container()),
+          Container(
+            width: 300,
+            margin: const EdgeInsets.only(top: 10, left: 10),
+            child: ChangeNotifierProvider(
+              create: (_) => AddFormProvider(),
+              child: _AddForm(),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _AddForm extends StatefulWidget {
+  @override
+  State<_AddForm> createState() => _AddFormState();
+}
+
+class _AddFormState extends State<_AddForm> {
+  late String imagenPath = '';
+  double value = 3.5;
+  List<Articulos> articulo = [];
+
+  @override
+  void initState() {
+    super.initState();
+    final articulosService =
+        Provider.of<ArticulosServices>(context, listen: false);
+    articulo = articulosService.articulos;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final addForm = Provider.of<CommentFormProvider>(context);
+
+    final size = MediaQuery.of(context).size;
+
+    return Container(
+      margin: const EdgeInsets.all(10),
+      padding: const EdgeInsets.all(10),
+      width: double.infinity,
+      height: 610,
+      child: Form(
+          key: addForm.formKey,
+          autovalidateMode: AutovalidateMode.onUserInteraction,
+          child: Column(
+            children: [
+              TextFormField(
+                autocorrect: false,
+                decoration: const InputDecoration(
+                    focusColor: Colors.black,
+                    hintText: 'Escriba un comentario',
+                    labelText: 'Comentario',
+                    border: UnderlineInputBorder(),
+                    suffixIcon: Icon(Icons.color_lens)),
+                onChanged: (value) => addForm.comment = value,
+                keyboardType: TextInputType.multiline,
+                maxLines: null,
+              ),
+              const SizedBox(height: 5),
+              RatingStars(
+                value: value,
+                onValueChanged: (v) {
+                  //
+                  setState(() {
+                    value = v;
+                  });
+                },
+                starBuilder: (index, color) => Icon(
+                  Icons.ac_unit_outlined,
+                  color: color,
+                ),
+                starCount: 5,
+                starSize: 20,
+                valueLabelColor: const Color(0xff9b9b9b),
+                valueLabelTextStyle: const TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.w400,
+                    fontStyle: FontStyle.normal,
+                    fontSize: 12.0),
+                valueLabelRadius: 10,
+                maxValue: 5,
+                starSpacing: 2,
+                maxValueVisibility: true,
+                valueLabelVisibility: true,
+                animationDuration: Duration(milliseconds: 1000),
+                valueLabelPadding:
+                    const EdgeInsets.symmetric(vertical: 1, horizontal: 8),
+                valueLabelMargin: const EdgeInsets.only(right: 8),
+                starOffColor: const Color(0xffe7e8ea),
+                starColor: Colors.yellow,
+              ),
+              const SizedBox(height: 5),
+              SizedBox(
+                width: 300,
+                child: ElevatedButton(
+                  style: ButtonStyle(
+                    shape: MaterialStateProperty.all(RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(18.0),
+                    )),
+                    backgroundColor:
+                        MaterialStateProperty.all(Colors.blueAccent[100]),
+                    fixedSize: MaterialStateProperty.all(
+                        const Size(double.infinity, 30)),
+                  ),
+                  onPressed: () async {
+                    FocusScope.of(context).requestFocus(FocusNode());
+                    if (addForm.isValidForm()) {
+                      //Navigator.pushNamed(context, 'edit');
+                      final addArticuloService =
+                          Provider.of<ArticuloService>(context, listen: false);
+
+                      // addArticuloService.updateArticulo(
+                      //     addForm.modelo,
+                      //     int.parse(addForm.stock),
+                      //     int.parse(addForm.precio),
+                      //     articulo[ind].tipo!,
+                      //     articulo[ind].marca!,
+                      //     articulo[ind].talla!,
+                      //     id);
+
+                      final articulosService = ArticuloService();
+
+                      articulosService.addComment(
+                          addForm.comment, int.parse(addForm.mark));
+                      Navigator.pushReplacementNamed(context, 'buyscreen');
+                    }
+                  },
+                  // ignore: prefer_const_literals_to_create_immutables
+                  child: Row(children: [
+                    const Text(
+                      'Guardar',
+                      style: TextStyle(fontSize: 15),
+                    ),
+                    const Spacer(),
+                    const Icon(Icons.save)
+                  ]),
+                ),
+              ),
+            ],
+          )),
     );
   }
 }

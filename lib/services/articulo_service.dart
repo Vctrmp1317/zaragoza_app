@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:html';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -73,6 +74,56 @@ class ArticuloService extends ChangeNotifier {
       resp = error;
     }
     print(resp);
+    return resp;
+  }
+
+  addComment(String comment, int mark) async {
+    String? token = await LoginServices().readToken();
+    String? id = await LoginServices().readId();
+    String? idArt = await LoginServices().readIdArt();
+
+    isLoading = true;
+
+    final Map<String, String> art = {
+      'comentario': comment,
+      'valoracion': '$mark',
+      'user_id': id,
+      'articulo_id': idArt
+    };
+    final url = Uri.http(_baseUrl, '/public/api/valoracion', {
+      'comentario': comment,
+      'valoracion': '$mark',
+      'user_id': id,
+      'articulo_id': idArt
+    });
+
+    final request = http.MultipartRequest('POST', url)
+      ..headers['Authorization'] = 'Bearer $token'
+      ..headers['Accept'] = 'application/json'
+      ..fields.addAll(art);
+    // final response = await http.post(url, headers: {
+    //   HttpHeaders.acceptHeader: 'application/json',
+    //   HttpHeaders.fauthorizationHeader: 'Bearer $token'
+    // });
+
+    print(request.fields);
+    print('añade');
+
+    final response = await http.Response.fromStream(await request.send());
+
+    final Map<String, dynamic> articulossMap = json.decode(response.body);
+    print('envia');
+    print(response.body);
+    String resp;
+    if (articulossMap.containsValue(true)) {
+      resp = 'comentario añadido correctamente';
+    } else {
+      String? error = '';
+
+      error = 'Error to add';
+
+      resp = error;
+    }
     return resp;
   }
 }

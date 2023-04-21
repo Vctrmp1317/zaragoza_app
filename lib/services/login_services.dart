@@ -59,4 +59,10 @@ class LoginServices extends ChangeNotifier {
     print(i + 'idUser');
     return i;
   }
+
+  Future<String> readIdArt() async {
+    String? i = await storage.read(key: 'idArt') ?? '';
+    print(i + 'idUser');
+    return i;
+  }
 }
