@@ -38,6 +38,7 @@ class Articulos {
   int? deleted;
   String? createdAt;
   String? updatedAt;
+  String? categoria;
 
   Articulos(
       {this.id,
@@ -55,7 +56,8 @@ class Articulos {
       this.vistas,
       this.deleted,
       this.createdAt,
-      this.updatedAt});
+      this.updatedAt,
+      this.categoria});
 
   Articulos.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -74,6 +76,7 @@ class Articulos {
     deleted = json['deleted'];
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];
+    categoria = json['categoria'];
   }
 
   Map<String, dynamic> toJson() {
@@ -94,6 +97,7 @@ class Articulos {
     data['deleted'] = this.deleted;
     data['created_at'] = this.createdAt;
     data['updated_at'] = this.updatedAt;
+    data['categoria'] = this.categoria;
     return data;
   }
 }

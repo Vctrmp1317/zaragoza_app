@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'dart:html';
+
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -86,13 +86,13 @@ class ArticuloService extends ChangeNotifier {
 
     final Map<String, String> art = {
       'comentario': comment,
-      'valoracion': '$mark',
+      'puntuacion': '$mark',
       'user_id': id,
       'articulo_id': idArt
     };
     final url = Uri.http(_baseUrl, '/public/api/valoracion', {
       'comentario': comment,
-      'valoracion': '$mark',
+      'puntuacion': '$mark',
       'user_id': id,
       'articulo_id': idArt
     });

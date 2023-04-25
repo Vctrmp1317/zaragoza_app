@@ -122,14 +122,13 @@ class _SearchScreenState extends State<BuyScreen> {
                                   itemBuilder: ((context, index) {
                                     TextEditingController customController =
                                         TextEditingController();
-
                                     createAlertDialog(
                                         context, customController) {
                                       return showDialog(
                                           builder: (BuildContext context) {
                                             return AlertDialog(
                                                 title: const Text(
-                                                    'Editar prenda',
+                                                    'Añadir comentario',
                                                     style: TextStyle(
                                                         fontSize: 22,
                                                         fontWeight:
@@ -317,6 +316,28 @@ class _SearchScreenState extends State<BuyScreen> {
                               : ListView.builder(
                                   scrollDirection: Axis.horizontal,
                                   itemBuilder: ((context, index) {
+                                    createAlertDialog(
+                                        context, customController) {
+                                      return showDialog(
+                                          builder: (BuildContext context) {
+                                            return AlertDialog(
+                                                title: const Text(
+                                                    'Añadir comentario',
+                                                    style: TextStyle(
+                                                        fontSize: 22,
+                                                        fontWeight:
+                                                            FontWeight.bold)),
+                                                content:
+                                                    const SingleChildScrollView(
+                                                        child: _ColorBox()),
+                                                shape: RoundedRectangleBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            20)));
+                                          },
+                                          context: context);
+                                    }
+
                                     TextEditingController customController =
                                         TextEditingController();
 
@@ -457,6 +478,28 @@ class _SearchScreenState extends State<BuyScreen> {
                               : ListView.builder(
                                   scrollDirection: Axis.horizontal,
                                   itemBuilder: ((context, index) {
+                                    createAlertDialog(
+                                        context, customController) {
+                                      return showDialog(
+                                          builder: (BuildContext context) {
+                                            return AlertDialog(
+                                                title: const Text(
+                                                    'Añadir comentario',
+                                                    style: TextStyle(
+                                                        fontSize: 22,
+                                                        fontWeight:
+                                                            FontWeight.bold)),
+                                                content:
+                                                    const SingleChildScrollView(
+                                                        child: _ColorBox()),
+                                                shape: RoundedRectangleBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            20)));
+                                          },
+                                          context: context);
+                                    }
+
                                     TextEditingController customController =
                                         TextEditingController();
 
@@ -563,10 +606,28 @@ class _SearchScreenState extends State<BuyScreen> {
                                                           style:
                                                               const TextStyle(
                                                                   fontSize: 18),
-                                                        )
+                                                        ),
                                                       ],
                                                     ),
                                                   ),
+                                                  IconButton(
+                                                      onPressed: () {
+                                                        print(pantalones[index]
+                                                            .id
+                                                            .toString());
+                                                        storage.write(
+                                                            key: 'idArt',
+                                                            value: pantalones[
+                                                                    index]
+                                                                .id
+                                                                .toString());
+
+                                                        createAlertDialog(
+                                                            context,
+                                                            customController);
+                                                      },
+                                                      icon: Icon(Icons
+                                                          .post_add_outlined))
                                                 ],
                                               ),
                                             ],
@@ -839,7 +900,7 @@ class _ColorBox extends StatelessWidget {
     final size = MediaQuery.of(context).size;
     return Container(
       margin: const EdgeInsets.only(top: 10),
-      height: size.height * 0.8,
+      height: size.height * 0.5,
       width: double.infinity,
       child: Stack(
         children: [
@@ -904,7 +965,7 @@ class _AddFormState extends State<_AddForm> {
                 keyboardType: TextInputType.multiline,
                 maxLines: null,
               ),
-              const SizedBox(height: 5),
+              const SizedBox(height: 60),
               RatingStars(
                 value: value,
                 onValueChanged: (v) {
@@ -937,7 +998,7 @@ class _AddFormState extends State<_AddForm> {
                 starOffColor: const Color(0xffe7e8ea),
                 starColor: Colors.yellow,
               ),
-              const SizedBox(height: 5),
+              const SizedBox(height: 60),
               SizedBox(
                 width: 300,
                 child: ElevatedButton(
@@ -969,8 +1030,10 @@ class _AddFormState extends State<_AddForm> {
                       final articulosService = ArticuloService();
 
                       articulosService.addComment(
-                          addForm.comment, int.parse(addForm.mark));
+                          addForm.comment, value.truncate());
                       Navigator.pushReplacementNamed(context, 'buyscreen');
+
+                      Navigator.pop(context);
                     }
                   },
                   // ignore: prefer_const_literals_to_create_immutables

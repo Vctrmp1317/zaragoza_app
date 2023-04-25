@@ -5,6 +5,7 @@ import 'package:zaragoza_app/providers/login_form_provider.dart';
 import 'package:zaragoza_app/providers/register_form_provider.dart';
 import 'package:zaragoza_app/screens/screens.dart';
 
+import 'providers/comment_form_provider.dart';
 import 'providers/update_form_provider.dart';
 import 'router/app_routes.dart';
 import 'services/services.dart';
@@ -31,6 +32,7 @@ class AppState extends StatelessWidget {
       ChangeNotifierProvider(create: (_) => UpdateFormProvider()),
       ChangeNotifierProvider(create: (_) => LoginFormProvider()),
       ChangeNotifierProvider(create: (_) => RegisterFormProvider()),
+      ChangeNotifierProvider(create: (_) => CommentFormProvider()),
     ], child: const MyApp());
   }
 }

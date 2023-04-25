@@ -163,6 +163,11 @@ class _listProductsState extends State<listProducts1> {
           .where((element) =>
               element.tipo!.toLowerCase().contains(value.toLowerCase()))
           .toList();
+
+      articulos.addAll(articulosService.articulos
+          .where((element) =>
+              element.categoria!.toLowerCase().contains(value.toLowerCase()))
+          .toList());
     });
   }
 
