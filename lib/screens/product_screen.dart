@@ -41,6 +41,8 @@ class _ProductScreenState extends State<ProductScreen> {
   Articulo articulo = Articulo();
   Future refresh() async {
     await articuloService.getArticulo();
+    String? token = await LoginServices().readToken();
+    print(token);
 
     setState(() {
       articulo = articuloService.selectedArticulo;
@@ -79,14 +81,9 @@ class _ProductScreenState extends State<ProductScreen> {
         if (text == 'añadir al carrito') {
           final compraService =
               Provider.of<CompraServices>(context, listen: false);
-          final userService =
-              Provider.of<LoginServices>(context, listen: false);
-          int userId = int.parse(await userService.readId());
-
-          print(userId);
 
           String? msg = await compraService.addCompra(
-              userId, articulo.modelo!, 1, articulo.talla!);
+              articulo.modelo!, 1, articulo.talla!);
           CoolAlert.show(
             context: context,
             type: CoolAlertType.warning,
@@ -407,15 +404,9 @@ class _ProductScreenState extends State<ProductScreen> {
                             final compraService = Provider.of<CompraServices>(
                                 context,
                                 listen: false);
-                            final userService = Provider.of<LoginServices>(
-                                context,
-                                listen: false);
-                            int userId = int.parse(await userService.readId());
-
-                            print(userId);
 
                             String? msg = await compraService.addCompra(
-                                userId, articulo.modelo!, 1, articulo.talla!);
+                                articulo.modelo!, 1, articulo.talla!);
                             CoolAlert.show(
                               context: context,
                               type: CoolAlertType.warning,

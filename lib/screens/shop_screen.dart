@@ -166,6 +166,7 @@ class listProducts extends StatefulWidget {
 class _listProductsState extends State<listProducts> {
   List<Articulos> articulos = [];
   final articulosService = ArticulosServices();
+  final articuloService = ArticuloService();
 
   Future refresh() async {
     setState(() => articulos.clear());
@@ -192,23 +193,6 @@ class _listProductsState extends State<listProducts> {
         width: 400,
         child: GridView.builder(
           itemBuilder: ((context, index) {
-            TextEditingController customController = TextEditingController();
-
-            createAlertDialog(context, customController) {
-              return showDialog(
-                  builder: (BuildContext context) {
-                    return AlertDialog(
-                        title: const Text('Editar prenda',
-                            style: TextStyle(
-                                fontSize: 22, fontWeight: FontWeight.bold)),
-                        content:
-                            const SingleChildScrollView(child: _ColorBox()),
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(20)));
-                  },
-                  context: context);
-            }
-
             return Padding(
               padding: const EdgeInsets.all(8.0),
               child: Container(
@@ -267,12 +251,14 @@ class _listProductsState extends State<listProducts> {
                                   backgroundColor:
                                       MaterialStateProperty.all(Colors.white)),
                               iconSize: 30,
-                              onPressed: () {
+                              onPressed: () async {
+                                await articulosService.loadArticulo(id);
                                 setState(() {
                                   ind = index;
                                   id = articulos[index].id!;
+                                  Navigator.pushReplacementNamed(
+                                      context, 'editproduct');
                                 });
-                                createAlertDialog(context, customController);
                               },
                               icon: const Icon(Icons.edit_outlined)))
                     ]),
@@ -410,14 +396,17 @@ class _AddForm extends StatefulWidget {
 class _AddFormState extends State<_AddForm> {
   late String imagenPath = '';
 
-  List<Articulos> articulo = [];
+  Articulo articulo = Articulo();
+  final articulosService = ArticuloService();
+  Future refresh() async {
+    articulo = articulosService.selectedArticulo;
+  }
 
   @override
   void initState() {
     super.initState();
-    final articulosService =
-        Provider.of<ArticulosServices>(context, listen: false);
-    articulo = articulosService.articulos;
+
+    refresh();
   }
 
   @override
@@ -435,168 +424,174 @@ class _AddFormState extends State<_AddForm> {
       child: Form(
           key: addForm.formKey,
           autovalidateMode: AutovalidateMode.onUserInteraction,
-          child: Column(
-            children: [
-              Stack(
-                children: [
-                  (imagenPath == '')
-                      ? const FadeInImage(
-                          placeholder: AssetImage('assets/no-image.jpg'),
-                          image: AssetImage('assets/no-image.jpg'),
-                          width: 300,
-                          height: 150,
-                          fit: BoxFit.cover,
-                        )
-                      : Image.file(
-                          File(imagenPath),
-                          width: 300,
-                          height: 180,
-                          fit: BoxFit.cover,
+          child: articulosService.isLoading
+              ? const Center(
+                  child: SpinKitWave(
+                      color: Color.fromRGBO(0, 153, 153, 1), size: 50))
+              : Column(
+                  children: [
+                    Stack(
+                      children: [
+                        (imagenPath == '')
+                            ? const FadeInImage(
+                                placeholder: AssetImage('assets/no-image.jpg'),
+                                image: AssetImage('assets/no-image.jpg'),
+                                width: 300,
+                                height: 150,
+                                fit: BoxFit.cover,
+                              )
+                            : Image.file(
+                                File(imagenPath),
+                                width: 300,
+                                height: 180,
+                                fit: BoxFit.cover,
+                              ),
+                        //  getImage(imagenPath),
+
+                        Row(
+                          children: [
+                            IconButton(
+                                iconSize: 30,
+                                color: Colors.black,
+                                onPressed: () async {
+                                  print(imagenPath);
+                                  final picker = ImagePicker();
+
+                                  final PickedFile? pickedFile =
+                                      await picker.getImage(
+                                          source: ImageSource.camera,
+                                          imageQuality: 100);
+
+                                  print('tenemos imagen ' + pickedFile!.path);
+
+                                  imagenPath = pickedFile.path;
+
+                                  pickedFile.readAsBytes().then((value) {});
+                                  print(imagenPath);
+
+                                  pickedFile.readAsBytes().then((value) {});
+                                  setState(() {});
+                                },
+                                icon: const Icon(Icons.camera_alt_outlined)),
+                            const Spacer(),
+                            IconButton(
+                                iconSize: 30,
+                                color: Colors.black,
+                                onPressed: () async {
+                                  final picker = ImagePicker();
+
+                                  final PickedFile? pickedFile =
+                                      await picker.getImage(
+                                          source: ImageSource.gallery,
+                                          imageQuality: 100);
+
+                                  print('tenemos imagen ' + pickedFile!.path);
+
+                                  imagenPath = pickedFile.path;
+
+                                  pickedFile.readAsBytes().then((value) {});
+
+                                  setState(() {});
+                                },
+                                icon: const Icon(Icons.image_outlined))
+                          ],
                         ),
-                  //  getImage(imagenPath),
-
-                  Row(
-                    children: [
-                      IconButton(
-                          iconSize: 30,
-                          color: Colors.black,
-                          onPressed: () async {
-                            print(imagenPath);
-                            final picker = ImagePicker();
-
-                            final PickedFile? pickedFile =
-                                await picker.getImage(
-                                    source: ImageSource.camera,
-                                    imageQuality: 100);
-
-                            print('tenemos imagen ' + pickedFile!.path);
-
-                            imagenPath = pickedFile.path;
-
-                            pickedFile.readAsBytes().then((value) {});
-                            print(imagenPath);
-
-                            pickedFile.readAsBytes().then((value) {});
-                            setState(() {});
-                          },
-                          icon: const Icon(Icons.camera_alt_outlined)),
-                      const Spacer(),
-                      IconButton(
-                          iconSize: 30,
-                          color: Colors.black,
-                          onPressed: () async {
-                            final picker = ImagePicker();
-
-                            final PickedFile? pickedFile =
-                                await picker.getImage(
-                                    source: ImageSource.gallery,
-                                    imageQuality: 100);
-
-                            print('tenemos imagen ' + pickedFile!.path);
-
-                            imagenPath = pickedFile.path;
-
-                            pickedFile.readAsBytes().then((value) {});
-
-                            setState(() {});
-                          },
-                          icon: const Icon(Icons.image_outlined))
-                    ],
-                  ),
-                ],
-              ),
-              TextFormField(
-                autocorrect: false,
-                decoration: const InputDecoration(
-                    focusColor: Colors.black,
-                    hintText: 'Modelo de prenda',
-                    labelText: 'Modelo',
-                    border: UnderlineInputBorder(),
-                    suffixIcon: Icon(Icons.color_lens)),
-                onChanged: (value) => addForm.modelo = value,
-              ),
-              const SizedBox(height: 5),
-              TextFormField(
-                autocorrect: false,
-                keyboardType: TextInputType.number,
-                inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                decoration: const InputDecoration(
-                    focusColor: Colors.black,
-                    hintText: 'Stock de la prenda',
-                    labelText: 'Stock',
-                    border: UnderlineInputBorder(),
-                    suffixIcon: Icon(Icons.style)),
-                onChanged: (value) => addForm.stock = value,
-              ),
-              const SizedBox(height: 5),
-              TextFormField(
-                autocorrect: false,
-                keyboardType: TextInputType.number,
-                inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                decoration: const InputDecoration(
-                    focusColor: Colors.black,
-                    hintText: 'Precio de la prenda',
-                    labelText: 'Precio',
-                    border: UnderlineInputBorder(),
-                    suffixIcon: Icon(Icons.attach_money)),
-                onChanged: (value) => addForm.precio = value,
-              ),
-              const SizedBox(height: 5),
-              SizedBox(
-                width: 300,
-                child: ElevatedButton(
-                  style: ButtonStyle(
-                    shape: MaterialStateProperty.all(RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(18.0),
-                    )),
-                    backgroundColor:
-                        MaterialStateProperty.all(Colors.blueAccent[100]),
-                    fixedSize: MaterialStateProperty.all(
-                        const Size(double.infinity, 30)),
-                  ),
-                  onPressed: () async {
-                    FocusScope.of(context).requestFocus(FocusNode());
-                    if (addForm.isValidForm()) {
-                      //Navigator.pushNamed(context, 'edit');
-                      final addArticuloService =
-                          Provider.of<AddArticulosServices>(context,
-                              listen: false);
-
-                      addArticuloService.updateArticulo(
-                          addForm.modelo,
-                          int.parse(addForm.stock),
-                          int.parse(addForm.precio),
-                          articulo[ind].tipo!,
-                          articulo[ind].marca!,
-                          articulo[ind].talla!,
-                          id);
-
-                      final articulosService = ArticulosServices();
-
-                      Future refresh() async {
-                        await articulosService.getArticulos();
-                      }
-
-                      setState(() {
-                        refresh();
-                      });
-
-                      Navigator.pushReplacementNamed(context, 'tienda');
-                    }
-                  },
-                  // ignore: prefer_const_literals_to_create_immutables
-                  child: Row(children: [
-                    const Text(
-                      'Guardar',
-                      style: TextStyle(fontSize: 15),
+                      ],
                     ),
-                    const Spacer(),
-                    const Icon(Icons.save)
-                  ]),
-                ),
-              ),
-            ],
-          )),
+                    TextFormField(
+                      initialValue: articulo.modelo,
+                      autocorrect: false,
+                      decoration: const InputDecoration(
+                          focusColor: Colors.black,
+                          hintText: 'Modelo de prenda',
+                          labelText: 'Modelo',
+                          border: UnderlineInputBorder(),
+                          suffixIcon: Icon(Icons.color_lens)),
+                      onChanged: (value) => addForm.modelo = value,
+                    ),
+                    const SizedBox(height: 5),
+                    TextFormField(
+                      autocorrect: false,
+                      keyboardType: TextInputType.number,
+                      inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                      decoration: const InputDecoration(
+                          focusColor: Colors.black,
+                          hintText: 'Stock de la prenda',
+                          labelText: 'Stock',
+                          border: UnderlineInputBorder(),
+                          suffixIcon: Icon(Icons.style)),
+                      onChanged: (value) => addForm.stock = value,
+                    ),
+                    const SizedBox(height: 5),
+                    TextFormField(
+                      autocorrect: false,
+                      keyboardType: TextInputType.number,
+                      inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                      decoration: const InputDecoration(
+                          focusColor: Colors.black,
+                          hintText: 'Precio de la prenda',
+                          labelText: 'Precio',
+                          border: UnderlineInputBorder(),
+                          suffixIcon: Icon(Icons.attach_money)),
+                      onChanged: (value) => addForm.precio = value,
+                    ),
+                    const SizedBox(height: 5),
+                    SizedBox(
+                      width: 300,
+                      child: ElevatedButton(
+                        style: ButtonStyle(
+                          shape:
+                              MaterialStateProperty.all(RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(18.0),
+                          )),
+                          backgroundColor:
+                              MaterialStateProperty.all(Colors.blueAccent[100]),
+                          fixedSize: MaterialStateProperty.all(
+                              const Size(double.infinity, 30)),
+                        ),
+                        onPressed: () async {
+                          FocusScope.of(context).requestFocus(FocusNode());
+                          if (addForm.isValidForm()) {
+                            //Navigator.pushNamed(context, 'edit');
+                            final addArticuloService =
+                                Provider.of<AddArticulosServices>(context,
+                                    listen: false);
+
+                            addArticuloService.updateArticulo(
+                                addForm.modelo,
+                                int.parse(addForm.stock),
+                                int.parse(addForm.precio),
+                                articulo.tipo!,
+                                articulo.marca!,
+                                articulo.talla!,
+                                id);
+
+                            final articulosService = ArticulosServices();
+
+                            Future refresh() async {
+                              await articulosService.getArticulos();
+                            }
+
+                            setState(() {
+                              refresh();
+                            });
+
+                            Navigator.pushReplacementNamed(context, 'tienda');
+                          }
+                        },
+                        // ignore: prefer_const_literals_to_create_immutables
+                        child: Row(children: [
+                          const Text(
+                            'Guardar',
+                            style: TextStyle(fontSize: 15),
+                          ),
+                          const Spacer(),
+                          const Icon(Icons.save)
+                        ]),
+                      ),
+                    ),
+                  ],
+                )),
     );
   }
 }

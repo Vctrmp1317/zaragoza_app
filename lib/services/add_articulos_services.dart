@@ -25,6 +25,7 @@ class AddArticulosServices extends ChangeNotifier {
       String material,
       String color,
       String talla,
+      String categoria,
       int stock,
       int precio,
       XFile image) async {
@@ -39,6 +40,7 @@ class AddArticulosServices extends ChangeNotifier {
       'edad': genero,
       'material': material,
       'color': color,
+      'categoria': categoria,
       'talla': talla,
       'stock': '$stock',
       'precio': '$precio',
@@ -51,6 +53,7 @@ class AddArticulosServices extends ChangeNotifier {
       'edad': genero,
       'material': material,
       'color': color,
+      'categoria': categoria,
       'talla': talla,
       'stock': '$stock',
       'precio': '$precio',

@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_tts/flutter_tts.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
@@ -124,7 +125,7 @@ class _SearchScreenState extends State<ShoppingCartScreen> {
                                             height: 100,
                                             // ignore: prefer_const_literals_to_create_immutables
                                             child: articulos[index].foto == null
-                                                ? ClipRRect(
+                                                ? const ClipRRect(
                                                     child: FadeInImage(
                                                       placeholder: AssetImage(
                                                           'assets/no-image.jpg'),
@@ -137,7 +138,7 @@ class _SearchScreenState extends State<ShoppingCartScreen> {
                                                   )
                                                 : ClipRRect(
                                                     child: FadeInImage(
-                                                      placeholder: AssetImage(
+                                                      placeholder: const AssetImage(
                                                           'assets/no-image.jpg'),
                                                       image: NetworkImage(
                                                           'http://dressup.allsites.es/public/imagenes/' +
@@ -186,11 +187,47 @@ class _SearchScreenState extends State<ShoppingCartScreen> {
                                               ),
                                               Text(
                                                 articulos[index].talla!,
-                                                style: TextStyle(fontSize: 18),
-                                              )
+                                                style: const TextStyle(
+                                                    fontSize: 18),
+                                              ),
                                             ],
                                           ),
                                         ),
+                                        IconButton(
+                                            onPressed: () {
+                                              CoolAlert.show(
+                                                context: context,
+                                                type: CoolAlertType.warning,
+                                                title:
+                                                    '¿Deseas eliminar este articulo del carrito?',
+
+                                                borderRadius: 30,
+                                                //loopAnimation: true,
+                                                confirmBtnColor:
+                                                    Colors.blueAccent,
+                                                confirmBtnText: 'Aceptar',
+                                                cancelBtnText: 'Cancelar',
+                                                onConfirmBtnTap: () async {
+                                                  final String? msg =
+                                                      await CarritoServices()
+                                                          .deleteArticuloCarrito(
+                                                              articulos[index]
+                                                                  .id!);
+                                                  Fluttertoast.showToast(
+                                                      msg: msg!);
+                                                  setState(() {
+                                                    refresh();
+                                                  });
+                                                  Navigator.pop(context);
+                                                },
+                                                showCancelBtn: true,
+                                                onCancelBtnTap: () {
+                                                  Navigator.pop(context);
+                                                },
+                                              );
+                                            },
+                                            icon: const Icon(Icons.delete,
+                                                size: 25))
                                       ],
                                     ),
                                   ],
@@ -451,7 +488,7 @@ class _ProductsShoppingCartUserState extends State<ProductsShoppingCartUser> {
                                 child: ClipRRect(
                                   child: FadeInImage(
                                     placeholder:
-                                        AssetImage('assets/no-image.jpg'),
+                                        const AssetImage('assets/no-image.jpg'),
                                     image: NetworkImage(
                                         'http://dressup.allsites.es/public/imagenes/' +
                                             articulos[index].foto!),
@@ -492,13 +529,42 @@ class _ProductsShoppingCartUserState extends State<ProductsShoppingCartUser> {
                                   ),
                                   Text(
                                     articulos[index].talla!,
-                                    style: TextStyle(fontSize: 18),
+                                    style: const TextStyle(fontSize: 18),
                                   )
                                 ],
                               ),
                             ),
                           ],
                         ),
+                        IconButton(
+                            onPressed: () {
+                              CoolAlert.show(
+                                context: context,
+                                type: CoolAlertType.warning,
+                                title:
+                                    '¿Deseas eliminar este articulo del carrito?',
+
+                                borderRadius: 30,
+                                //loopAnimation: true,
+                                confirmBtnColor: Colors.blueAccent,
+                                confirmBtnText: 'Aceptar',
+                                cancelBtnText: 'Cancelar',
+                                onConfirmBtnTap: () async {
+                                  final String? msg = await CarritoServices()
+                                      .deleteArticuloCarrito(
+                                          articulos[index].id!);
+                                  Fluttertoast.showToast(msg: msg!);
+                                  setState(() {
+                                    refresh();
+                                  });
+                                },
+                                showCancelBtn: true,
+                                onCancelBtnTap: () {
+                                  Navigator.pop(context);
+                                },
+                              );
+                            },
+                            icon: const Icon(Icons.delete, size: 15))
                       ],
                     ),
                   ),

@@ -8,8 +8,8 @@ import 'dart:convert';
 
 class DataUser {
   int? id;
-  String? name;
-  String? surname;
+  String? nombre;
+  String? apellidos;
   String? direccion;
   String? email;
   String? emailVerifiedAt;
@@ -21,8 +21,8 @@ class DataUser {
 
   DataUser(
       {this.id,
-      this.name,
-      this.surname,
+      this.nombre,
+      this.apellidos,
       this.direccion,
       this.email,
       this.emailVerifiedAt,
@@ -34,8 +34,8 @@ class DataUser {
 
   DataUser.fromJson(Map<String, dynamic> json) {
     id = json['id'];
-    name = json['name'];
-    surname = json['surname'];
+    nombre = json['nombre'];
+    apellidos = json['apellidos'];
     direccion = json['direccion'];
     email = json['email'];
     emailVerifiedAt = json['email_verified_at'];
@@ -49,8 +49,8 @@ class DataUser {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['id'] = this.id;
-    data['name'] = this.name;
-    data['surname'] = this.surname;
+    data['nombre'] = this.nombre;
+    data['apellidos'] = this.apellidos;
     data['direccion'] = this.direccion;
     data['email'] = this.email;
     data['email_verified_at'] = this.emailVerifiedAt;

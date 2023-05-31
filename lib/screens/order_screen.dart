@@ -31,7 +31,6 @@ class _OrderScreenState extends State<OrderScreen> {
     ttsCompra.speak('Estás en el trámite de compra.');
     setState(() {
       user = userService.selectedUser;
-      print(user.direccion);
     });
   }
 
@@ -141,8 +140,8 @@ class _OrderScreenState extends State<OrderScreen> {
                               Row(
                                 // ignore: prefer_const_literals_to_create_immutables
                                 children: [
-                                  Text(user.direccion!,
-                                      style: TextStyle(fontSize: 18)),
+                                  // Text(user.direccion,
+                                  //     style: TextStyle(fontSize: 18)),
                                 ],
                               ),
                               const SizedBox(

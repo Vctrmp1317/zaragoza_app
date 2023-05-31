@@ -139,7 +139,7 @@ class ArticulosGeneroServices extends ChangeNotifier {
 
   Future loadArticulo(int id) async {
     String? token = await LoginServices().readToken();
-    storage.write(key: 'id', value: id.toString());
+    storage.write(key: 'idArt', value: id.toString());
     isLoading = true;
     notifyListeners();
     final url = Uri.http(_baseUrl, '/public/api/articulos/$id');

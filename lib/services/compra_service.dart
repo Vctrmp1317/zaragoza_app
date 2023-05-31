@@ -15,12 +15,14 @@ class CompraServices extends ChangeNotifier {
   final storage = const FlutterSecureStorage();
   CompraServices() {}
 
-  addCompra(int clienteId, String modelo, int cantidad, String talla) async {
+  addCompra(String modelo, int cantidad, String talla) async {
     String? token = await LoginServices().readToken();
+    String? id = await LoginServices().readId();
+    print('ID: ' + token);
     isLoading = true;
 
     final url = Uri.http(_baseUrl, '/public/api/compra', {
-      'cliente_id': '$clienteId',
+      'cliente_id': id,
       'modelo': modelo,
       'talla': talla,
       'cantidad': '$cantidad',
@@ -38,7 +40,7 @@ class CompraServices extends ChangeNotifier {
     } else {
       String? error = '';
 
-      error = 'Error to add';
+      error = response.body;
 
       resp = error;
     }
@@ -49,7 +51,7 @@ class CompraServices extends ChangeNotifier {
     String? token = await LoginServices().readToken();
     int? idCliente = int.parse(await LoginServices().readId());
     isLoading = true;
-
+    print(idCliente);
     final url = Uri.http(
       _baseUrl,
       '/public/api/compras/confirmar/$idCliente',
@@ -60,7 +62,7 @@ class CompraServices extends ChangeNotifier {
     });
 
     final Map<String, dynamic> articulossMap = json.decode(response.body);
-    print(response.body);
+
     String resp;
     if (articulossMap.containsKey("Compras realizadas")) {
       resp = 'Pedido realizado correctamente';

@@ -48,4 +48,19 @@ class CarritoServices extends ChangeNotifier {
     notifyListeners();
     return articulos;
   }
+
+  Future deleteArticuloCarrito(int id) async {
+    String? token = await LoginServices().readToken();
+
+    notifyListeners();
+    final url = Uri.http(_baseUrl, 'public/api/carrito/$id');
+    final resp = await http.delete(url, headers: {
+      HttpHeaders.acceptHeader: 'application/json',
+      HttpHeaders.authorizationHeader: 'Bearer $token'
+    });
+
+    isLoading = false;
+    notifyListeners();
+    return 'Eliminado correctamente';
+  }
 }

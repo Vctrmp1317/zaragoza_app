@@ -161,7 +161,7 @@ class _registerFormState extends State<_registerForm> {
     // TODO: implement initState
     super.initState();
     ttsRegistro.setSpeechRate(0.5);
-    ttsRegistro.speak('Bienvenido al inicio de sesión.');
+    ttsRegistro.speak('Bienvenido a la pantalla de registro .');
   }
 
   @override
@@ -300,7 +300,14 @@ class _registerFormState extends State<_registerForm> {
                               addForm.direccion);
                       print(errorMessage);
                       if (errorMessage == 'Usuario registrado correctamente') {
-                        Navigator.pushReplacementNamed(context, 'login');
+                        CoolAlert.show(
+                          context: context,
+                          type: CoolAlertType.success,
+                          text: 'Usuario registrado correctamente',
+                          onConfirmBtnTap: () {
+                            Navigator.pushReplacementNamed(context, 'login');
+                          },
+                        );
                       } else {
                         CoolAlert.show(
                             context: context,

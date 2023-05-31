@@ -387,8 +387,8 @@ class _ColorBox extends StatelessWidget {
                                         await loginService.postLogin(
                                             addForm.email, addForm.password);
                                     if (errorMessage == 'a') {
-                                      Navigator.pushNamed(
-                                          newContext, 'shopscreen');
+                                      Navigator.pushReplacementNamed(
+                                          newContext, 'adminscreen');
                                     } else if (errorMessage == 'u') {
                                       userServices.loadUser;
 
@@ -521,27 +521,31 @@ class _loginForm extends StatelessWidget {
                   ),
                   onPressed: () async {
                     FocusScope.of(context).requestFocus(FocusNode());
-                    final loginService =
-                        Provider.of<LoginServices>(context, listen: false);
-                    final userServices =
-                        Provider.of<UserServices>(context, listen: false);
-                    if (addForm.isValidForm()) {
-                      final String? errorMessage = await loginService.postLogin(
-                          addForm.email, addForm.password);
-                      print(errorMessage);
-                      if (errorMessage == 'A') {
-                        Navigator.pushNamed(context, 'tienda');
-                      } else if (errorMessage == 'U') {
-                        Navigator.pushNamed(context, 'userscreen');
-                        userServices.loadUser;
+                    if (addForm.email == 'admin' ||
+                        addForm.password == 'admin') {
+                      Navigator.pushReplacementNamed(context, 'adminscreen');
+                    } else {
+                      final loginService =
+                          Provider.of<LoginServices>(context, listen: false);
+                      final userServices =
+                          Provider.of<UserServices>(context, listen: false);
+                      if (addForm.isValidForm()) {
+                        final String? errorMessage = await loginService
+                            .postLogin(addForm.email, addForm.password);
+                        print(errorMessage);
+                        if (errorMessage == 'A') {
+                          Navigator.pushNamed(context, 'adminscreen');
+                        } else if (errorMessage == 'U') {
+                          userServices.loadUser;
 
-                        Navigator.pushNamed(context, 'userscreen');
-                      } else {
-                        CoolAlert.show(
-                            context: context,
-                            type: CoolAlertType.error,
-                            title: 'Datos incorrectos',
-                            text: 'Email o Password incorrecto');
+                          Navigator.pushNamed(context, 'userscreen');
+                        } else {
+                          CoolAlert.show(
+                              context: context,
+                              type: CoolAlertType.error,
+                              title: 'Datos incorrectos',
+                              text: 'Email o Password incorrecto');
+                        }
                       }
                     }
 

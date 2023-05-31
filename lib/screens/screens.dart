@@ -1,5 +1,7 @@
 export '../screens/shop_screen.dart';
 export '../screens/add_product_screen.dart';
+export '../screens/edit_product_screen.dart';
+
 export '../screens/login_screen2.dart';
 export '../screens/user_screen.dart';
 export '../screens/register_screen.dart';
@@ -14,3 +16,8 @@ export '../screens/buy_screen.dart';
 export '../screens/outfit_screen.dart';
 export '../screens/scanner_screen.dart';
 export '../screens/write_screen.dart';
+export '../screens/admin_screen.dart';
+export '../screens/adminUsers_screen.dart';
+export '../screens/edit_user_screen.dart';
+export '../screens/edit_comment_screen.dart';
+export '../screens/comments_screen.dart';

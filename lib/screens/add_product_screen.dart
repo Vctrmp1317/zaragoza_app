@@ -37,7 +37,7 @@ class AddProductScreen extends StatelessWidget {
         leading: IconButton(
             onPressed: () {
               Navigator.pushNamedAndRemoveUntil(
-                  context, 'tienda', (route) => false);
+                  context, 'adminscreen', (route) => false);
             },
             icon: const Icon(Icons.logout, color: Colors.white)),
         title: Row(
@@ -366,6 +366,16 @@ class _AddFormState extends State<_AddForm> {
                       suffixIcon: Icon(Icons.style)),
                   onChanged: (value) => addForm.modelo = value,
                 ),
+                TextFormField(
+                  autocorrect: false,
+                  decoration: const InputDecoration(
+                      focusColor: Colors.black,
+                      hintText: 'Categoria de la prenda',
+                      labelText: 'Categoria',
+                      border: UnderlineInputBorder(),
+                      suffixIcon: Icon(Icons.style)),
+                  onChanged: (value) => addForm.categoria = value,
+                ),
                 const SizedBox(height: 10),
                 DropdownButtonFormField(
                   hint: Text('Talla'),
@@ -454,12 +464,12 @@ class _AddFormState extends State<_AddForm> {
                             addForm.material,
                             addForm.color,
                             addForm.talla,
+                            addForm.categoria,
                             int.parse(addForm.stock),
                             int.parse(addForm.precio),
                             pickedFile!);
 
-                        Navigator.pop(context);
-                        Navigator.pushReplacementNamed(context, 'tienda');
+                        Navigator.pushReplacementNamed(context, 'adminscreen');
                       }
                     },
                     // ignore: prefer_const_literals_to_create_immutables

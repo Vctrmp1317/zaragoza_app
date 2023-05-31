@@ -29,6 +29,11 @@ class AppRoutes {
         screen: const AddProductScreen(),
         icon: Icons.account_balance_outlined),
     MenuOption(
+        route: 'editproduct',
+        name: 'Edit Porduct Screen',
+        screen: const EditProductScreen(),
+        icon: Icons.account_balance_outlined),
+    MenuOption(
         route: 'userscreen',
         name: 'User Screen',
         screen: const UserScreen(),
@@ -87,6 +92,31 @@ class AppRoutes {
         route: 'writescreen',
         name: 'Scanner Screen',
         screen: const WriteScreen(),
+        icon: Icons.account_balance_outlined),
+    MenuOption(
+        route: 'adminscreen',
+        name: 'Admin Screen',
+        screen: const AdminScreen(),
+        icon: Icons.account_balance_outlined),
+    MenuOption(
+        route: 'adminusersscreen',
+        name: 'AdminUsers Screen',
+        screen: const AdminUsersScreen(),
+        icon: Icons.account_balance_outlined),
+    MenuOption(
+        route: 'edit',
+        name: 'EditUser Screen',
+        screen: const EditUserScreen(),
+        icon: Icons.account_balance_outlined),
+    MenuOption(
+        route: 'comments',
+        name: 'Comments Screen',
+        screen: const CommentsScreen(),
+        icon: Icons.account_balance_outlined),
+    MenuOption(
+        route: 'editComment',
+        name: 'EditComment Screen',
+        screen: const EditCommentScreen(),
         icon: Icons.account_balance_outlined),
   ];
 

@@ -365,7 +365,6 @@ class _listProductsState extends State<manProducts1> {
 
                                       String? msg =
                                           await compraService.addCompra(
-                                              userId,
                                               articulos[index].modelo!,
                                               1,
                                               articulos[index].talla!);
@@ -407,7 +406,6 @@ class _listProductsState extends State<manProducts1> {
 
                                         String? msg =
                                             await compraService.addCompra(
-                                                userId,
                                                 articulos[index].modelo!,
                                                 1,
                                                 articulos[index].talla!);

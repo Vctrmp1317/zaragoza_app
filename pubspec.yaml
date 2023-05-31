@@ -52,6 +52,7 @@ dependencies:
   flutter_tts: ^3.6.3
   nfc_in_flutter: ^2.0.5
   flutter_rating_stars: ^1.0.3+4
+  flutter_slidable: ^2.0.0
  
 
  

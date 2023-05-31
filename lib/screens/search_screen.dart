@@ -161,7 +161,7 @@ class _listProductsState extends State<listProducts1> {
       ind = -1;
       articulos = articulosService.articulos
           .where((element) =>
-              element.tipo!.toLowerCase().contains(value.toLowerCase()))
+              element.modelo!.toLowerCase().contains(value.toLowerCase()))
           .toList();
 
       articulos.addAll(articulosService.articulos
@@ -418,7 +418,6 @@ class _listProductsState extends State<listProducts1> {
                                         int.parse(await userService.readId());
 
                                     String? msg = await compraService.addCompra(
-                                        userId,
                                         articulos[index].modelo!,
                                         1,
                                         articulos[index].talla!);
@@ -462,7 +461,6 @@ class _listProductsState extends State<listProducts1> {
 
                                       String? msg =
                                           await compraService.addCompra(
-                                              userId,
                                               articulos[index].modelo!,
                                               1,
                                               articulos[index].talla!);

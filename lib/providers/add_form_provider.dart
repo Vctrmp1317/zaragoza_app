@@ -9,6 +9,7 @@ class AddFormProvider extends ChangeNotifier {
   String stock = '';
   String edad = '';
   String color = '';
+  String categoria = '';
   String tipo = '';
   String material = '';
   String precio = '';

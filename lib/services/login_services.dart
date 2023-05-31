@@ -25,10 +25,11 @@ class LoginServices extends ChangeNotifier {
     String error;
     var resp;
     final Map<String, dynamic> login = json.decode(response.body);
-    print(login);
+
     login.forEach((key, value) {
       if (login.containsKey('success')) {
         storage.write(key: 'token', value: value['token']);
+        print(value['token']);
         storage.write(key: 'id', value: value['id'].toString());
 
         type = value['tipo'];

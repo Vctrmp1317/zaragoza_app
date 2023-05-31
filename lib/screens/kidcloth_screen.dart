@@ -54,6 +54,14 @@ class KidClothScreen extends StatelessWidget {
     return AppBar(
       backgroundColor: Colors.transparent,
       elevation: 0,
+      leading: IconButton(
+        color: Colors.black,
+        onPressed: () {
+          Navigator.pushNamedAndRemoveUntil(
+              context, 'userscreen', (route) => false);
+        },
+        icon: const Icon(Icons.logout),
+      ),
       title: Row(
         children: [
           Container(
@@ -74,17 +82,6 @@ class KidClothScreen extends StatelessWidget {
             ),
           ),
           const SizedBox(width: 8),
-          Container(
-            margin: const EdgeInsets.only(top: 20),
-            child: IconButton(
-              color: Colors.black,
-              onPressed: () {
-                Navigator.pushNamedAndRemoveUntil(
-                    context, 'userscreen', (route) => false);
-              },
-              icon: const Icon(Icons.logout),
-            ),
-          )
         ],
       ),
     );
@@ -360,7 +357,6 @@ class _listProductsState extends State<kidProducts1> {
                                     int.parse(await userService.readId());
 
                                 String? msg = await compraService.addCompra(
-                                    userId,
                                     articulos[index].modelo!,
                                     1,
                                     articulos[index].talla!);
@@ -401,7 +397,6 @@ class _listProductsState extends State<kidProducts1> {
                                       int.parse(await userService.readId());
 
                                   String? msg = await compraService.addCompra(
-                                      userId,
                                       articulos[index].modelo!,
                                       1,
                                       articulos[index].talla!);
